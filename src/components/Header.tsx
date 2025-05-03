@@ -6,12 +6,12 @@ import { FaUser, FaEnvelope, FaEdit, FaSignOutAlt, FaRobot, FaCommentDots, FaUse
 import logo from '../../public/img/logo_general.png';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import useUser from '@store/user';
-import useMessageQueues from '@/hooks/useMessageQueues';
+
 
 const Header = () => {
   const router = useRouter();
   const { fetchUser, user, logout, token } = useUser();
-  const { robotStatus } = useMessageQueues();
+
 
   useEffect(() => {
     if (!user && token) {
@@ -50,14 +50,6 @@ const Header = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav className="ml-auto">
-            <Nav.Item style={{ display: 'flex', alignItems: 'center', color: 'black' }}>
-              <Nav.Link onClick={handleRobotClick} style={{ display: 'flex', alignItems: 'center', border: `2px solid ${robotStatus ? '#28a745' : '#dc3545'}`, borderRadius: '10%', padding: '5px' }}>
-                <FaRobot style={{ fontSize: '1.5rem', color: robotStatus ? '#28a745' : '#dc3545' }} />
-                <span style={{ marginLeft: '5px', color: robotStatus ? '#28a745' : '#dc3545', fontWeight: 'bold' }}>
-                  {robotStatus ? 'Activo' : 'Inactivo'}
-                </span>
-              </Nav.Link>
-            </Nav.Item>
             <Nav.Link href="/whatsapp-sessions"><FaPhone style={{ marginRight: '5px' }} />WPP</Nav.Link>
             <Nav.Link href="/messages"><FaCommentDots style={{ marginRight: '5px' }} />Mensajes</Nav.Link>
             <Nav.Link href="/customers"><FaUsers style={{ marginRight: '5px' }} />Clientes</Nav.Link>

@@ -5,11 +5,11 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <link rel="icon" href="/img/favicon.svg" />
+          <link rel="icon" href="/img/icon.png" sizes="200x200" />
         </Head>
         <body>
           <Main />
-          <NextScript />
+          <NextScript /> 
         </body>
       </Html>
     );

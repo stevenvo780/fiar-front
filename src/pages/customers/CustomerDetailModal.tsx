@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { Customer } from '@utils/types';
+import { Client } from '@utils/types';
 
 interface CustomerDetailModalProps {
   show: boolean;
   onHide: () => void;
-  customer: Customer | null;
+  customer: Client | null;
 }
 
 const CustomerDetailModal: FC<CustomerDetailModalProps> = ({ show, onHide, customer }) => {
@@ -17,18 +17,18 @@ const CustomerDetailModal: FC<CustomerDetailModalProps> = ({ show, onHide, custo
       <Modal.Body>
         {customer && (
           <div>
-            <p>Nombre: {customer.firstName}</p>
-            <p>Apellido: {customer.lastName}</p>
-            <p>Etiqueta: {customer.label}</p>
-            <p>Nota: {customer.note}</p>
-            <p>Campaña: {customer.campaign}</p>
-            <p>Título: {customer.title}</p>
-            <p>Data 1: {customer.data1}</p>
-            <p>Data 2: {customer.data2}</p>
-            <p>Data 3: {customer.data3}</p>
-            <p>Último contacto: {customer.lastContact}</p>
-            <p>Prefijo: {customer.prefix}</p>
-            <p>Celular: {customer.phone}</p>
+            <p>Nombre: {customer.name}</p>
+            <p>Apellido: {customer.lastname}</p>
+            <p>Documento: {customer.document}</p>
+            <p>Teléfono: {customer.phone}</p>
+            <p>Ciudad: {customer.city}</p>
+            <p>Estado: {customer.state}</p>
+            <p>Dirección: {customer.direction}</p>
+            <p>Límite de crédito: {customer.credit_limit}</p>
+            <p>Confiable: {customer.trusted ? 'Sí' : 'No'}</p>
+            <p>Bloqueado: {customer.blocked ? 'Sí' : 'No'}</p>
+            <p>Etiquetas: {customer.label?.join(', ')}</p>
+            <p>Creado en: {customer.created_at}</p>
           </div>
         )}
       </Modal.Body>

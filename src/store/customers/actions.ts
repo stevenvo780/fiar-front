@@ -1,8 +1,8 @@
 import { Dispatch } from 'react';
-import { Customer } from '@utils/types';
+import { Client } from '@utils/types';
 
 const actions = {
-  setCustomers: (dispatch: Dispatch<any>, customers: Customer[]) => {
+  setCustomers: (dispatch: Dispatch<any>, customers: Client[]) => {
     dispatch({ type: 'SET_CUSTOMERS', payload: customers });
   },
 
@@ -18,11 +18,11 @@ const actions = {
     dispatch({ type: 'SET_LAST_PAGE', payload: lastPage });
   },
 
-  addCustomer: (dispatch: Dispatch<any>, customer: Customer) => {
+  addCustomer: (dispatch: Dispatch<any>, customer: Client) => {
     dispatch({ type: 'ADD_CUSTOMER', payload: customer });
   },
 
-  updateCustomer: (dispatch: Dispatch<any>, customer: Customer) => {
+  updateCustomer: (dispatch: Dispatch<any>, customer: Client) => {
     dispatch({ type: 'UPDATE_CUSTOMER', payload: customer });
   },
 

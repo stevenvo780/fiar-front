@@ -1,0 +1,72 @@
+[
+  {
+    "id": "0fa42e9d-1e6d-4241-839f-cdda7eb7e74e",
+    "user_id": "161e0606-c0fe-4d0f-8011-3bb1b8441743",
+    "commerce_name": "Larsen and Sons",
+    "phone": "4998877549344",
+    "created_at": "2023-06-09T23:25:13"
+  },
+  {
+    "id": "891cd5f7-0411-4677-973b-b4adc0e97dd4",
+    "user_id": "12694f89-877a-414b-8fa8-322552a0222d",
+    "commerce_name": "Sanders-Esparza",
+    "phone": "2248128771827",
+    "created_at": "2024-03-22T09:57:30"
+  },
+  {
+    "id": "5f13263a-d9ef-4491-bb24-b61763705281",
+    "user_id": "3f5364fe-dc79-45ae-9947-5d5a58cdbd94",
+    "commerce_name": "Jones-Thomas",
+    "phone": "5771250224254",
+    "created_at": "2023-10-15T10:26:31"
+  },
+  {
+    "id": "3e1f0627-13e9-45c7-bfe8-ac3d25ee3d8c",
+    "user_id": "4f60855a-ac18-45f7-a8f0-52b58a629d93",
+    "commerce_name": "Landry, Perry and Lopez",
+    "phone": "0846082219881",
+    "created_at": "2024-03-07T13:22:27"
+  },
+  {
+    "id": "00f0f5e4-e6bd-42b9-9621-ab1d6cb8650f",
+    "user_id": "f5a5da89-d0e1-40a9-9701-588dea2f7875",
+    "commerce_name": "Russo and Sons",
+    "phone": "7605543624138",
+    "created_at": "2023-12-12T19:59:11"
+  },
+  {
+    "id": "6ab3c3ec-3269-46eb-94d5-9eb0f7f7fb37",
+    "user_id": "cfd403e8-b1e4-454b-b38e-cb63b325f626",
+    "commerce_name": "Peters PLC",
+    "phone": "6198541587108",
+    "created_at": "2023-08-24T10:15:25"
+  },
+  {
+    "id": "9c602b26-eebe-4e61-b30a-b2103fb08f2b",
+    "user_id": "4a10e2e1-8132-4501-9756-6e03cebc3e36",
+    "commerce_name": "Delgado, Colon and Parsons",
+    "phone": "5121963460984",
+    "created_at": "2023-09-28T15:46:59"
+  },
+  {
+    "id": "5b8d514e-569f-4e94-ab2e-fb00063c1de1",
+    "user_id": "198062cc-b197-4ec7-bd41-cc5c080057d7",
+    "commerce_name": "King PLC",
+    "phone": "8285606843053",
+    "created_at": "2023-07-28T07:54:33"
+  },
+  {
+    "id": "d4e629d4-7a9d-4e3d-93d6-99fedf770533",
+    "user_id": "e171acab-3b70-4b0d-8f6c-78e9d5b7767a",
+    "commerce_name": "Blackwell, Smith and Scott",
+    "phone": "9072020300384",
+    "created_at": "2023-06-27T01:30:39"
+  },
+  {
+    "id": "dc1cb777-ff0d-424c-ac82-51a060eface4",
+    "user_id": "f822f230-4159-4d20-90ce-6ed4052c7447",
+    "commerce_name": "Aguilar, Murray and Hill",
+    "phone": "6691393345949",
+    "created_at": "2024-02-09T19:15:54"
+  }
+]

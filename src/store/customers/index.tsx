@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../rootReducer';
-import { Customer } from '@utils/types';
+import { Client } from '@utils/types';
 import customerActions from './actions';
 import api from '../../api';
 import useUI from '../ui';
@@ -8,6 +8,7 @@ import * as XLSX from "xlsx/xlsx";
 import { convertKeysToEnglish, convertKeysToSpanish } from '@utils/conversions';
 import { ref, uploadString } from 'firebase/storage';
 import { storage } from '@utils/firebase.config';
+import ClientJson from '@api/json/clients_numeric_id.json';
 
 const useCustomer = () => {
   const { customers, labels, totalPages, page, lastPage } = useSelector((state: RootState) => state.customers);
@@ -17,11 +18,16 @@ const useCustomer = () => {
   const fetchCustomers = async (page: number = 1, limit: number = 50, search: string = '') => {
     setLoading(true);
     try {
-      const response = await api.customers.getCustomersAPI(page, limit, search);
-      customerActions.setCustomers(dispatch, response.data.data);
-      customerActions.setTotalPages(dispatch, response.data.total);
-      customerActions.setPage(dispatch, response.data.page);
-      customerActions.setLastPage(dispatch, response.data.last_page);
+      // const response = await api.customers.getCustomersAPI(page, limit, search);
+      //customerActions.setCustomers(dispatch, response.data.data);
+      //customerActions.setTotalPages(dispatch, response.data.total);
+      //customerActions.setPage(dispatch, response.data.page);
+      // customerActions.setLastPage(dispatch, response.data.last_page);
+      const response = ClientJson as Client[];
+      customerActions.setCustomers(dispatch, response);
+      customerActions.setTotalPages(dispatch, 1);
+      customerActions.setPage(dispatch, 1);
+      customerActions.setLastPage(dispatch, 1);
     } catch (error) {
       console.error(`Error: ${error}`);
       addAlert({ type: 'danger', message: 'Ocurrió un error, consulta a soporte' });
@@ -30,7 +36,7 @@ const useCustomer = () => {
     }
   };
 
-  const createCustomer = async (customer: Customer) => {
+  const createCustomer = async (customer: Client) => {
     setLoading(true);
     try {
       const response = await api.customers.createCustomerAPI(customer);
@@ -44,7 +50,7 @@ const useCustomer = () => {
     }
   };
 
-  const updateCustomer = async (id: number, customer: Customer) => {
+  const updateCustomer = async (id: number, customer: Client) => {
     setLoading(true);
     try {
       const response = await api.customers.updateCustomerAPI(id, customer);
@@ -97,7 +103,7 @@ const useCustomer = () => {
         const ws = workbook.Sheets[wsname];
         const jsonData = XLSX.utils.sheet_to_json(ws);
 
-        const allData: Customer[] = jsonData.map((row: any) => {
+        const allData: Client[] = jsonData.map((row: any) => {
           const dataConvert = convertKeysToEnglish(row);
 
           const cleanNumber = (num: string) => {
@@ -115,8 +121,8 @@ const useCustomer = () => {
           }
 
           dataConvert['label'] = dataConvert['label'] ? dataConvert['label'].split(',').filter((item: string) => item.trim() !== '') : [];
-          return dataConvert as Customer;
-        }).filter((contact: Customer | null) => contact !== null);
+          return dataConvert as Client;
+        }).filter((contact: Client | null) => contact !== null);
 
         const uniqueFilename = `contacts_${Date.now()}.json`;
 

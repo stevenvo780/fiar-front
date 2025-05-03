@@ -1,13 +1,13 @@
 import { FC, ChangeEvent } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { Customer } from '@utils/types';
+import { Client } from '@utils/types';
 import CustomerForm from './CustomerForm';
 
 interface CustomerFormModalProps {
   show: boolean;
   onHide: () => void;
   isUpdating: boolean;
-  customer: Customer;
+  customer: Client;
   labels: { value: string, label: string }[];
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSelectChange: (event: any) => void;

@@ -1,17 +1,17 @@
 import axios from '@utils/axios';
 import { AxiosResponse } from 'axios';
-import { Customer } from '@utils/types';
+import { Client } from '@utils/types';
 
-export const getCustomersAPI = (page: number = 1, limit: number = 50, search: string = ''): Promise<AxiosResponse<{ data: Customer[], total: number, page: number, last_page: number }>> => {
+export const getCustomersAPI = (page: number = 1, limit: number = 50, search: string = ''): Promise<AxiosResponse<{ data: Client[], total: number, page: number, last_page: number }>> => {
   const url = search ? `/customers/search?page=${page}&limit=${limit}&search=${search}` : `/customers/user?page=${page}&limit=${limit}`;
   return axios.get(url);
 };
 
-export const createCustomerAPI = (customer: Customer): Promise<AxiosResponse<Customer>> => {
+export const createCustomerAPI = (customer: Client): Promise<AxiosResponse<Client>> => {
   return axios.post('/customers', customer);
 };
 
-export const updateCustomerAPI = (id: number, customer: Customer): Promise<AxiosResponse<Customer>> => {
+export const updateCustomerAPI = (id: number, customer: Client): Promise<AxiosResponse<Client>> => {
   return axios.put(`/customers/${id}`, customer);
 };
 

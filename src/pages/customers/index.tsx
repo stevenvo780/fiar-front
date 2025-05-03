@@ -4,7 +4,7 @@ import { withAuthSync } from '@utils/auth';
 import CustomerList from './CustomerList';
 import useCustomer from '@store/customers';
 import useUI from '@/store/ui';
-import { Customer } from '@utils/types';
+import { Client } from '@utils/types';
 import CustomerDetailModal from './CustomerDetailModal';
 import CustomerFormModal from './CustomerFormModal';
 import UploadModal from './UploadModal';
@@ -29,10 +29,10 @@ const Customers: FC = () => {
     downloadExcel
   } = useCustomer();
 
-  const [customer, setCustomer] = useState<Customer>({} as Customer);
+  const [customer, setCustomer] = useState<Client>({} as Client);
   const [isUpdating, setIsUpdating] = useState(false);
   const [showModalDetail, setShowModalDetail] = useState(false);
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Client | null>(null);
   const [showModalCreate, setShowModalCreate] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -67,7 +67,7 @@ const Customers: FC = () => {
   };
 
   const updateCustomerSelect = (id: number) => {
-    const selectedCustomer = customers.find((i: Customer) => i.id === id);
+    const selectedCustomer = customers.find((i: Client) => i.id === id);
     if (selectedCustomer) {
       setCustomer(selectedCustomer);
       setIsUpdating(true);
@@ -76,10 +76,10 @@ const Customers: FC = () => {
   };
 
   const resetForm = () => {
-    setCustomer({} as Customer);
+    setCustomer({} as Client);
   };
 
-  const handleShowModalDetail = (customer: Customer) => {
+  const handleShowModalDetail = (customer: Client) => {
     setSelectedCustomer(customer);
     setShowModalDetail(true);
   };
@@ -95,7 +95,7 @@ const Customers: FC = () => {
       const labelValue = event[index].value;
       labelsData.push(labelValue);
     }
-    setCustomer({ ...customer, ['label']: labelsData });
+    setCustomer(customer);
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -261,7 +261,7 @@ const Customers: FC = () => {
         handleSave={createOrUpdateCustomer}
         handleCancel={() => {
           setIsUpdating(false);
-          setCustomer({} as Customer);
+          setCustomer({} as Client);
           setShowModalCreate(false);
         }}
       />

@@ -20,7 +20,8 @@ const EditProfile: React.FC = () => {
       setFormData({
         email: user.email || '',
         name: user.name || '',
-        phone: user.phone || '',
+        phone:'' ,
+        
       });
     } else {
       if (token){

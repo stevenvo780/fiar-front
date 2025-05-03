@@ -2,74 +2,63 @@ export enum PaymentPeriodicity {
 	MONTHLY = 'MONTHLY',
 	ANNUAL = 'ANNUAL',
 }
-
-export interface Customer {
-  id?: number;
-  prefix?: number;
-  phone?: number;
-  lastContact?: string;
-  campaign?: string;
-  note?: string;
-  label?: string[];
-  companyName?: string;
-  firstName?: string;
-  lastName?: string;
-  title?: string;
-  data1?: string;
-  data2?: string;
-  data3?: string;
-  image?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface WppMS {
-  id?: number;
-  message: string;
-  file: string;
-  active: boolean;
-  order?: number;
-  labels?: string[];
-  user?: User;
-}
-
-export interface WhatsAppSession {
-  isConnected: boolean;
-  isValid: boolean;
-  qrUrl: string;
-  timestamp: number;
-}
-
-export enum UserRoleOptions {
-  NORMAL = 'NORMAL',
-  SPECIAL = 'SPECIAL',
-  FREE = 'FREE',
-}
-
 export interface User {
-  id: string;
+  id?: string;
+  created_at?: Date;
   email: string;
-  password: string;
+  update_at?: Date;
   name: string;
-  phone: string;
   role: UserRoleOptions;
-  confirmEmail: boolean;
-  robotStatus: RobotStatus;
 }
 
-export interface RobotStatus {
-  id: number;
-  isEnabled: boolean;
-  user: User;
+export interface Profile {
+  id?: string;
+  user_id?: string;
+  commerce_name?: string;
+  phone?: string | null;
+  created_at?: Date;
 }
 
-export interface RobotMetrics {
-  isEnabled: boolean;
-  failureRate: number;
-  messagesPerMinute: number;
-  messagesInPeriod: number;
-  messagesPerHour: { hour: string, count: number }[];
-  failedMessages: { hour: string, count: number }[];
+export interface Client {
+  id?: number;
+  owner_id?: string;
+  document?: string;
+  lastname?: string;
+  name?: string;
+  credit_limit?: number;
+  trusted?: boolean;
+  created_at?: string;
+  blocked?: boolean;
+  city?: string;
+  state?: string;
+  direction?: string;
+  phone?: string;
+  label?: string[];
+}
+
+export interface Transaction {
+  id?: string;
+  client_id?: string;
+  owner_id?: string;
+  amount?: number;
+  status?: 'pending' | 'approved' | 'rejected';
+  detail?: any;
+  created_at?: Date;
+  updated_at?: Date;
+  txn_hash?: string;
+}
+
+export interface BlockchainLog {
+  id?: string;
+  entity?: string;
+  entity_id?: string;
+  txn_hash?: string;
+  contract_address?: string;
+  network?: string;
+  block_number?: number;
+  signature?: string;
+  proof?: any;
+  created_at?: Date;
 }
 
 export interface Action {
@@ -104,28 +93,9 @@ export interface Plans {
   sm: string;
 }
 
-export interface MessageLog {
-  id: string;
-  recipientNumber: string;
-  sent: boolean;
-  reason: string;
-  createdAt: string;
-  updatedAt: string;
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    phone: string;
-    role: string;
-    confirmEmail: boolean | null;
-    createdAt: string;
-    updatedAt: string;
-  };
+export enum UserRoleOptions {
+  NORMAL = 'NORMAL',
+  SPECIAL = 'SPECIAL',
+  FREE = 'FREE',
 }
 
-export interface MessageLogsResponse {
-  data: MessageLog[];
-  total: number;
-  limit: number;
-  offset: number;
-}

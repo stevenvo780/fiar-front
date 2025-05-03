@@ -1,7 +1,7 @@
-import { Customer } from '@utils/types';
+import { Client } from '@utils/types';
 
 export interface CustomerState {
-  customers: Customer[];
+  customers: Client[];
   labels: { value: string, label: string }[];
   loading: boolean;
   alertMessage: string | null;
