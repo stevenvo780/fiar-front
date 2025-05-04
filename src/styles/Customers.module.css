@@ -1,6 +1,117 @@
-.paginationContainer {
+/* Customer.module.css */
+
+/* Filtros */
+.filters {
   display: flex;
-  justify-content: center;
-  margin-top: 20px;
+  gap: 10px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
+}
+
+/* Tarjeta de cliente */
+.customer-card {
+  height: 220px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Estado (título) */
+.status {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #06D6A0;
+  margin-bottom: 12px;
+}
+
+/* Filas de datos */
+.data-row {
+  display: flex;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+/* Etiqueta del dato */
+.data-label {
+  font-weight: 600;
+  color: #333;
+  width: 100px;
+}
+
+/* Valor del dato */
+.data-value {
+  color: #555;
+}
+
+/* Grupo de botones */
+.button-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 0;
+  flex-wrap: wrap;
+}
+
+/* Botones dentro del grupo */
+.button-group .btn {
+  flex: 1;
+  box-shadow: none;
+  min-width: 150px; /* Para que los botones se ajusten en pantallas pequeñas */
+}
+
+/* Botón "Ver" (con icono) */
+.btnView {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+}
+
+.btnView:hover,
+.btnView:focus {
+  background-color: #007bff;
+  box-shadow: none;
+}
+
+/* Botón "Actualizar" (con icono) */
+.btnUpdate {
+  background-color: #FFD700;
+  color: #333;
+  border: none;
+}
+
+.btnUpdate:hover,
+.btnUpdate:focus {
+  background-color: #FFD700;
+  box-shadow: none;
+}
+
+/* Botón "Eliminar" (con icono) */
+.btnDelete {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+}
+
+.btnDelete:hover,
+.btnDelete:focus {
+  background-color: #dc3545;
+  box-shadow: none;
+}
+
+/* Hacer que las tarjetas se ajusten en pantallas pequeñas */
+@media (max-width: 768px) {
+  .customer-card {
+    height: auto;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .button-group .btn {
+    min-width: 100%; /* Los botones ocupan todo el ancho en pantallas pequeñas */
+  }
 }

@@ -9,7 +9,13 @@ interface UploadModalProps {
   downloadTemplate: () => void;
 }
 
-const UploadModal: FC<UploadModalProps> = ({ show, onHide, handleFileChange, handleUpload, downloadTemplate }) => {
+const UploadModal: FC<UploadModalProps> = ({
+  show,
+  onHide,
+  handleFileChange,
+  handleUpload,
+  downloadTemplate,
+}) => {
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>
@@ -21,7 +27,7 @@ const UploadModal: FC<UploadModalProps> = ({ show, onHide, handleFileChange, han
             <Form.Label>Sube el formato de clientes para cargar los datos</Form.Label>
             <Form.Control type="file" onChange={handleFileChange} />
           </Form.Group>
-          <Button variant="info" onClick={downloadTemplate}>
+          <Button variant="primary" onClick={downloadTemplate}>
             Descargar Formato
           </Button>
         </Form>
@@ -39,3 +45,4 @@ const UploadModal: FC<UploadModalProps> = ({ show, onHide, handleFileChange, han
 };
 
 export default UploadModal;
+  

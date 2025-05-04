@@ -13,17 +13,7 @@ interface CustomerFormProps {
 const CustomerForm: FC<CustomerFormProps> = ({ customer, labels, handleInputChange, handleSelectChange }) => {
   return (
     <Row>
-      <Col style={{ marginTop: 10 }} sm="4">
-        <Select
-          placeholder="Etiquetas*"
-          isMulti
-          instanceId="labels"
-          name="label"
-          onChange={handleSelectChange}
-          options={labels}
-          value={customer.label ? customer.label.map(label => ({ value: label, label: label })) : []}
-        />
-      </Col>
+
       <Col style={{ marginTop: 10 }} sm="4">
         <Form.Control
           type="text"

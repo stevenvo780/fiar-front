@@ -7,7 +7,7 @@ const IndexPage: React.FC = () => {
   const router = useRouter();
   useEffect(() => {
     if (token) {
-      router.replace('/messages');
+      router.replace('/Home');
     } else {
       router.replace('/login');
     }

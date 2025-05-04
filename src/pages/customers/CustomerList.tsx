@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button, Card, Dropdown } from 'react-bootstrap';
 import { Client } from '@utils/types';
+import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa'; // Agrega los iconos
+import styles from '@styles/Customers.module.css';
 
-// Define the props type for the component
 interface CustomerListProps {
   customers: Client[];
   handleShowModal: (customer: Client) => void;
@@ -15,62 +16,78 @@ const CustomerList: FC<CustomerListProps> = ({
   handleShowModal,
   updateCustomerSelect,
   deleteCustomer,
-}) => {
-  return (
+}) => (
+  <>
+    {/* Filtros */}
+    <div className={styles.filters}>
+      <Dropdown>
+        <Dropdown.Toggle variant="success" id="estado-de-cuenta">
+          Estado de cuenta
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          <Dropdown.Item>En deuda</Dropdown.Item>
+          <Dropdown.Item>Al día</Dropdown.Item>
+          <Dropdown.Item>Suspendidos</Dropdown.Item>
+          <Dropdown.Item>Todos</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+      <Dropdown>
+        <Dropdown.Toggle variant="success" id="deudas-pendientes">
+          Deudas pendientes
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          <Dropdown.Item>Deuda (mayor → menor)</Dropdown.Item>
+          <Dropdown.Item>Deuda (menor → mayor)</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    </div>
+
+    {/* Lista de clientes */}
     <Row>
-      {customers.map((customer: Client, key) => (
-        <Col sm="4" key={key} style={{ marginBottom: 20 }}>
-          <div className="card">
-            <div className="card-body">
-              <Row>
-                <Col xs="4" sm="4">
-                  <p>
-                    {customer.label &&
-                      customer.label.map((label: string, key) => (
-                        <span key={key}>{label}{" "}</span>
-                      ))}
-                  </p>
-                </Col>
-                <Col xs="4" sm="4">
-                  <p className="card-text">{customer.name}</p>
-                </Col>
-                <Col xs="4" sm="4">
-                  <p className="card-text">{customer.phone}</p>
-                </Col>
-                <Col sm="12">
-                  <Button
-                    style={{ marginRight: 10 }}
-                    variant="warning"
-                    onClick={() => handleShowModal(customer)}
-                    className="btn btn-secondary"
-                  >
-                    Ver
-                  </Button>
-                  <Button
-                    style={{ marginRight: 10 }}
-                    variant="secondary"
-                    onClick={() => updateCustomerSelect(customer.id ?? 0)}
-                    className="btn btn-secondary"
-                  >
-                    Actualizar
-                  </Button>
-                  <Button
-                    style={{ marginRight: 10 }}
-                    variant="secondary"
-                    onClick={() => deleteCustomer(customer.id ?? 0)}
-                    className="btn btn-secondary"
-                  >
-                    Eliminar
-                  </Button>
-                </Col>
-              </Row>
-            </div>
-          </div>
+      {customers.map((customer, idx) => (
+        <Col key={idx} xs={12} md={4} lg={3} className="mb-3">
+          <Card className={styles['customer-card']}>
+            <Card.Body className="d-flex flex-column justify-content-between h-100">
+              
+              <div className={styles['data-row']}>
+                <span className={styles['data-label']}>Nombre:</span>
+                <span className={styles['data-value']}>{customer.name}</span>
+              </div>
+              <div className={styles['data-row']}>
+                <span className={styles['data-label']}>Cédula:</span>
+                <span className={styles['data-value']}>{customer.document}</span>
+              </div>
+              <div className={styles['data-row']}>
+                <span className={styles['data-label']}>Cupo:</span>
+                <span className={styles['data-value']}>${customer.credit_limit}</span>
+              </div>
+
+              <div className={`${styles['button-group']} mt-0`}>
+                <Button
+                  className={styles.btnView}
+                  onClick={() => handleShowModal(customer)}
+                >
+                  <FaEye style={{ marginRight: '5px' }} /> Ver
+                </Button>
+                <Button
+                  className={styles.btnUpdate}
+                  onClick={() => updateCustomerSelect(customer.id ?? 0)}
+                >
+                  <FaEdit style={{ marginRight: '5px' }} /> Actualizar
+                </Button>
+                <Button
+                  className={styles.btnDelete}
+                  onClick={() => deleteCustomer(customer.id ?? 0)}
+                >
+                  <FaTrashAlt style={{ marginRight: '5px' }} /> Eliminar
+                </Button>
+              </div>
+            </Card.Body>
+          </Card>
         </Col>
       ))}
     </Row>
-  );
-};
+  </>
+);
 
 export default CustomerList;
-

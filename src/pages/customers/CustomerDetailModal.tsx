@@ -27,7 +27,6 @@ const CustomerDetailModal: FC<CustomerDetailModalProps> = ({ show, onHide, custo
             <p>Límite de crédito: {customer.credit_limit}</p>
             <p>Confiable: {customer.trusted ? 'Sí' : 'No'}</p>
             <p>Bloqueado: {customer.blocked ? 'Sí' : 'No'}</p>
-            <p>Etiquetas: {customer.label?.join(', ')}</p>
             <p>Creado en: {customer.created_at}</p>
           </div>
         )}
