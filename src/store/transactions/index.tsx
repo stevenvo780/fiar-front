@@ -9,6 +9,7 @@ const useTransactions = () => {
   const dispatch = useDispatch();
 
   const fetchTransactions = async (pageParam: number = 1, limit: number = 50, search: string = '') => {
+    if (loading) return;  // Evita que se dispare si ya está cargando
     transactionActions.setLoading(dispatch, true);
     try {
       const response = await api.transactions.getTransactionsAPI(pageParam, limit, search);
@@ -25,6 +26,7 @@ const useTransactions = () => {
   };
 
   const addTransaction = async (transaction: Transaction) => {
+    if (loading) return;  // Evita que se dispare si ya está cargando
     transactionActions.setLoading(dispatch, true);
     try {
       const response = await api.transactions.addTransactionAPI(transaction);
@@ -38,6 +40,7 @@ const useTransactions = () => {
   };
 
   const updateTransaction = async (id: string, transaction: Transaction) => {
+    if (loading) return;  // Evita que se dispare si ya está cargando
     transactionActions.setLoading(dispatch, true);
     try {
       const response = await api.transactions.updateTransactionAPI(id, transaction);
@@ -51,6 +54,7 @@ const useTransactions = () => {
   };
 
   const deleteTransaction = async (id: string) => {
+    if (loading) return;  // Evita que se dispare si ya está cargando
     transactionActions.setLoading(dispatch, true);
     try {
       await api.transactions.deleteTransactionAPI(id);
