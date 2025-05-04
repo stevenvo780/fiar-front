@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FC, useEffect } from 'react';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Dropdown, Navbar, Nav } from 'react-bootstrap';
 import { withAuthSync } from '@utils/auth';
 import CustomerList from './CustomerList';
 import useCustomer from '@store/customers';
@@ -24,7 +24,6 @@ const Customers: FC = () => {
     createCustomer,
     updateCustomer,
     deleteCustomer,
-    handleFileUpload,
     downloadTemplate,
     downloadExcel
   } = useCustomer();
@@ -34,8 +33,6 @@ const Customers: FC = () => {
   const [showModalDetail, setShowModalDetail] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<Client | null>(null);
   const [showModalCreate, setShowModalCreate] = useState(false);
-  const [showUploadModal, setShowUploadModal] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
   const [search, setSearch] = useState('');
   const [limit, setLimit] = useState(50);
 
@@ -98,28 +95,6 @@ const Customers: FC = () => {
     setCustomer(customer);
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
-  };
-
-  const handleUpload = async () => {
-    if (file) {
-      try {
-        setLoading(true);
-        await handleFileUpload(file, limit, search);
-        addAlert({ type: 'success', message: 'Contactos subidos correctamente' });
-        setShowUploadModal(false);
-      } catch (err) {
-        console.error('Error al subir contactos:', err);
-        addAlert({ type: 'danger', message: 'Error al subir contactos' });
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
   const handlePageChange = (current: number) => {
     fetchCustomers(current, limit, search);
   };
@@ -178,45 +153,65 @@ const Customers: FC = () => {
   return (
     <>
       <Container className={`container`}>
-        <Row>
-          <Col sm="2">
-            <h2>Clientes</h2>
-          </Col>
-          <Col sm="3">
-            <Form.Control
-              type="text"
-              placeholder="Buscar..."
-              value={search}
-              onChange={handleSearchChange}
-            />
-          </Col>
-          <Col>
-            <Button variant="warning" onClick={() => setShowUploadModal(true)}>
-              Cargar clientes
-            </Button>
-          </Col>
-          <Col>
-            <Button variant="secondary" onClick={handleDownloadExcel}>
-              Descargar Excel
-            </Button>
-          </Col>
-          <Col>
-            <Button variant="secondary" onClick={() => {
-              setIsUpdating(false);
-              resetForm();
-              setShowModalCreate(true);
-            }}>
-              Nuevo cliente
-            </Button>
-          </Col>
-          <Col sm="1">
-            <Form.Select value={limit} onChange={handleLimitChange}>
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-            </Form.Select>
-          </Col>
-        </Row>
+        <Navbar bg="light" expand="lg" className={`mb-3 ${styles.roundedNavbar}`}>
+          <Navbar.Brand>Clientes</Navbar.Brand>
+          <Navbar.Toggle aria-controls="navbar-customers" />
+          <Navbar.Collapse id="navbar-customers">
+            <Nav className="me-auto">
+              <Form.Control
+                type="text"
+                placeholder="Buscar..."
+                value={search}
+                onChange={handleSearchChange}
+                className="me-2"
+                style={{ width: '200px' }}
+              />
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setIsUpdating(false);
+                  resetForm();
+                  setShowModalCreate(true);
+                }}
+                className="me-2"
+              >
+                Nuevo cliente
+              </Button>
+              <Button variant="secondary" onClick={handleDownloadExcel} className="me-2">
+                Descargar Excel
+              </Button>
+              <Dropdown className="me-2">
+                <Dropdown.Toggle variant="success" id="estado-de-cuenta">
+                  Estado de cuenta
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item>En deuda</Dropdown.Item>
+                  <Dropdown.Item>Al día</Dropdown.Item>
+                  <Dropdown.Item>Suspendidos</Dropdown.Item>
+                  <Dropdown.Item>Todos</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              <Dropdown className="me-2">
+                <Dropdown.Toggle variant="success" id="deudas-pendientes">
+                  Deudas pendientes
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item>Deuda (mayor → menor)</Dropdown.Item>
+                  <Dropdown.Item>Deuda (menor → mayor)</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              <Form.Select
+                value={limit}
+                onChange={handleLimitChange}
+                style={{ width: '100px' }}
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+              </Form.Select>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
         <hr />
         <CustomerList
           customers={customers}
@@ -264,13 +259,6 @@ const Customers: FC = () => {
           setCustomer({} as Client);
           setShowModalCreate(false);
         }}
-      />
-      <UploadModal
-        show={showUploadModal}
-        onHide={() => setShowUploadModal(false)}
-        handleFileChange={handleFileChange}
-        handleUpload={handleUpload}
-        downloadTemplate={handleDownloadTemplate}
       />
     </>
   );

@@ -1,0 +1,98 @@
+/* Header.module.css */
+
+/* Estilo del navbar */
+.navbar {
+  background-color: #FFFFFF;  /* Fondo blanco */
+  padding: 15px 30px;
+  border-bottom: 1px solid #EAEAEA;  /* Borde sutil */
+  box-shadow: none;  /* Sin sombra */
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  margin-bottom: 20px; /* Agregar espacio entre el header y el contenido siguiente */
+}
+
+.navbar-toggler-icon {
+  background-color: #333;  /* Color oscuro para el ícono de la hamburguesa */
+}
+
+/* Estilo de la marca */
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  margin-right: 10px;
+}
+
+.brandName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1B3862;  /* Color azul */
+}
+
+/* Estilo de los elementos de navegación */
+.navItem {
+  margin-left: 20px;
+  font-size: 1rem;
+  color: #333;  /* Color oscuro para los enlaces */
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+  padding: 10px 0;
+}
+
+/* Efecto hover para los enlaces */
+.navItem:hover {
+  color: #1B3862;  /* Color azul al pasar el mouse */
+}
+
+.icon {
+  margin-right: 8px;
+}
+
+.iconUser {
+  font-size: 1.5rem;
+  color: #333;  /* Icono con color oscuro */
+}
+
+.userMenu {
+  background-color: #FFFFFF;
+  box-shadow: none;  /* Sin sombra para el dropdown */
+}
+
+.navbar-collapse {
+  justify-content: flex-end;
+}
+
+/* Estilos de los elementos de dropdown */
+.navDropdownItem {
+  padding: 10px 20px;
+  border: none;  /* Sin bordes en los items del dropdown */
+}
+
+.navDropdownItem:hover {
+  background-color: #f0f0f0;  /* Color suave al pasar el mouse */
+  color: #333;  /* Color oscuro */
+}
+
+/* Responsividad para móviles */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 20px 15px;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+  }
+
+  .navItem {
+    margin-left: 0;
+    margin-top: 15px;
+    font-size: 1.1rem;
+  }
+
+  .iconUser {
+    font-size: 1.5rem;
+  }
+}

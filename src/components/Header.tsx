@@ -2,30 +2,24 @@ import React, { useEffect } from 'react';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { FaUser, FaEnvelope, FaEdit, FaSignOutAlt, FaRobot, FaCommentDots, FaUsers, FaShoppingCart, FaPhone } from 'react-icons/fa';
-import logo from '../../public/img/logo_general.png';
-import 'bootstrap-icons/font/bootstrap-icons.css';
+import { FaUser, FaEnvelope, FaEdit, FaSignOutAlt, FaCommentDots, FaUsers, FaShoppingCart, FaPhone,FaHome} from 'react-icons/fa';
+import logo from '../../public/img/icon.png';
 import useUser from '@store/user';
-
+import styles from '@styles/Header.module.css'; 
+import { FaMoneyBillTransfer } from "react-icons/fa6";
 
 const Header = () => {
   const router = useRouter();
   const { fetchUser, user, logout, token } = useUser();
 
-
   useEffect(() => {
     if (!user && token) {
       fetchUser();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, token]);
 
   const handleLogout = () => {
     logout();
-  };
-
-  const handleRobotClick = () => {
-    router.push('/robot');
   };
 
   const handleEditProfile = () => {
@@ -33,41 +27,39 @@ const Header = () => {
   };
 
   return (
-    <>
-      <Navbar expand="lg" style={{ padding: '5px' }} variant="light">
-        <Navbar.Brand href="https://www.humanizar.co/" target='_blank'>
-          <p style={{ margin: 10 }}>
-            <Image
-              src={logo} 
-              alt="Icono" 
-              width={50} 
-              height={50} 
-              style={{ marginRight: 10 }}
-              fetchPriority='high'
-            />{' fiar'} - {" " + (user ? user.name : '')}
-          </p>
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-          <Nav className="ml-auto">
-            <Nav.Link href="/whatsapp-sessions"><FaPhone style={{ marginRight: '5px' }} />WPP</Nav.Link>
-            <Nav.Link href="/messages"><FaCommentDots style={{ marginRight: '5px' }} />Mensajes</Nav.Link>
-            <Nav.Link href="/customers"><FaUsers style={{ marginRight: '5px' }} />Clientes</Nav.Link>
-            <Nav.Link href="/plans"><FaShoppingCart style={{ marginRight: '5px' }} />Planes</Nav.Link>
-            <NavDropdown
-              title={<FaUser style={{ fontSize: '1.3rem' }} />}
-              id="user-menu"
-              align={{ lg: 'end' }}
-              drop="down"
-            >
-              <NavDropdown.Item href="/contact"><FaEnvelope style={{ marginRight: '5px' }} />Contáctanos</NavDropdown.Item>
-              <NavDropdown.Item onClick={handleEditProfile}><FaEdit style={{ marginRight: '5px' }} />Editar perfil</NavDropdown.Item>
-              <NavDropdown.Item onClick={handleLogout}><FaSignOutAlt style={{ marginRight: '5px' }} />Cerrar sesión</NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
-    </>
+    <Navbar expand="lg" className={styles.navbar}>
+      <Navbar.Brand href="/home" className={styles.brand}>
+        <Image
+          src={logo}
+          alt="Logo"
+          width={50}
+          height={50}
+          className={styles.logo}
+          fetchPriority="high"
+        />
+        
+      </Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+        <Nav className="ml-auto">
+          <Nav.Link href="/home" className={styles.navItem}><FaHome className={styles.icon} /> Inicio</Nav.Link>
+          <Nav.Link href="/transacciones" className={styles.navItem}><FaMoneyBillTransfer className={styles.icon} /> transacciones </Nav.Link>
+          <Nav.Link href="/customers" className={styles.navItem}><FaUsers className={styles.icon} /> Clientes</Nav.Link>
+          <Nav.Link href="/plans" className={styles.navItem}><FaShoppingCart className={styles.icon} /> Planes</Nav.Link>
+          <NavDropdown
+            title={<FaUser className={styles.iconUser} />}
+            id="user-menu"
+            align={{ lg: 'end' }}
+            drop="down"
+            className={styles.userMenu}
+          >
+            <NavDropdown.Item href="/contact"><FaEnvelope className={styles.icon} /> Contáctanos</NavDropdown.Item>
+            <NavDropdown.Item onClick={handleEditProfile}><FaEdit className={styles.icon} /> Editar perfil</NavDropdown.Item>
+            <NavDropdown.Item onClick={handleLogout}><FaSignOutAlt className={styles.icon} /> Cerrar sesión</NavDropdown.Item>
+          </NavDropdown>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
   );
 };
 

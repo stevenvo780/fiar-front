@@ -18,7 +18,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     if (!token && router.pathname !== '/login') {
       router.push('/login');
     } else if (token && router.pathname === '/login') {
-      router.push('/messages');
+      router.push('/home');
     }
   }, [token, router]);
 

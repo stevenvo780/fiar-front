@@ -34,6 +34,8 @@ export interface Client {
   direction?: string;
   phone?: string;
   label?: string[];
+  transactions?: Transaction[];
+  
 }
 
 export interface Transaction {
