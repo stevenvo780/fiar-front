@@ -17,13 +17,15 @@ interface Transaction extends TransactionBase {
 interface TransactionListProps {
   transactions: Transaction[];
   handleShowModal: (transaction: Transaction) => void;
-  updateTransactionSelect: (id: number) => void;
+  updateTransactionSelect: (id: string) => void;
+  onStatusChange: (id: string, status: 'pending' | 'approved' | 'rejected') => Promise<void>;
 }
 
 const TransactionList: FC<TransactionListProps> = ({
   transactions,
   handleShowModal,
   updateTransactionSelect,
+  onStatusChange,
 }) => {
   // Sincroniza el estado local si cambian las transacciones del prop
   const [localTransactions, setLocalTransactions] = useState<Transaction[]>(transactions);
@@ -40,29 +42,39 @@ const TransactionList: FC<TransactionListProps> = ({
     amount.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 });
 
   // Devuelve un badge de estado con color
-  const StatusBadge = ({ status }: { status: string }) => (
-    <Badge pill bg={status === 'aprobado' ? 'success' : 'danger'}>
-      {status === 'aprobado' ? (
+  const StatusBadge = ({ status }: { status: 'pending' | 'approved' | 'rejected' }) => (
+    <Badge pill bg={
+      status === 'approved' ? 'success'
+      : status === 'rejected' ? 'danger'
+      : 'warning'
+    }>
+      {status === 'approved' ? (
         <>
           <FaCheckCircle style={{ marginRight: 4 }} />
           Aprobado
         </>
-      ) : (
+      ) : status === 'rejected' ? (
         <>
           <FaTimesCircle style={{ marginRight: 4 }} />
-          No aprobado
+          Rechazado
+        </>
+      ) : (
+        <>
+          <FaInfoCircle style={{ marginRight: 4 }} />
+          Pendiente
         </>
       )}
     </Badge>
   );
 
   // Actualiza el estado de una transacción localmente
-  const handleStatusChange = (id: Transaction['id'], status: 'aprobado' | 'no_aprobado') => {
+  const handleStatusChange = async (id: Transaction['id'], status: 'pending' | 'approved' | 'rejected') => {
     setLocalTransactions(prev =>
       prev.map(tx =>
         tx.id === id ? { ...tx, status } : tx
       )
     );
+    await onStatusChange(id, status);
   };
 
   // Abre el modal y selecciona la transacción
@@ -129,28 +141,42 @@ const TransactionList: FC<TransactionListProps> = ({
                     <Col xs={7}>
                       <Dropdown>
                         <Dropdown.Toggle
-                          variant={transaction.status === 'aprobado' ? 'success' : 'danger'}
+                          variant={
+                            transaction.status === 'approved' ? 'success'
+                            : transaction.status === 'rejected' ? 'danger'
+                            : 'warning'
+                          }
                           id={`dropdown-status-${transaction.id}`}
                           size="sm"
                           className="w-100"
                           style={{ borderRadius: 8 }}
                         >
-                          {transaction.status === 'aprobado' ? 'Aprobado' : 'No aprobado'}
+                          {transaction.status === 'approved' ? 'Aprobado'
+                            : transaction.status === 'rejected' ? 'Rechazado'
+                            : 'Pendiente'
+                          }
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                           <Dropdown.Item
-                            active={transaction.status === 'aprobado'}
-                            onClick={() => handleStatusChange(transaction.id, 'aprobado')}
+                            active={transaction.status === 'approved'}
+                            onClick={() => handleStatusChange(transaction.id, 'approved')}
                           >
                             <FaCheckCircle style={{ color: '#198754', marginRight: 6 }} />
                             Aprobado
                           </Dropdown.Item>
                           <Dropdown.Item
-                            active={transaction.status !== 'aprobado'}
-                            onClick={() => handleStatusChange(transaction.id, 'no_aprobado')}
+                            active={transaction.status === 'pending'}
+                            onClick={() => handleStatusChange(transaction.id, 'pending')}
+                          >
+                            <FaInfoCircle style={{ color: '#ffc107', marginRight: 6 }} />
+                            Pendiente
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            active={transaction.status === 'rejected'}
+                            onClick={() => handleStatusChange(transaction.id, 'rejected')}
                           >
                             <FaTimesCircle style={{ color: '#dc3545', marginRight: 6 }} />
-                            No aprobado
+                            Rechazado
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
@@ -174,7 +200,6 @@ const TransactionList: FC<TransactionListProps> = ({
                           onClick={() => handleShowHistory(transaction)}
                         >
                           <FaInfoCircle style={{ marginRight: 4, color: '#fff' }} />
-                          Ver más
                         </button>
                       </OverlayTrigger>
                     </Col>

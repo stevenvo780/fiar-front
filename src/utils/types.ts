@@ -39,15 +39,15 @@ export interface Client {
 }
 
 export interface Transaction {
-  id?: string;
-  client_id?: string;
-  owner_id?: string;
-  amount?: number;
-  status?: 'pending' | 'approved' | 'rejected';
-  detail?: any;
-  created_at?: Date;
-  updated_at?: Date;
-  txn_hash?: string;
+  id: string;
+  client_id: string;
+  owner_id: string;
+  amount: number;
+  status: 'pending' | 'approved' | 'rejected';
+  detail: any;
+  created_at: Date;
+  updated_at: Date;
+  txn_hash: string;
 }
 
 export interface BlockchainLog {

@@ -3,56 +3,58 @@ import { RootState } from '../rootReducer';
 import { Transaction } from '@utils/types';
 import transactionActions from './actions';
 import api from '../../api';
+import { useCallback } from 'react';
 
 const useTransactions = () => {
-  const { transactions, loading, error, total, page, lastPage } = useSelector((state: RootState) => state.transactions);
+  const { transactions, error, total, page, lastPage } = useSelector((state: RootState) => state.transactions);
   const dispatch = useDispatch();
 
-  const fetchTransactions = async (
-    pageParam: number = 1,
-    limitParam: number = 50,
-    clientSearch: string = '',
-    orderFilter: 'reciente' | 'antiguo' = 'reciente',
-    statusFilter: 'todos' | 'aprobado' | 'no_aprobado' = 'todos',
-    minAmount?: number,
-    maxAmount?: number,
-    startDate?: string,
-    endDate?: string
-  ) => {
-    if (loading) return;
-    transactionActions.setLoading(dispatch, true);
-    try {
-      // mapear valores UI → API
-      const apiOrder = orderFilter === 'antiguo' ? 'asc' : 'desc';
-      let apiStatus: string | undefined;
-      if (statusFilter === 'aprobado') apiStatus = 'approved';
-      else if (statusFilter === 'no_aprobado') apiStatus = 'rejected';
-      // llamar al endpoint con todos los filtros
-      const response = await api.transactions.getTransactionsAPI(
-        pageParam,
-        limitParam,
-        clientSearch,
-        apiOrder,
-        apiStatus,
-        minAmount,
-        maxAmount,
-        startDate,
-        endDate
-      );
-      transactionActions.setTransactions(dispatch, response.data.data);
-      transactionActions.setTotal(dispatch, response.data.total);
-      transactionActions.setPage(dispatch, response.data.page);
-      transactionActions.setLastPage(dispatch, response.data.last_page);
-      transactionActions.setError(dispatch, null);
-    } catch (err: any) {
-      transactionActions.setError(dispatch, err.message || 'Error al obtener transacciones');
-    } finally {
-      transactionActions.setLoading(dispatch, false);
-    }
-  };
+  const fetchTransactions = useCallback(
+    async (
+      pageParam: number = 1,
+      limitParam: number = 50,
+      clientSearch: string = '',
+      orderFilter: 'reciente' | 'antiguo' = 'reciente',
+      statusFilter: 'todos' | 'aprobado' | 'no_aprobado' = 'todos',
+      minAmount?: number,
+      maxAmount?: number,
+      startDate?: string,
+      endDate?: string
+    ) => {
+      transactionActions.setLoading(dispatch, true);
+      try {
+        console.log('Fetching transactions with filters:');
+        const apiOrder = orderFilter === 'antiguo' ? 'asc' : 'desc';
+        let apiStatus: string | undefined;
+        if (statusFilter === 'aprobado') apiStatus = 'approved';
+        else if (statusFilter === 'no_aprobado') apiStatus = 'rejected';
+        const response = await api.transactions.getTransactionsAPI(
+          pageParam,
+          limitParam,
+          clientSearch,
+          apiOrder,
+          apiStatus,
+          minAmount,
+          maxAmount,
+          startDate,
+          endDate
+        );
+        console.log(response);
+        transactionActions.setTransactions(dispatch, response.data.data);
+        transactionActions.setTotal(dispatch, response.data.total);
+        transactionActions.setPage(dispatch, response.data.page);
+        transactionActions.setLastPage(dispatch, response.data.last_page);
+        transactionActions.setError(dispatch, null);
+      } catch (err: any) {
+        transactionActions.setError(dispatch, err.message || 'Error al obtener transacciones');
+      } finally {
+        transactionActions.setLoading(dispatch, false);
+      }
+    },
+    [dispatch]
+  );
 
   const addTransaction = async (transaction: Transaction) => {
-    if (loading) return;  // Evita que se dispare si ya está cargando
     transactionActions.setLoading(dispatch, true);
     try {
       const response = await api.transactions.addTransactionAPI(transaction);
@@ -66,7 +68,6 @@ const useTransactions = () => {
   };
 
   const updateTransaction = async (id: string, transaction: Transaction) => {
-    if (loading) return;  // Evita que se dispare si ya está cargando
     transactionActions.setLoading(dispatch, true);
     try {
       const response = await api.transactions.updateTransactionAPI(id, transaction);
@@ -80,7 +81,6 @@ const useTransactions = () => {
   };
 
   const deleteTransaction = async (id: string) => {
-    if (loading) return;  // Evita que se dispare si ya está cargando
     transactionActions.setLoading(dispatch, true);
     try {
       await api.transactions.deleteTransactionAPI(id);
@@ -99,7 +99,6 @@ const useTransactions = () => {
 
   return {
     transactions,
-    loading,
     error,
     total,
     page,
