@@ -21,7 +21,7 @@ const ClientList: FC<ClientListProps> = ({
       {client?.map((client, idx) => (
         <Col key={idx} xs={12} md={4} lg={3} className="mb-3">
           <Card className={styles['client-card']}>
-            <Card.Body className="d-flex flex-column justify-content-between h-100">
+            <Card.Body className="d-flex flex-column justify-content-between h-110">
               
               <div className={styles['data-row']}>
                 <span className={styles['data-label']}>Nombre:</span>
@@ -40,7 +40,7 @@ const ClientList: FC<ClientListProps> = ({
                 <span className={styles['data-value']}>${client.available_quota}</span>
               </div>
 
-              <div className={`${styles['button-group']} mt-0`}>
+              <div className={`${styles['button-group']} mt-1 d-flex justify-content-between`}>
                 <Button
                   className={styles.btnView}
                   onClick={() => handleShowModal(client)}
