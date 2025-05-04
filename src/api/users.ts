@@ -1,15 +1,14 @@
 import axios from '@utils/axios';
-import { AxiosResponse } from 'axios';
 import { User } from '@utils/types';
 
-export const getUser = (): Promise<AxiosResponse<User>> => {
+export const getUser = () => {
   return axios.get('/user');
 };
 
-export const updateUserProfile = (userData: any): Promise<AxiosResponse<any>> => {
-  return axios.patch(`/user`, userData);
+export const updateUserProfile = (userData: any) => {
+  return axios.patch(`/user/me`, userData);
 };
 
-export const register = (userData: any): Promise<AxiosResponse<any>> => {
+export const register = (userData: any) => {
   return axios.post('/register', userData);
 };
