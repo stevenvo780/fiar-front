@@ -1,162 +1,114 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Alert, Card } from 'react-bootstrap';
-import { withAuthSync } from '@utils/auth';
-import PaymentForm from '@components/payment/PaymentForm';
-import axios from '@utils/axios';
-import useUser from '@store/user';
-import { UserRoleOptions } from '@utils/types';
-
-interface SubscriptionExpiry {
-  nextRenewalAt: string | null;
-  message: string;
-}
+import React from "react";
+import { Container, Row, Col, Card, Button, Badge } from 'react-bootstrap';
+import { FaHandshake, FaStore, FaLock, FaUsers, FaChartLine, FaShieldAlt, FaRocket, FaCreditCard } from 'react-icons/fa';
+import { FaPlayCircle } from 'react-icons/fa'; // Nuevo ícono para el CTA
 
 const PlansPage: React.FC = () => {
-  const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionExpiry | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const { user } = useUser(); // Obtenemos la información del usuario
-
-  useEffect(() => {
-    const fetchSubscriptionExpiry = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get('/subscription/expiry');
-        setSubscriptionInfo(response.data);
-        setError(null);
-      } catch (err) {
-        setError('No se pudo cargar la información de tu suscripción');
-        console.error('Error al consultar la expiración de la suscripción:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSubscriptionExpiry();
-  }, []);
-
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    };
-    return new Date(dateString).toLocaleDateString('es-ES', options);
-  };
-
-  // Función para determinar el estado de la suscripción
-  const getSubscriptionStatus = (): 'active-renewable' | 'active-canceled' | 'none' => {
-    if (!subscriptionInfo || !subscriptionInfo.nextRenewalAt) {
-      return 'none';
-    }
-    
-    if (user?.role === UserRoleOptions.SPECIAL) {
-      return 'active-renewable';
-    } else {
-      return 'active-canceled';
-    }
-  };
-
-  const subscriptionStatus = getSubscriptionStatus();
-  const hasActiveSubscription = subscriptionStatus === 'active-renewable' || subscriptionStatus === 'active-canceled';
-
   return (
     <Container className="py-5">
-      <div className="text-center mb-5">
-        <h1 className="display-4 fw-bold">Plan Premium</h1>
-        <p className="lead text-muted">
-          Potencia tu negocio con nuestro plan exclusivo
+      {/* Hero/Promo Section */}
+      <div
+        className="text-center mb-5 p-4 mx-auto"
+        style={{
+          background: 'linear-gradient(90deg, #e6f9f7 0%, #f8fffc 100%)',
+          borderRadius: 24,
+          border: '2px solid #0a827f22',
+          boxShadow: '0 4px 32px 0 #0a827f22',
+          maxWidth: 700
+        }}
+      >
+        <h1 className="display-4 fw-bold text-success mb-3">Moderniza tu negocio con nuestro sistema</h1>
+        <p className="lead text-muted mb-4">
+          Gestiona créditos sin interés, fideliza clientes y haz crecer tu comercio con tecnología segura y fácil de usar.
         </p>
-        <hr className="my-4" style={{ width: '50%', margin: '0 auto', borderColor: '#0a827f' }} />
+        <Button
+          variant="success"
+          size="lg"
+          className="mt-2 px-4 py-3 fw-bold d-flex align-items-center mx-auto"
+          style={{ fontSize: 22, boxShadow: '0 2px 16px 0 #0a827f33' }}
+          onClick={() => window.open('https://www.humanizar.co/', '_blank')}
+        >
+          <FaPlayCircle className="me-2" size={28} />
+          Solicita una Demo
+        </Button>
+        <hr className="my-4" style={{ width: '50%', margin: '2rem auto 0 auto', borderColor: '#0a827f' }} />
       </div>
 
-      <Row className="justify-content-center">
-        <Col lg={10}>
-          <PaymentForm 
-            planTitle="Plan Especial"
-            planPrice="88.000"
-            onPaymentSuccess={() => console.log('Pago exitoso')}
-            onPaymentError={(error) => console.error('Error en el pago:', error)}
-            onCancelSubscription={() => console.log('Suscripción cancelada')}
-          />
+      {/* Sección de Planes */}
+      <div className="text-center mb-4">
+        <Badge bg="success" className="mb-2">Planes</Badge>
+        <h2 className="display-6 fw-bold">Elige el plan que mejor se adapte a tu negocio</h2>
+      </div>
+      <Row className="justify-content-center mb-5">
+        <Col md={4} className="mb-4">
+          <Card className="h-100 border-0 shadow-lg text-center" style={{ transition: 'transform 0.2s', minHeight: 480 }}>
+            <Card.Body className="d-flex flex-column align-items-center">
+              <Card.Title className="fw-bold fs-3 mb-3">Plan Mensual</Card.Title>
+              <div className="display-5 fw-bold text-success mb-2">$30.000</div>
+              <div className="text-muted mb-3">COP / mes</div>
+              <ul className="list-unstyled mb-4 text-start w-100" style={{ maxWidth: 250 }}>
+                <li className="mb-2"><FaShieldAlt className="me-2 text-success" />Todas las funcionalidades</li>
+                <li className="mb-2"><FaHandshake className="me-2 text-success" />Soporte prioritario</li>
+                <li className="mb-2"><FaRocket className="me-2 text-success" />Actualizaciones incluidas</li>
+              </ul>
+              <Button
+                variant="success"
+                size="lg"
+                className="w-100 fw-bold"
+                style={{ maxWidth: 220 }}
+                onClick={() => window.open('https://www.humanizar.co/', '_blank')}
+              >
+                Elegir Mensual
+              </Button>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4} className="mb-4">
+          <Card
+            className="h-100 border-3 shadow-lg text-center position-relative"
+            style={{ borderColor: '#198754', minHeight: 520, boxShadow: '0 0 32px 0 #19875433' }}
+          >
+            <div style={{ position: 'absolute', top: -18, left: '50%', transform: 'translateX(-50%)' }}>
+              <Badge bg="warning" text="dark" className="fs-6 px-3 py-2 shadow">Más popular</Badge>
+            </div>
+            <Card.Body className="d-flex flex-column align-items-center pt-5">
+              <Card.Title className="fw-bold fs-3 mb-3">Plan Anual</Card.Title>
+              <div className="display-5 fw-bold text-success mb-2">$330.000</div>
+              <div className="text-muted mb-1">COP / año</div>
+              <div className="mb-3 small text-success fw-semibold">¡Ahorra $30.000!</div>
+              <ul className="list-unstyled mb-4 text-start w-100" style={{ maxWidth: 250 }}>
+                <li className="mb-2"><FaShieldAlt className="me-2 text-success" />Todas las funcionalidades</li>
+                <li className="mb-2"><FaHandshake className="me-2 text-success" />Soporte prioritario</li>
+                <li className="mb-2"><FaRocket className="me-2 text-success" />Actualizaciones incluidas</li>
+                <li className="mb-2"><FaChartLine className="me-2 text-success" />Ahorra 1 mes</li>
+              </ul>
+              <Button
+                variant="success"
+                size="lg"
+                className="w-100 fw-bold"
+                style={{ maxWidth: 220 }}
+                onClick={() => window.open('https://www.humanizar.co/', '_blank')}
+              >
+                Elegir Anual
+              </Button>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
 
-      {/* Sección de información de vencimiento de suscripción - para todos los casos con nextRenewalAt */}
-      {!loading && subscriptionInfo?.nextRenewalAt && (
-        <Row className="justify-content-center mt-5">
-          <Col lg={10}>
-            <Card className={`border-0 shadow-sm ${subscriptionStatus === 'active-canceled' ? 'bg-light' : ''}`}>
-              <Card.Body className="text-center p-4">
-                <div className="subscription-status active">
-                  <div className="icon-container mb-3">
-                    {subscriptionStatus === 'active-renewable' ? (
-                      <i className="fas fa-calendar-check fa-3x text-success"></i>
-                    ) : (
-                      <i className="fas fa-calendar-times fa-3x text-warning"></i>
-                    )}
-                  </div>
-                  
-                  <h3 className={subscriptionStatus === 'active-renewable' ? 'text-success' : 'text-warning'}>
-                    Estado de tu plan
-                  </h3>
-                  
-                  {subscriptionStatus === 'active-renewable' ? (
-                    <>
-                      <p className="lead">
-                        <strong>Tu plan está vigente hasta el {formatDate(subscriptionInfo.nextRenewalAt)}</strong>
-                      </p>
-                      <div className="bg-light p-3 rounded mb-3">
-                        <i className="fas fa-sync-alt me-2 text-success"></i>
-                        Se renovará automáticamente al llegar a esta fecha para garantizar la continuidad de tu servicio.
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <p className="lead">
-                        <strong>Tu plan está vigente hasta el {formatDate(subscriptionInfo.nextRenewalAt)}</strong>
-                      </p>
-                      <div className="bg-white p-3 rounded mb-3">
-                        <i className="fas fa-exclamation-circle me-2 text-warning"></i>
-                        Este plan no se renovará automáticamente. Para evitar la interrupción 
-                        del servicio al llegar a esta fecha, te recomendamos reactivar tu suscripción.
-                      </div>
-                    </>
-                  )}
-                  
-                  {subscriptionInfo.message && (
-                    <p className="text-muted">
-                      {subscriptionInfo.message}
-                    </p>
-                  )}
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      )}
-
-      {loading && (
-        <Row className="justify-content-center mt-5">
-          <Col lg={10} className="text-center">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Cargando...</span>
-            </div>
-          </Col>
-        </Row>
-      )}
-
-      {error && (
-        <Row className="justify-content-center mt-5">
-          <Col lg={10}>
-            <Alert variant="danger">{error}</Alert>
-          </Col>
-        </Row>
-      )}
+      {/* CTA Final */}
+      <div className="text-center mt-5">
+        <h2 className="fw-bold mb-3">¿Listo para transformar tu negocio?</h2>
+        <Button
+          variant="success"
+          size="lg"
+          onClick={() => window.open('https://www.humanizar.co/', '_blank')}
+        >
+          Solicita tu Demo Gratis
+        </Button>
+      </div>
     </Container>
   );
 };
 
-export default withAuthSync(PlansPage);
+export default PlansPage;
