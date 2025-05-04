@@ -44,7 +44,7 @@ const Header = () => {
         <Nav className="ml-auto">
           <Nav.Link href="/home" className={styles.navItem}><FaHome className={styles.icon} /> Inicio</Nav.Link>
           <Nav.Link href="/transacciones" className={styles.navItem}><FaMoneyBillTransfer className={styles.icon} /> transacciones </Nav.Link>
-          <Nav.Link href="/customers" className={styles.navItem}><FaUsers className={styles.icon} /> Clientes</Nav.Link>
+          <Nav.Link href="/client" className={styles.navItem}><FaUsers className={styles.icon} /> Clientes</Nav.Link>
           <Nav.Link href="/plans" className={styles.navItem}><FaShoppingCart className={styles.icon} /> Planes</Nav.Link>
           <NavDropdown
             title={<FaUser className={styles.iconUser} />}

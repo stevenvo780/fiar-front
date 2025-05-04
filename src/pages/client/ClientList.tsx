@@ -2,27 +2,23 @@ import React, { FC } from 'react';
 import { Row, Col, Button, Card, Dropdown } from 'react-bootstrap';
 import { Client } from '@utils/types';
 import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa'; // Agrega los iconos
-import styles from '@styles/Customers.module.css';
+import styles from '@styles/Client.module.css';
 
-interface CustomerListProps {
-  customers: Client[];
+interface ClientListProps {
+  client: Client[];
   handleShowModal: (customer: Client) => void;
-  updateCustomerSelect: (id: number) => void;
-  deleteCustomer: (id: number) => void;
+  updateClientSelect: (id: number) => void;
+  deleteClient: (id: number) => void;
 }
 
-const CustomerList: FC<CustomerListProps> = ({
-  customers,
+const ClientList: FC<ClientListProps> = ({
+  client,
   handleShowModal,
-  updateCustomerSelect,
-  deleteCustomer,
+  updateClientSelect,
 }) => (
   <>
-    
-
-    {/* Lista de clientes */}
     <Row>
-      {customers.map((customer, idx) => (
+      {client?.map((customer, idx) => (
         <Col key={idx} xs={12} md={4} lg={3} className="mb-3">
           <Card className={styles['customer-card']}>
             <Card.Body className="d-flex flex-column justify-content-between h-100">
@@ -49,7 +45,7 @@ const CustomerList: FC<CustomerListProps> = ({
                 </Button>
                 <Button
                   className={styles.btnUpdate}
-                  onClick={() => updateCustomerSelect(customer.id ?? 0)}
+                  onClick={() => updateClientSelect(customer.id ?? 0)}
                 >
                   <FaEdit style={{ marginRight: '5px' }} /> 
                 </Button>
@@ -63,4 +59,4 @@ const CustomerList: FC<CustomerListProps> = ({
   </>
 );
 
-export default CustomerList;
+export default ClientList;

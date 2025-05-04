@@ -1,7 +1,7 @@
 import { Client } from '@utils/types';
 
-export interface CustomerState {
-  customers: Client[];
+export interface ClientState {
+  client: Client[];
   labels: { value: string, label: string }[];
   loading: boolean;
   alertMessage: string | null;
@@ -10,8 +10,8 @@ export interface CustomerState {
   lastPage: number;
 }
 
-export const initialCustomerState: CustomerState = {
-  customers: [],
+export const initialClientState: ClientState = {
+  client: [],
   labels: [{ value: '', label: 'Etiqueta' }],
   loading: false,
   alertMessage: null,
@@ -25,18 +25,18 @@ interface Action {
   payload?: any;
 }
 
-const customerReducer = (state: CustomerState = initialCustomerState, action: Action): CustomerState => {
+const customerReducer = (state: ClientState = initialClientState, action: Action): ClientState => {
   switch (action.type) {
     case 'SET_CUSTOMERS':
-      return { ...state, customers: action.payload };
+      return { ...state, client: action.payload };
     case 'SET_LABELS':
       return { ...state, labels: action.payload };
     case 'ADD_CUSTOMER':
-      return { ...state, customers: [...state.customers, action.payload] };
+      return { ...state, client: [...state.client, action.payload] };
     case 'UPDATE_CUSTOMER':
-      return { ...state, customers: state.customers.map(customer => customer.id === action.payload.id ? action.payload : customer) };
+      return { ...state, client: state.client.map(customer => customer.id === action.payload.id ? action.payload : customer) };
     case 'DELETE_CUSTOMER':
-      return { ...state, customers: state.customers.filter(customer => customer.id !== action.payload) };
+      return { ...state, client: state.client.filter(customer => customer.id !== action.payload) };
     case 'SET_TOTAL_PAGES':
       return { ...state, totalPages: action.payload };
     case 'SET_PAGE':

@@ -1,9 +1,9 @@
 import { FC, ChangeEvent } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { Client } from '@utils/types';
-import CustomerForm from './CustomerForm';
+import ClientForm from './ClientForm';
 
-interface CustomerFormModalProps {
+interface ClientFormModalProps {
   show: boolean;
   onHide: () => void;
   isUpdating: boolean;
@@ -15,7 +15,7 @@ interface CustomerFormModalProps {
   handleCancel: () => void;
 }
 
-const CustomerFormModal: FC<CustomerFormModalProps> = ({
+const ClientFormModal: FC<ClientFormModalProps> = ({
   show,
   onHide,
   isUpdating,
@@ -32,7 +32,7 @@ const CustomerFormModal: FC<CustomerFormModalProps> = ({
         <Modal.Title>{isUpdating ? 'Actualizar Cliente' : 'Crear Cliente'}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <CustomerForm
+        <ClientForm
           customer={customer}
           labels={labels}
           handleInputChange={handleInputChange}
@@ -53,4 +53,4 @@ const CustomerFormModal: FC<CustomerFormModalProps> = ({
   );
 };
 
-export default CustomerFormModal;
+export default ClientFormModal;

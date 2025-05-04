@@ -1,57 +1,56 @@
 import { useState, ChangeEvent, FC, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Dropdown, Navbar, Nav } from 'react-bootstrap';
 import { withAuthSync } from '@utils/auth';
-import CustomerList from './CustomerList';
-import useCustomer from '@store/customers';
+import ClientList from './ClientList';
+import useClient from '@store/client';
 import useUI from '@/store/ui';
 import { Client } from '@utils/types';
-import CustomerDetailModal from './CustomerDetailModal';
-import CustomerFormModal from './CustomerFormModal';
-import UploadModal from './UploadModal';
+import ClientDetailModal from './ClientDetailModal';
+import ClientFormModal from './ClientFormModal';
 import Pagination from 'rc-pagination';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import 'rc-pagination/assets/index.css';
-import styles from '@styles/Customers.module.css';
+import styles from '@styles/Client.module.css';
 
-const Customers: FC = () => {
+const ClientView: FC = () => {
   const { setLoading, addAlert } = useUI();
   const {
-    customers,
+    client,
     labels,
     page,
     lastPage,
-    fetchCustomers,
-    createCustomer,
-    updateCustomer,
-    deleteCustomer,
+    fetchClient,
+    createClient,
+    updateClient,
+    deleteClient,
     downloadTemplate,
     downloadExcel
-  } = useCustomer();
+  } = useClient();
 
-  const [customer, setCustomer] = useState<Client>({} as Client);
+  const [customer, setClient] = useState<Client>({} as Client);
   const [isUpdating, setIsUpdating] = useState(false);
   const [showModalDetail, setShowModalDetail] = useState(false);
-  const [selectedCustomer, setSelectedCustomer] = useState<Client | null>(null);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [showModalCreate, setShowModalCreate] = useState(false);
   const [search, setSearch] = useState('');
   const [limit, setLimit] = useState(50);
 
   useEffect(() => {
-    fetchCustomers(page, limit, search);
+    fetchClient(page, limit, search);
   }, [page, limit]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCustomer({ ...customer, [e.target.name]: e.target.value });
+    setClient({ ...customer, [e.target.name]: e.target.value });
   };
 
-  const createOrUpdateCustomer = async () => {
+  const createOrUpdateClient = async () => {
     try {
       setLoading(true);
       if (isUpdating) {
-        await updateCustomer(customer.id || 0, customer);
+        await updateClient(customer.id || 0, customer);
         setIsUpdating(false);
       } else {
-        await createCustomer(customer);
+        await createClient(customer);
       }
     } catch (err) {
       console.error('Error al guardar cliente:', err);
@@ -63,26 +62,26 @@ const Customers: FC = () => {
     }
   };
 
-  const updateCustomerSelect = (id: number) => {
-    const selectedCustomer = customers.find((i: Client) => i.id === id);
-    if (selectedCustomer) {
-      setCustomer(selectedCustomer);
+  const updateClientSelect = (id: number) => {
+    const selectedClient = client.find((i: Client) => i.id === id);
+    if (selectedClient) {
+      setClient(selectedClient);
       setIsUpdating(true);
       setShowModalCreate(true);
     }
   };
 
   const resetForm = () => {
-    setCustomer({} as Client);
+    setClient({} as Client);
   };
 
   const handleShowModalDetail = (customer: Client) => {
-    setSelectedCustomer(customer);
+    setSelectedClient(customer);
     setShowModalDetail(true);
   };
 
   const handleCloseModalDetail = () => {
-    setSelectedCustomer(null);
+    setSelectedClient(null);
     setShowModalDetail(false);
   };
 
@@ -92,18 +91,18 @@ const Customers: FC = () => {
       const labelValue = event[index].value;
       labelsData.push(labelValue);
     }
-    setCustomer(customer);
+    setClient(customer);
   };
 
   const handlePageChange = (current: number) => {
-    fetchCustomers(current, limit, search);
+    fetchClient(current, limit, search);
   };
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value;
     setSearch(searchValue);
     if (searchValue.length >= 3 || searchValue.length === 0) {
-      fetchCustomers(1, limit, searchValue);
+      fetchClient(1, limit, searchValue);
     }
   };
 
@@ -111,10 +110,10 @@ const Customers: FC = () => {
     setLimit(Number(e.target.value));
   };
 
-  const handleDeleteCustomer = async (id: number) => {
+  const handleDeleteClient = async (id: number) => {
     try {
       setLoading(true);
-      await deleteCustomer(id);
+      await deleteClient(id);
       addAlert({ type: 'success', message: 'Cliente eliminado correctamente' });
     } catch (err) {
       console.error('Error al eliminar cliente:', err);
@@ -152,12 +151,11 @@ const Customers: FC = () => {
 
   return (
     <>
-      <Container className={`container`}>
-        <Navbar bg="light" expand="lg" className={`mb-3 ${styles.roundedNavbar}`}>
-          <Navbar.Brand>Clientes</Navbar.Brand>
-          <Navbar.Toggle aria-controls="navbar-customers" />
-          <Navbar.Collapse id="navbar-customers">
-            <Nav className="me-auto">
+      <Container className="container">
+        <Navbar bg="light" expand="lg" className={`mb-3  ${styles.roundedNavbar}`}>
+          <Navbar.Toggle aria-controls="navbar-client" />
+          <Navbar.Collapse id="navbar-client">
+            <Nav className="me-auto align-items-center">
               <Form.Control
                 type="text"
                 placeholder="Buscar..."
@@ -213,11 +211,11 @@ const Customers: FC = () => {
           </Navbar.Collapse>
         </Navbar>
         <hr />
-        <CustomerList
-          customers={customers}
+        <ClientList
+          client={client}
           handleShowModal={handleShowModalDetail}
-          updateCustomerSelect={updateCustomerSelect}
-          deleteCustomer={handleDeleteCustomer}
+          updateClientSelect={updateClientSelect}
+          deleteClient={handleDeleteClient}
         />
         <div className={styles.paginationContainer}>
           <Pagination
@@ -240,12 +238,12 @@ const Customers: FC = () => {
           />
         </div>
       </Container>
-      <CustomerDetailModal
+      <ClientDetailModal
         show={showModalDetail}
         onHide={handleCloseModalDetail}
-        customer={selectedCustomer}
+        customer={selectedClient}
       />
-      <CustomerFormModal
+      <ClientFormModal
         show={showModalCreate}
         onHide={() => setShowModalCreate(false)}
         isUpdating={isUpdating}
@@ -253,10 +251,10 @@ const Customers: FC = () => {
         labels={labels}
         handleInputChange={handleInputChange}
         handleSelectChange={handleSelectChange}
-        handleSave={createOrUpdateCustomer}
+        handleSave={createOrUpdateClient}
         handleCancel={() => {
           setIsUpdating(false);
-          setCustomer({} as Client);
+          setClient({} as Client);
           setShowModalCreate(false);
         }}
       />
@@ -264,5 +262,5 @@ const Customers: FC = () => {
   );
 };
 
-export default withAuthSync(Customers);
+export default withAuthSync(ClientView);
 

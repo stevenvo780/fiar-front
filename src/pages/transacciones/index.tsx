@@ -67,52 +67,53 @@ const Transactions: FC = () => {
 
   return (
     <>
-      <Container className={`container`}>
-        <div className="row align-items-center mb-4" style={{ marginTop: 24, marginBottom: 32 }}>
-          <div className="col-12 col-md-6 d-flex flex-wrap align-items-center justify-content-start mb-2 mb-md-0">
-            <Form.Control
-              type="text"
-              placeholder="Buscar..."
-              value={search}
-              onChange={handleSearchChange}
-              className="me-2"
-              style={{ width: '200px', minWidth: 120 }}
-            />
-            <Form.Select
-              value={order}
-              onChange={e => setOrder(e.target.value as 'reciente' | 'antiguo')}
-              className="me-2"
-              style={{ width: '140px', minWidth: 100 }}
-            >
-              <option value="reciente">Más reciente</option>
-              <option value="antiguo">Más antiguo</option>
-            </Form.Select>
-            <Form.Select
-              value={statusFilter}
-              onChange={e => setStatusFilter(e.target.value as 'todos' | 'aprobado' | 'no_aprobado')}
-              className="me-2"
-              style={{ width: '140px', minWidth: 100 }}
-            >
-              <option value="todos">Todos</option>
-              <option value="aprobado">Aprobado</option>
-              <option value="no_aprobado">No aprobado</option>
-            </Form.Select>
-          </div>
-          <div className="col-12 col-md-6 d-flex justify-content-md-end justify-content-start align-items-center">
-            <Button variant="secondary" onClick={handleDownloadExcel} className="me-2">
-              Descargar Excel
-            </Button>
-            <Form.Select
-              value={limit}
-              onChange={handleLimitChange}
-              style={{ width: '100px', minWidth: 80 }}
-            >
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-            </Form.Select>
-          </div>
-        </div>
+      <Container className="container">
+        <Navbar bg="light" expand="lg" className="mb-3">
+          <Navbar.Toggle aria-controls="navbar-transactions" />
+          <Navbar.Collapse id="navbar-transactions">
+            <Nav className="me-auto align-items-center">
+              <Form.Control
+                type="text"
+                placeholder="Buscar..."
+                value={search}
+                onChange={handleSearchChange}
+                className="me-2"
+                style={{ width: '200px', minWidth: 120 }}
+              />
+              <Form.Select
+                value={order}
+                onChange={e => setOrder(e.target.value as 'reciente' | 'antiguo')}
+                className="me-2"
+                style={{ width: '140px', minWidth: 100 }}
+              >
+                <option value="reciente">Más reciente</option>
+                <option value="antiguo">Más antiguo</option>
+              </Form.Select>
+              <Form.Select
+                value={statusFilter}
+                onChange={e => setStatusFilter(e.target.value as 'todos' | 'aprobado' | 'no_aprobado')}
+                className="me-2"
+                style={{ width: '140px', minWidth: 100 }}
+              >
+                <option value="todos">Todos</option>
+                <option value="aprobado">Aprobado</option>
+                <option value="no_aprobado">No aprobado</option>
+              </Form.Select>
+              <Button variant="secondary" onClick={handleDownloadExcel} className="me-2">
+                Descargar Excel
+              </Button>
+              <Form.Select
+                value={limit}
+                onChange={handleLimitChange}
+                style={{ width: '100px', minWidth: 80 }}
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+              </Form.Select>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
         <hr />
         <TransactionList
           transactions={transactions}

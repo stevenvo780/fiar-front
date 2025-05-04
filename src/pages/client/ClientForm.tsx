@@ -4,7 +4,7 @@ import Select from 'react-select/creatable';
 import { Client } from '@utils/types';
 
 // Definición de las propiedades que recibe el componente
-interface CustomerFormProps {
+interface ClientFormProps {
   customer: Client; // Información del cliente
   labels: { value: string, label: string }[]; // Opciones para un select (no usado en el código actual)
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void; // Manejador para cambios en inputs
@@ -12,7 +12,7 @@ interface CustomerFormProps {
 }
 
 // Componente funcional que recibe las propiedades
-const CustomerForm: FC<CustomerFormProps> = ({ customer, labels, handleInputChange, handleSelectChange }) => {
+const ClientForm: FC<ClientFormProps> = ({ customer, labels, handleInputChange, handleSelectChange }) => {
   return (
     <Form>
       {/* Sección: Información del Usuario */}
@@ -168,4 +168,4 @@ const CustomerForm: FC<CustomerFormProps> = ({ customer, labels, handleInputChan
   );
 };
 
-export default CustomerForm;
+export default ClientForm;

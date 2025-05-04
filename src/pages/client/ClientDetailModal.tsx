@@ -1,20 +1,20 @@
 import { FC } from 'react';
 import { Modal, Button, ListGroup, Container, Card } from 'react-bootstrap';
 import { Client, Transaction } from '@utils/types';
-import styles from '@styles/CustomerDetailModal.module.css';
+import styles from '@styles/ClientDetailModal.module.css';
 import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa'; 
 
 // Definición de las propiedades que recibe el componente
-interface CustomerDetailModalProps {
+interface ClientDetailModalProps {
   show: boolean; // Controla si el modal está visible
   onHide: () => void; // Función para cerrar el modal
   customer: Client | null; // Información del cliente
 }
 
 // Componente funcional que recibe las propiedades
-const CustomerDetailModal: FC<CustomerDetailModalProps> = ({ show, onHide, customer }) => {
+const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, customer }) => {
   // Función placeholder para eliminar un cliente
-  const deleteCustomer = (customerId: number) => {
+  const deleteClient = (customerId: number) => {
     console.log(`Deleting customer with ID: ${customerId}`);
   };
 
@@ -89,7 +89,7 @@ const CustomerDetailModal: FC<CustomerDetailModalProps> = ({ show, onHide, custo
         {/* Botón para eliminar el cliente */}
         <Button
           className={styles.btnDelete}
-          onClick={() => deleteCustomer(customer?.id ?? 0)}
+          onClick={() => deleteClient(customer?.id ?? 0)}
         >
           <FaTrashAlt style={{ marginRight: '5px' }} /> Eliminar
         </Button>
@@ -102,4 +102,4 @@ const CustomerDetailModal: FC<CustomerDetailModalProps> = ({ show, onHide, custo
   );
 };
 
-export default CustomerDetailModal;
+export default ClientDetailModal;

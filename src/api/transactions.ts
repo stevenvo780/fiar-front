@@ -5,12 +5,17 @@ import { Transaction } from '@utils/types';
 export const getTransactionsAPI = (
   page: number = 1,
   limit: number = 50,
-  search: string = ''
+  search: string = '',
+  order?: 'asc' | 'desc',
+  status?: string
 ): Promise<AxiosResponse<{ data: Transaction[]; total: number; page: number; last_page: number }>> => {
-  const url = search
-    ? `/transactions/search?page=${page}&limit=${limit}&search=${search}`
-    : `/transactions?page=${page}&limit=${limit}`;
-  return axios.get(url);
+  const params = new URLSearchParams();
+  params.append('page', String(page));
+  params.append('limit', String(limit));
+  if (search) params.append('search', search);
+  if (order) params.append('order', order);
+  if (status) params.append('status', status);
+  return axios.get(`/transactions?${params.toString()}`);
 };
 
 export const addTransactionAPI = (transaction: Transaction): Promise<AxiosResponse<Transaction>> => {

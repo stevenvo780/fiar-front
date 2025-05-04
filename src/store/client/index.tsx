@@ -8,39 +8,34 @@ import * as XLSX from "xlsx/xlsx";
 import { convertKeysToEnglish, convertKeysToSpanish } from '@utils/conversions';
 import { ref, uploadString } from 'firebase/storage';
 import { storage } from '@utils/firebase.config';
-import ClientJson from '@api/json/clients_numeric_id.json';
 
-const useCustomer = () => {
-  const { customers, labels, totalPages, page, lastPage } = useSelector((state: RootState) => state.customers);
+const useClient = () => {
+  const { client, labels, totalPages, page, lastPage } = useSelector((state: RootState) => state.client);
   const dispatch = useDispatch();
   const { setLoading, addAlert } = useUI();
 
-  const fetchCustomers = async (page: number = 1, limit: number = 50, search: string = '') => {
+  const fetchClient = async (page: number = 1, limit: number = 50, search: string = '') => {
     setLoading(true);
     try {
-      // const response = await api.customers.getCustomersAPI(page, limit, search);
-      //customerActions.setCustomers(dispatch, response.data.data);
-      //customerActions.setTotalPages(dispatch, response.data.total);
-      //customerActions.setPage(dispatch, response.data.page);
-      // customerActions.setLastPage(dispatch, response.data.last_page);
-      const response = ClientJson as Client[];
-      customerActions.setCustomers(dispatch, response);
-      customerActions.setTotalPages(dispatch, 1);
-      customerActions.setPage(dispatch, 1);
-      customerActions.setLastPage(dispatch, 1);
-    } catch (error) {
-      console.error(`Error: ${error}`);
+      const response = await api.client.getClientAPI(page, limit, search);
+      console.log('respuesta del back de clientes', response);
+      customerActions.setClient(dispatch, response.data.data);
+      customerActions.setTotalPages(dispatch, response.data.total);
+      customerActions.setPage(dispatch, response.data.page);
+      customerActions.setLastPage(dispatch, response.data.last_page);
+    } catch (error: any) {
+      console.error(`Error fetching client: ${error}`);
       addAlert({ type: 'danger', message: 'Ocurrió un error, consulta a soporte' });
     } finally {
       setLoading(false);
     }
   };
 
-  const createCustomer = async (customer: Client) => {
+  const createClient = async (customer: Client) => {
     setLoading(true);
     try {
-      const response = await api.customers.createCustomerAPI(customer);
-      customerActions.addCustomer(dispatch, response.data);
+      const response = await api.client.createClientAPI(customer);
+      customerActions.addClient(dispatch, response.data);
       addAlert({ type: 'success', message: 'Cliente creado con éxito.' });
     } catch (error) {
       console.error(`Error: ${error}`);
@@ -50,11 +45,11 @@ const useCustomer = () => {
     }
   };
 
-  const updateCustomer = async (id: number, customer: Client) => {
+  const updateClient = async (id: number, customer: Client) => {
     setLoading(true);
     try {
-      const response = await api.customers.updateCustomerAPI(id, customer);
-      customerActions.updateCustomer(dispatch, response.data);
+      const response = await api.client.updateClientAPI(id, customer);
+      customerActions.updateClient(dispatch, response.data);
       addAlert({ type: 'success', message: 'Cliente actualizado con éxito.' });
     } catch (error) {
       console.error(`Error: ${error}`);
@@ -64,11 +59,11 @@ const useCustomer = () => {
     }
   };
 
-  const deleteCustomer = async (id: number) => {
+  const deleteClient = async (id: number) => {
     setLoading(true);
     try {
-      await api.customers.deleteCustomerAPI(id);
-      customerActions.deleteCustomer(dispatch, id);
+      await api.client.deleteClientAPI(id);
+      customerActions.deleteClient(dispatch, id);
       addAlert({ type: 'success', message: 'Cliente eliminado con éxito.' });
     } catch (error) {
       console.error(`Error: ${error}`);
@@ -81,7 +76,7 @@ const useCustomer = () => {
   const fetchLabels = async () => {
     setLoading(true);
     try {
-      const response = await api.customers.getLabelsAPI();
+      const response = await api.client.getLabelsAPI();
       const labels = response.data.map((label: string) => ({ value: label, label }));
       customerActions.setLabels(dispatch, labels);
     } catch (error) {
@@ -130,10 +125,10 @@ const useCustomer = () => {
         const storageRef = ref(storage, `${folderPath}/${uniqueFilename}`);
         await uploadString(storageRef, JSON.stringify(allData));
 
-        await api.customers.uploadCustomersAPI({ filename: uniqueFilename });
+        await api.client.uploadClientAPI({ filename: uniqueFilename });
 
         customerActions.setPage(dispatch, 1);
-        fetchCustomers(1, limit, search);
+        fetchClient(1, limit, search);
         addAlert({ type: 'success', message: 'Archivo subido con éxito.' });
       };
       reader.readAsArrayBuffer(file);
@@ -160,17 +155,17 @@ const useCustomer = () => {
   const downloadExcel = async () => {
     setLoading(true);
     try {
-      const response = await api.customers.getCustomersAPI(1, 20000, '');
-      const allCustomers = response.data.data;
+      const response = await api.client.getClientAPI(1, 20000, '');
+      const allClient = response.data.data;
 
-      const customersWithLabelsAsString = allCustomers.map((customer: any) => {
+      const clientWithLabelsAsString = allClient.map((customer: any) => {
         const customerNew = {
           ...customer,
           label: customer.label ? customer.label.join(', ') : ''
         };
         return convertKeysToSpanish(customerNew);
       });
-      const ws = XLSX.utils.json_to_sheet(customersWithLabelsAsString);
+      const ws = XLSX.utils.json_to_sheet(clientWithLabelsAsString);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Clientes");
       XLSX.writeFile(wb, "Clientes_EMW.xlsx");
@@ -183,15 +178,15 @@ const useCustomer = () => {
   };
 
   return {
-    customers,
+    client,
     labels,
     totalPages,
     page,
     lastPage,
-    fetchCustomers,
-    createCustomer,
-    updateCustomer,
-    deleteCustomer,
+    fetchClient,
+    createClient,
+    updateClient,
+    deleteClient,
     fetchLabels,
     handleFileUpload,
     downloadTemplate,
@@ -199,4 +194,4 @@ const useCustomer = () => {
   };
 };
 
-export default useCustomer;
+export default useClient;
