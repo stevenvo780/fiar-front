@@ -9,6 +9,7 @@ export interface User {
   update_at?: Date;
   name: string;
   role: UserRoleOptions;
+  phone?: string | null;
 }
 
 export interface Profile {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Spinner, Alert } from 'react-bootstrap';
 import useUser from '@store/user';
 import { withAuthSync } from '@utils/auth';
 
@@ -8,28 +8,81 @@ const EditProfile: React.FC = () => {
   const [formData, setFormData] = useState({
     email: '',
     name: '',
-    phone: '',
+    apiKey: '', // Nuevo campo
   });
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
+  const [apiUser, setApiUser] = useState<any>(null);
+
+  const API_URL = process.env.NEXT_PUBLIC_API || 'http://172.23.146.224:8080/api';
+
+  // Llama a fetchUser si hay token y no hay usuario cargado
   useEffect(() => {
-    if (user) {
-      setFormData({
-        email: user.email || '',
-        name: user.name || '',
-        phone:'' ,
-        
-      });
-    } else {
-      if (token){
-        fetchUser();
-      }
+    console.log('token:', token);
+    console.log('user:', user);
+
+    if (!user && token) {
+      setLoading(true);
+      setError(null);
+      fetchUser()
+        .catch((err: any) => {
+          setError('Error al obtener el usuario');
+          console.error('Error al obtener el usuario:', err);
+        })
+        .finally(() => setLoading(false));
+    } else if (user) {
+      setLoading(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [token, user]);
+
+  // Obtener usuario por ID usando fetch y guardar en apiUser
+  useEffect(() => {
+    if (token) {
+      setLoading(true);
+      fetch(`${API_URL}/user/me/data`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Error al obtener usuario');
+          return res.json();
+        })
+        .then(data => {
+          setApiUser({
+            ...data,
+            apiKey: data.apiKey || '', // Asegura que apiKey esté presente
+          });
+          setError(null);
+        })
+        .catch(err => {
+          setError('Error al obtener usuario');
+          setApiUser(null);
+          console.error('Error al obtener usuario:', err);
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [token, API_URL]);
+
+  // Actualiza el formulario cuando los datos del usuario estén disponibles (prioriza apiUser)
+  useEffect(() => {
+    const u = apiUser || user;
+    if (u) {
+      setFormData({
+        email: u.email || '',
+        name: u.name || '',
+        apiKey: u.apiKey || '',
+      });
+    }
+  }, [apiUser, user]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -41,9 +94,25 @@ const EditProfile: React.FC = () => {
     setPasswordData({ ...passwordData, [name]: value });
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    updateUserProfile(formData);
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      await updateUserProfile(formData);
+      // Refresca los datos del usuario después de actualizar
+      const updated = await fetchUser();
+      setApiUser({
+        ...updated,
+        apiKey: updated.apiKey || '', // Asegura que apiKey esté presente tras actualizar
+      });
+      setSuccess('Perfil actualizado correctamente');
+    } catch (err) {
+      setError('Error al actualizar el perfil');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChangePassword = (e: FormEvent) => {
@@ -51,10 +120,24 @@ const EditProfile: React.FC = () => {
     changePassword(passwordData.currentPassword, passwordData.newPassword);
   };
 
+  if (loading) {
+    return (
+      <Container>
+        <Row>
+          <Col md={{ span: 6, offset: 3 }} className="text-center">
+            <Spinner animation="border" />
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <Row>
         <Col md={{ span: 6, offset: 3 }}>
+          {error && <Alert variant="danger">{error}</Alert>}
+          {success && <Alert variant="success">{success}</Alert>}
           <h2>Editar Perfil</h2>
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formEmail" className="mb-3">
@@ -75,13 +158,13 @@ const EditProfile: React.FC = () => {
                 placeholder="Nombre"
               />
             </Form.Group>
-            <Form.Group controlId="formClientPhone" className="mb-3">
+            <Form.Group controlId="formApiKey" className="mb-3">
               <Form.Control
                 type="text"
-                name="phone"
-                value={formData.phone}
+                name="apiKey"
+                value={formData.apiKey}
                 onChange={handleInputChange}
-                placeholder="Teléfono"
+                placeholder="API Key"
               />
             </Form.Group>
             <Button variant="primary" type="submit" style={{ marginTop: '20px' }}>
