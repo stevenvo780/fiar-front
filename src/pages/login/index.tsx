@@ -42,7 +42,7 @@ const Login = () => {
       <Container className={styles.loginContainer} fluid>
         <Card className={styles.card}>
           <div className="text-center">
-            <Image fetchPriority="high" src={logo} alt="Logo" width={120} height={120} />
+            <Image fetchPriority="high" src={logo} alt="Logo" width={200} height={200} />
           </div>
           <Card.Body>
             <Form onSubmit={handleSubmit}>
