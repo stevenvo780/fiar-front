@@ -24,9 +24,6 @@ const EditProfile: React.FC = () => {
 
   // Llama a fetchUser si hay token y no hay usuario cargado
   useEffect(() => {
-    console.log('token:', token);
-    console.log('user:', user);
-
     if (!user && token) {
       setLoading(true);
       setError(null);

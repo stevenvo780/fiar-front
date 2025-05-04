@@ -23,7 +23,6 @@ const useTransactions = () => {
     ) => {
       transactionActions.setLoading(dispatch, true);
       try {
-        console.log('Fetching transactions with filters:');
         const apiOrder = orderFilter === 'antiguo' ? 'asc' : 'desc';
         let apiStatus: string | undefined;
         if (statusFilter === 'aprobado') apiStatus = 'approved';
@@ -39,7 +38,6 @@ const useTransactions = () => {
           startDate,
           endDate
         );
-        console.log(response);
         transactionActions.setTransactions(dispatch, response.data.data);
         transactionActions.setTotal(dispatch, response.data.total);
         transactionActions.setPage(dispatch, response.data.page);

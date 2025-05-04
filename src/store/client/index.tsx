@@ -18,7 +18,6 @@ const useClient = () => {
     setLoading(true);
     try {
       const response = await api.client.getClientAPI(page, limit, search);
-      console.log('respuesta del back de clientes', response);
       clientActions.setClient(dispatch, response.data.data);
       clientActions.setTotalPages(dispatch, response.data.total);
       clientActions.setPage(dispatch, response.data.page);

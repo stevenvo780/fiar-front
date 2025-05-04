@@ -268,7 +268,7 @@ const TransactionList: FC<TransactionListProps> = ({
         </Modal.Body>
         <Modal.Footer style={{ borderTop: 'none' }}>
           <Button variant="outline-secondary" onClick={handleCloseHistory} style={{ borderRadius: 8 }}>
-            Cerrar
+            <p style={{ margin: 0, color: 'black' }}>Cerrar</p>
           </Button>
         </Modal.Footer>
       </Modal>

@@ -85,7 +85,6 @@ const useUser = () => {
     setLoading(true);
     try {
       const user = auth.currentUser;
-      console.log('user', user);
       if (user) {
         const reauthenticated = await reauthenticate(currentPassword);
         if (reauthenticated) {

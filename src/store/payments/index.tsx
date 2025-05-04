@@ -51,7 +51,6 @@ const usePayments = () => {
     setLoading(true);
     try {
       const response = await axios.get<User>('/cancelSubscription');
-      console.log(response.data);
       setUser(response.data);
       addAlert({ type: 'success', message: 'Suscripción cancelada con éxito.' });
     } catch (error) {
