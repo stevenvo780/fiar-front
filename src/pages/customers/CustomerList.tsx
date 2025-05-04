@@ -18,29 +18,7 @@ const CustomerList: FC<CustomerListProps> = ({
   deleteCustomer,
 }) => (
   <>
-    {/* Filtros */}
-    <div className={styles.filters}>
-      <Dropdown>
-        <Dropdown.Toggle variant="success" id="estado-de-cuenta">
-          Estado de cuenta
-        </Dropdown.Toggle>
-        <Dropdown.Menu>
-          <Dropdown.Item>En deuda</Dropdown.Item>
-          <Dropdown.Item>Al día</Dropdown.Item>
-          <Dropdown.Item>Suspendidos</Dropdown.Item>
-          <Dropdown.Item>Todos</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
-      <Dropdown>
-        <Dropdown.Toggle variant="success" id="deudas-pendientes">
-          Deudas pendientes
-        </Dropdown.Toggle>
-        <Dropdown.Menu>
-          <Dropdown.Item>Deuda (mayor → menor)</Dropdown.Item>
-          <Dropdown.Item>Deuda (menor → mayor)</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
-    </div>
+    
 
     {/* Lista de clientes */}
     <Row>
@@ -67,20 +45,15 @@ const CustomerList: FC<CustomerListProps> = ({
                   className={styles.btnView}
                   onClick={() => handleShowModal(customer)}
                 >
-                  <FaEye style={{ marginRight: '5px' }} /> Ver
+                  <FaEye style={{ marginRight: '5px' }} /> 
                 </Button>
                 <Button
                   className={styles.btnUpdate}
                   onClick={() => updateCustomerSelect(customer.id ?? 0)}
                 >
-                  <FaEdit style={{ marginRight: '5px' }} /> Actualizar
+                  <FaEdit style={{ marginRight: '5px' }} /> 
                 </Button>
-                <Button
-                  className={styles.btnDelete}
-                  onClick={() => deleteCustomer(customer.id ?? 0)}
-                >
-                  <FaTrashAlt style={{ marginRight: '5px' }} /> Eliminar
-                </Button>
+                
               </div>
             </Card.Body>
           </Card>
