@@ -168,7 +168,7 @@ const ClientView: FC = () => {
   return (
     <>
       <Container className="container">
-        <Navbar bg="light" expand="lg" className={`mb-3  ${styles.roundedNavbar}`}>
+        <Navbar expand="lg" className={`mb-3 ${styles.roundedNavbar}`}>
           <Navbar.Toggle aria-controls="navbar-client" />
           <Navbar.Collapse id="navbar-client">
             <Nav className="me-auto align-items-center">

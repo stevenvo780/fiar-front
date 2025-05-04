@@ -78,7 +78,7 @@ const Transactions: FC = () => {
   return (
     <>
       <Container className="container">
-        <Navbar bg="light" expand="lg" className="mb-3">
+        <Navbar expand="lg" className="mb-3">
           <Navbar.Toggle aria-controls="navbar-transactions" />
           <Navbar.Collapse id="navbar-transactions">
             <Nav className="me-auto align-items-center">
