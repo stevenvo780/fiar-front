@@ -9,10 +9,11 @@ interface ClientFormProps {
   labels: { value: string, label: string }[]; // Opciones para un select (no usado en el código actual)
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void; // Manejador para cambios en inputs
   handleSelectChange: (event: any) => void; // Manejador para cambios en selects
+  onSave?: () => void; // Nuevo prop para invocar la acción de guardado
 }
 
 // Componente funcional que recibe las propiedades
-const ClientForm: FC<ClientFormProps> = ({ client, labels, handleInputChange, handleSelectChange }) => {
+const ClientForm: FC<ClientFormProps> = ({ client, labels, handleInputChange, handleSelectChange, onSave }) => {
   return (
     <Form>
       {/* Sección: Información del Usuario */}
@@ -112,7 +113,7 @@ const ClientForm: FC<ClientFormProps> = ({ client, labels, handleInputChange, ha
             <Form.Control
               type="number"
               name="total_quota"
-              value={''} // Valor no vinculado al cliente
+              value={client.total_quota || ''} // Vinculado a client.total_quota
               onChange={handleInputChange}
               placeholder="Cupo Total"
               className="form-control"
@@ -122,7 +123,7 @@ const ClientForm: FC<ClientFormProps> = ({ client, labels, handleInputChange, ha
             <Form.Control
               type="number"
               name="available_quota"
-              value={''} // Valor no vinculado al cliente
+              value={client.available_quota || ''} // Vinculado a client.available_quota
               onChange={handleInputChange}
               placeholder="Cupo Disponible"
               className="form-control"
@@ -160,7 +161,11 @@ const ClientForm: FC<ClientFormProps> = ({ client, labels, handleInputChange, ha
           <Button variant="danger">Desactivar</Button>
         </div>
         {/* Botón para guardar */}
-        <Button variant="primary" type="submit">
+        <Button
+          variant="primary"
+          type="button"
+          onClick={onSave} // Llama a la función recibida
+        >
           Guardar
         </Button>
       </div>

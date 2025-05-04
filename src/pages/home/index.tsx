@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Container, Row, Col, Card, Button, Badge } from 'react-bootstrap';
 import { 
   FaCreditCard, 
@@ -10,19 +11,17 @@ import {
   FaShieldAlt,
   FaRocket
 } from 'react-icons/fa';
-
 function HomeHeroButtons() {
   return (
     <div className="d-flex flex-wrap gap-3">
-      <a href="/plans">
+      <Link href="/plans" passHref>
         <Button
           variant="light"
           size="lg"
-          className="text-dark"
         >
           Comenzar Ahora
         </Button>
-      </a>
+      </Link>
       <Button
         variant="outline-light"
         size="lg"

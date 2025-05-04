@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Modal, Button, Container, Card } from 'react-bootstrap';
 import { Transaction } from '@utils/types';
-import styles from '@/styles/TransactionDetailModal.module.css';
+import styles from '@styles/ClientDetailModal.module.css';
 import { FaTrashAlt } from 'react-icons/fa';
 
 interface TransactionDetailModalProps {

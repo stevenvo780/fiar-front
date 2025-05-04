@@ -16,7 +16,8 @@ const Transactions: FC = () => {
     page,
     lastPage,
     fetchTransactions,
-    downloadExcel
+    downloadExcel,
+    updateTransaction
   } = useTransaction();
 
   const [search, setSearch] = useState('');
@@ -61,8 +62,17 @@ const Transactions: FC = () => {
     // Implementa la lógica para mostrar/ocultar el modal con la transacción seleccionada
   };
 
-  const updateTransactionSelect = (transaction: any) => {
+  const updateTransactionSelect = (id: string) => {
     // Implementa la lógica para actualizar la transacción seleccionada
+  };
+
+  const handleChangeTransactionStatus = async (id: string, status: 'pending' | 'approved' | 'rejected') => {
+    try {
+      // reenviar el estado tal cual
+      await updateTransaction(id, { id, status } as any);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -119,6 +129,7 @@ const Transactions: FC = () => {
           transactions={transactions}
           handleShowModal={handleShowModal}
           updateTransactionSelect={updateTransactionSelect}
+          onStatusChange={handleChangeTransactionStatus}
         />
         <div className={styles.paginationContainer}>
           <Pagination

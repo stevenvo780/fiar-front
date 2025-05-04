@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { FaUser, FaEnvelope, FaEdit, FaSignOutAlt, FaCommentDots, FaUsers, FaShoppingCart, FaPhone, FaHome } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaEdit, FaSignOutAlt, FaUsers, FaShoppingCart,  FaHome } from 'react-icons/fa';
 import logo from '../../public/img/icon.png';
 import useUser from '@store/user';
 import styles from '@styles/Header.module.css'; 

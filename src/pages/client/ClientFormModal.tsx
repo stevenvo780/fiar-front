@@ -37,17 +37,16 @@ const ClientFormModal: FC<ClientFormModalProps> = ({
           labels={labels}
           handleInputChange={handleInputChange}
           handleSelectChange={handleSelectChange}
+          onSave={handleSave} // Nuevo prop
         />
       </Modal.Body>
       <Modal.Footer>
         <Button style={{ margin: 10 }} variant="success" onClick={handleSave} className="btn btn-success">
           {isUpdating ? 'Actualizar' : 'Crear'}
         </Button>
-        {isUpdating && (
-          <Button variant="secondary" onClick={handleCancel} className="btn btn-danger">
+        <Button variant="secondary" onClick={handleCancel} className="btn btn-danger">
             Cancelar
-          </Button>
-        )}
+        </Button>
       </Modal.Footer>
     </Modal>
   );

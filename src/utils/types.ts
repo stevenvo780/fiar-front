@@ -37,19 +37,20 @@ export interface Client {
   phone?: string;
   label?: string[];
   transactions?: Transaction[];
-  
+  total_quota?: number; // Añadido
+  available_quota?: number; // Añadido
 }
 
 export interface Transaction {
-  id?: string;
-  client_id?: string;
-  owner_id?: string;
-  amount?: number;
-  status?: 'pending' | 'approved' | 'rejected';
-  detail?: any;
-  created_at?: Date;
-  updated_at?: Date;
-  txn_hash?: string;
+  id: string;
+  client_id: string;
+  owner_id: string;
+  amount: number;
+  status: 'pending' | 'approved' | 'rejected';
+  detail: any;
+  created_at: Date;
+  updated_at: Date;
+  txn_hash: string;
 }
 
 export interface BlockchainLog {
