@@ -128,9 +128,9 @@ const TransactionList: FC<TransactionListProps> = ({
                 </div>
                 <div className={styles['data-row']} style={{ marginBottom: 8 }}>
                   <span className={styles['data-label']}>Fecha:</span>
-                  <span className={styles['data-value']}>
-                    {transaction.created_at
-                      ? new Date(transaction.created_at).toLocaleDateString()
+                  <span className={styles['data-value']}>{' '}
+                    {transaction.createdAt
+                      ? new Date(transaction.createdAt).toLocaleDateString()
                       : 'Sin fecha'}
                   </span>
                 </div>
@@ -240,8 +240,8 @@ const TransactionList: FC<TransactionListProps> = ({
                 </div>
                 <div>
                   <strong>Fecha:</strong>{' '}
-                  {selectedTransaction.created_at
-                    ? new Date(selectedTransaction.created_at).toLocaleString()
+                  {selectedTransaction.createdAt
+                    ? new Date(selectedTransaction.createdAt).toLocaleString()
                     : 'Sin fecha'}
                 </div>
               </div>

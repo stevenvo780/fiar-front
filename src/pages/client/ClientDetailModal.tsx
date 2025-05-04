@@ -70,7 +70,7 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, client })
                             {/* Muestra los detalles de cada transacción */}
                             <p><strong>Monto:</strong> ${transaction.amount}</p>
                             <p><strong>Estado:</strong> {transaction.status}</p>
-                            <p><strong>Fecha:</strong> {new Date(transaction.created_at!).toLocaleDateString()}</p>
+                            <p><strong>Fecha:</strong> {new Date(transaction.createdAt!).toLocaleDateString()}</p>
                             {transaction.detail && <p><strong>Detalle:</strong> {transaction.detail}</p>}
                             {transaction.txn_hash && <p><strong>Hash:</strong> {transaction.txn_hash}</p>}
                           </div>
