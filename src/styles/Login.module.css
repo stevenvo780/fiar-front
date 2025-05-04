@@ -8,10 +8,10 @@
   justify-content: center;
   align-items: center;
   background-image: url('../../public/img/fondo.png');
-  background-position: center;
-  background-size: cover;
+  background-position: left bottom;
+  background-size: 800px auto;
   background-repeat: no-repeat;
-  overflow: hidden; /* Evita el scroll */
+  overflow: hidden;
 }
 
 .card {
@@ -19,19 +19,19 @@
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
   padding: 3rem;
   width: 100%;
-  max-width: 800px; /* Aumentar aún más el ancho máximo */
+  max-width: 700px;
 }
 
 .formControl {
-  height: 50px; /* Aumenta la altura de los campos de formulario */
-  font-size: 1.1rem; /* Tamaño de fuente más grande */
+  height: 50px;
+  font-size: 1.1rem;
 }
 
 .forgotPasswordLink {
   display: block;
   text-align: center;
   margin-top: 20px;
-  color: #58A399; /* Verde azulado */
+  color: #58A399;
 }
 
 .modalBackground {
@@ -41,8 +41,6 @@
 .full-width {
   width: 100%;
 }
-
-
 
 @media (max-width: 768px) {
   .card {

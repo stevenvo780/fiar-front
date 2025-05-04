@@ -1,6 +1,5 @@
 import React, { useState, FormEvent } from 'react';
-import { useRouter } from 'next/router';
-import { Card, Form, Button, Row, Col, Container } from 'react-bootstrap';
+import { Card, Form, Button, Container } from 'react-bootstrap';
 import Image from 'next/image';
 import { FcGoogle } from 'react-icons/fc';
 import logo from '@public/img/Logo.png';
@@ -41,79 +40,72 @@ const Login = () => {
   return (
     <>
       <Container className={styles.loginContainer} fluid>
-        <Row className="justify-content-center">
-          <Col md="12" lg="12" className="d-flex flex-column align-items-center">
-           
-            <Card className={styles.card} style={{ width: '100%', maxWidth: '800px' }}>
-              <div className="text-center">
-                <Image fetchPriority="high" src={logo} alt="Logo" width={120} height={120} />
-              </div>
-              <Card.Body>
-                <Form onSubmit={handleSubmit}>
-                  <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Ingresa el correo electrónico</Form.Label>
-                    <Form.Control
-                      placeholder="Correo electrónico"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className={styles.formControl}
-                    />
-                  </Form.Group>
-                  <br />
-                  <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Agrega la contraseña</Form.Label>
-                    <Form.Control
-                      placeholder="Contraseña"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className={styles.formControl}
-                    />
-                  </Form.Group>
-                  <br />
-                  <Button
-                    style={{ width: '100%' }}
-                    className="btn btn-success btn-block mb-3"
-                    type="submit"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Cargando...' : 'Iniciar sesión'}
-                  </Button>
-                  <Button
-                    style={{ width: '100%' }}
-                    className="btn btn-secondary btn-block mb-3 d-flex align-items-center"
-                    onClick={() => handleLoginWithProvider('google')}
-                  >
-                    <FcGoogle size={24} className="mr-3" />
-                    <span className="flex-grow-1 text-center">Continuar con Google</span>
-                  </Button>
-                  <Button
-                    style={{ width: '100%' }}
-                    variant="link"
-                    onClick={() => setShowPasswordResetModal(true)}
-                    className={styles.forgotPasswordLink}
-                  >
-                    ¿Olvidaste tu contraseña?
-                  </Button>
-                  <hr />
-                  <Button
-                    style={{ width: '100%' }}
-                    className="btn btn-secondary btn-block"
-                    onClick={handleRegister}
-                  >
-                    Registrarse
-                  </Button>
-                </Form>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+        <Card className={styles.card}>
+          <div className="text-center">
+            <Image fetchPriority="high" src={logo} alt="Logo" width={120} height={120} />
+          </div>
+          <Card.Body>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Ingresa el correo electrónico</Form.Label>
+                <Form.Control
+                  placeholder="Correo electrónico"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className={styles.formControl}
+                />
+              </Form.Group>
+              <br />
+              <Form.Group controlId="formBasicPassword">
+                <Form.Label>Agrega la contraseña</Form.Label>
+                <Form.Control
+                  placeholder="Contraseña"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className={styles.formControl}
+                />
+              </Form.Group>
+              <br />
+              <Button
+                style={{ width: '100%' }}
+                className="btn btn-success btn-block mb-3"
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Cargando...' : 'Iniciar sesión'}
+              </Button>
+              <Button
+                style={{ width: '100%' }}
+                className="btn btn-secondary btn-block mb-3 d-flex align-items-center"
+                onClick={() => handleLoginWithProvider('google')}
+              >
+                <FcGoogle size={24} className="mr-3" />
+                <span className="flex-grow-1 text-center">Continuar con Google</span>
+              </Button>
+              <Button
+                style={{ width: '100%' }}
+                variant="link"
+                onClick={() => setShowPasswordResetModal(true)}
+                className={styles.forgotPasswordLink}
+              >
+                ¿Olvidaste tu contraseña?
+              </Button>
+              <hr />
+              <Button
+                style={{ width: '100%' }}
+                className="btn btn-secondary btn-block"
+                onClick={handleRegister}
+              >
+                Registrarse
+              </Button>
+            </Form>
+          </Card.Body>
+        </Card>
       </Container>
-
-      {/* Modals */}
       <Register show={showRegisterModal} handleClose={() => setShowRegisterModal(false)} />
       <PasswordResetModal
         show={showPasswordResetModal}
