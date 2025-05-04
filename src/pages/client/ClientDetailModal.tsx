@@ -43,6 +43,8 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, client })
                     <p><strong>Estado:</strong> {client.state}</p>
                     <p><strong>Dirección:</strong> {client.direction}</p>
                     <p><strong>Límite de crédito:</strong> ${client.credit_limit}</p>
+                    <p><strong>Cupo Total:</strong> ${client.total_quota}</p> {/* Añadido */}
+                    <p><strong>Cupo Disponible:</strong> ${client.available_quota}</p> {/* Añadido */}
                     <p><strong>Confiable:</strong> {client.trusted ? 'Sí' : 'No'}</p>
                     <p><strong>Bloqueado:</strong> {client.blocked ? 'Sí' : 'No'}</p>
                     <p><strong>Creado en:</strong> {client.created_at}</p>

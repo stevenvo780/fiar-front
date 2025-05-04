@@ -36,43 +36,57 @@ const ClientView: FC = () => {
   const [limit, setLimit] = useState(50);
 
   useEffect(() => {
+    // Fetch initial data or when page/limit changes, but not search initially
     fetchClient(page, limit, search);
-  }, [page, limit]);
+  }, [page, limit]); // Removed search dependency here to avoid fetching on every keystroke initially
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setClientSelected({ ...clientSelected, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    // Update clientSelected state correctly for different input types
+    setClientSelected(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : (type === 'number' ? (value === '' ? '' : Number(value)) : value)
+    }));
   };
 
   const createOrUpdateClient = async () => {
+    // setLoading is handled by the hooks createClient/updateClient
     try {
-      setLoading(true);
-      if (isUpdating) {
-        await updateClient(clientSelected.id || 0, clientSelected);
-        setIsUpdating(false);
+      if (isUpdating && clientSelected?.id) {
+        await updateClient(clientSelected.id, clientSelected);
+        // No need to call fetchClient here if updateClient updates the redux state correctly
+        // Assuming updateClient updates the specific client in the redux store
       } else {
         await createClient(clientSelected);
+        // After creating, fetch the first page to see the new client potentially
+        // Or fetch the current page if the backend sorts predictably
+        await fetchClient(1, limit, ''); // Fetch first page after creation
       }
-    } catch (err) {
-      console.error('Error al guardar cliente:', err);
-      addAlert({ type: 'danger', message: `Error al ${isUpdating ? 'actualizar' : 'crear'} cliente` });
-    } finally {
-      setLoading(false);
+      // Close modal and reset form on success
       setShowModalCreate(false);
       resetForm();
+    } catch (err) {
+      console.error('Error al guardar cliente:', err);
+      // Keep modal open on error, alert is handled by hooks
     }
+    // No finally block needed for setLoading if hooks handle it
   };
 
   const updateClientSelect = (id: number) => {
-    const selectedClient = client.find((i: Client) => i.id === id);
-    if (selectedClient) {
-      setSelectedClient(selectedClient);
+    // Find the client to edit from the current state
+    const clientToEdit = client.find((cli: Client) => cli.id === id);
+    if (clientToEdit) {
+      // Set the form state with the data of the client being edited
+      setClientSelected(clientToEdit);
       setIsUpdating(true);
       setShowModalCreate(true);
     }
   };
 
   const resetForm = () => {
-    setSelectedClient({} as Client);
+    // Reset clientSelected to an empty object for the next creation
+    setClientSelected({} as Client);
+    setIsUpdating(false); // Ensure isUpdating is reset
   };
 
   const handleShowModalDetail = (client: Client) => {
@@ -101,13 +115,15 @@ const ClientView: FC = () => {
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value;
     setSearch(searchValue);
+    // Fetch only when search term is long enough or cleared
     if (searchValue.length >= 3 || searchValue.length === 0) {
-      fetchClient(1, limit, searchValue);
+      fetchClient(1, limit, searchValue); // Reset to page 1 for new search
     }
   };
 
   const handleLimitChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setLimit(Number(e.target.value));
+    fetchClient(1, Number(e.target.value), search); // Reset to page 1 on limit change
   };
 
   const handleDeleteClient = async (id: number) => {
@@ -245,17 +261,19 @@ const ClientView: FC = () => {
       />
       <ClientFormModal
         show={showModalCreate}
-        onHide={() => setShowModalCreate(false)}
+        onHide={() => { // Use onHide for closing via backdrop or X button
+            setShowModalCreate(false);
+            resetForm();
+        }}
         isUpdating={isUpdating}
-        client={clientSelected}
+        client={clientSelected} // Pass the state variable directly
         labels={labels}
-        handleInputChange={handleInputChange}
+        handleInputChange={handleInputChange} // Pass the handler
         handleSelectChange={handleSelectChange}
-        handleSave={createOrUpdateClient}
-        handleCancel={() => {
-          setIsUpdating(false);
-          setSelectedClient({} as Client);
+        handleSave={createOrUpdateClient} // Pass the save handler
+        handleCancel={() => { // Explicit cancel button action
           setShowModalCreate(false);
+          resetForm();
         }}
       />
     </>

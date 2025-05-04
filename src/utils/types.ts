@@ -35,7 +35,8 @@ export interface Client {
   phone?: string;
   label?: string[];
   transactions?: Transaction[];
-  
+  total_quota?: number; // Añadido
+  available_quota?: number; // Añadido
 }
 
 export interface Transaction {
