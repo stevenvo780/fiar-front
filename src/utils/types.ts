@@ -6,10 +6,11 @@ export interface User {
   id?: string;
   created_at?: Date;
   email: string;
-  update_at?: Date;
+  updated_at?: Date;
   name: string;
   role: UserRoleOptions;
   phone?: string | null;
+  apiKey?: string;
 }
 
 export interface Profile {
