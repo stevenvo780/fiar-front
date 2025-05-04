@@ -8,14 +8,14 @@ import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa';
 interface ClientDetailModalProps {
   show: boolean; // Controla si el modal está visible
   onHide: () => void; // Función para cerrar el modal
-  customer: Client | null; // Información del cliente
+  client: Client | null; // Información del cliente
 }
 
 // Componente funcional que recibe las propiedades
-const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, customer }) => {
+const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, client }) => {
   // Función placeholder para eliminar un cliente
-  const deleteClient = (customerId: number) => {
-    console.log(`Deleting customer with ID: ${customerId}`);
+  const deleteClient = (clientId: number) => {
+    console.log(`Deleting client with ID: ${clientId}`);
   };
 
   return (
@@ -24,7 +24,7 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, customer 
         <Modal.Title>Detalles del Cliente</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {customer && (
+        {client && (
           <>
             {/* Información del cliente */}
             <Container fluid>
@@ -33,19 +33,19 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, customer 
                   <h3>Información del Cliente</h3>
                 </Card.Header>
                 <Card.Body>
-                  <div className="customer-info">
+                  <div className="client-info">
                     {/* Muestra los detalles del cliente */}
-                    <p><strong>Nombre:</strong> {customer.name}</p>
-                    <p><strong>Apellido:</strong> {customer.lastname}</p>
-                    <p><strong>Documento:</strong> {customer.document}</p>
-                    <p><strong>Teléfono:</strong> {customer.phone}</p>
-                    <p><strong>Ciudad:</strong> {customer.city}</p>
-                    <p><strong>Estado:</strong> {customer.state}</p>
-                    <p><strong>Dirección:</strong> {customer.direction}</p>
-                    <p><strong>Límite de crédito:</strong> ${customer.credit_limit}</p>
-                    <p><strong>Confiable:</strong> {customer.trusted ? 'Sí' : 'No'}</p>
-                    <p><strong>Bloqueado:</strong> {customer.blocked ? 'Sí' : 'No'}</p>
-                    <p><strong>Creado en:</strong> {customer.created_at}</p>
+                    <p><strong>Nombre:</strong> {client.name}</p>
+                    <p><strong>Apellido:</strong> {client.lastname}</p>
+                    <p><strong>Documento:</strong> {client.document}</p>
+                    <p><strong>Teléfono:</strong> {client.phone}</p>
+                    <p><strong>Ciudad:</strong> {client.city}</p>
+                    <p><strong>Estado:</strong> {client.state}</p>
+                    <p><strong>Dirección:</strong> {client.direction}</p>
+                    <p><strong>Límite de crédito:</strong> ${client.credit_limit}</p>
+                    <p><strong>Confiable:</strong> {client.trusted ? 'Sí' : 'No'}</p>
+                    <p><strong>Bloqueado:</strong> {client.blocked ? 'Sí' : 'No'}</p>
+                    <p><strong>Creado en:</strong> {client.created_at}</p>
                   </div>
                 </Card.Body>
               </Card>
@@ -59,10 +59,10 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, customer 
                 </Card.Header>
                 <Card.Body>
                   {/* Verifica si hay transacciones disponibles */}
-                  {customer.transactions && customer.transactions.length > 0 ? (
+                  {client.transactions && client.transactions.length > 0 ? (
                     <ListGroup className="transaction-list">
                       {/* Itera sobre las transacciones del cliente */}
-                      {customer.transactions.map((transaction: Transaction, index) => (
+                      {client.transactions.map((transaction: Transaction, index) => (
                         <ListGroup.Item key={transaction.id || index} className="transaction-item">
                           <div className="transaction-info">
                             {/* Muestra los detalles de cada transacción */}
@@ -89,7 +89,7 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, customer 
         {/* Botón para eliminar el cliente */}
         <Button
           className={styles.btnDelete}
-          onClick={() => deleteClient(customer?.id ?? 0)}
+          onClick={() => deleteClient(client?.id ?? 0)}
         >
           <FaTrashAlt style={{ marginRight: '5px' }} /> Eliminar
         </Button>

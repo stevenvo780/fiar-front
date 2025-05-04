@@ -5,14 +5,14 @@ import { Client } from '@utils/types';
 
 // Definición de las propiedades que recibe el componente
 interface ClientFormProps {
-  customer: Client; // Información del cliente
+  client: Client; // Información del cliente
   labels: { value: string, label: string }[]; // Opciones para un select (no usado en el código actual)
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void; // Manejador para cambios en inputs
   handleSelectChange: (event: any) => void; // Manejador para cambios en selects
 }
 
 // Componente funcional que recibe las propiedades
-const ClientForm: FC<ClientFormProps> = ({ customer, labels, handleInputChange, handleSelectChange }) => {
+const ClientForm: FC<ClientFormProps> = ({ client, labels, handleInputChange, handleSelectChange }) => {
   return (
     <Form>
       {/* Sección: Información del Usuario */}
@@ -24,7 +24,7 @@ const ClientForm: FC<ClientFormProps> = ({ customer, labels, handleInputChange, 
             <Form.Control
               type="text"
               name="name"
-              value={customer.name || ''} // Valor actual del campo
+              value={client.name || ''} // Valor actual del campo
               onChange={handleInputChange} // Manejador de cambios
               placeholder="Nombre *" // Texto de ayuda
               className="form-control"
@@ -34,7 +34,7 @@ const ClientForm: FC<ClientFormProps> = ({ customer, labels, handleInputChange, 
             <Form.Control
               type="text"
               name="lastname"
-              value={customer.lastname || ''}
+              value={client.lastname || ''}
               onChange={handleInputChange}
               placeholder="Apellido *"
               className="form-control"
@@ -44,7 +44,7 @@ const ClientForm: FC<ClientFormProps> = ({ customer, labels, handleInputChange, 
             <Form.Control
               type="text"
               name="document"
-              value={customer.document || ''}
+              value={client.document || ''}
               onChange={handleInputChange}
               placeholder="Documento"
               className="form-control"
@@ -54,7 +54,7 @@ const ClientForm: FC<ClientFormProps> = ({ customer, labels, handleInputChange, 
             <Form.Control
               type="text"
               name="phone"
-              value={customer.phone || ''}
+              value={client.phone || ''}
               onChange={handleInputChange}
               placeholder="Teléfono"
               className="form-control"
@@ -64,7 +64,7 @@ const ClientForm: FC<ClientFormProps> = ({ customer, labels, handleInputChange, 
             <Form.Control
               type="text"
               name="city"
-              value={customer.city || ''}
+              value={client.city || ''}
               onChange={handleInputChange}
               placeholder="Ciudad"
               className="form-control"
@@ -74,7 +74,7 @@ const ClientForm: FC<ClientFormProps> = ({ customer, labels, handleInputChange, 
             <Form.Control
               type="text"
               name="state"
-              value={customer.state || ''}
+              value={client.state || ''}
               onChange={handleInputChange}
               placeholder="Estado"
               className="form-control"
@@ -84,7 +84,7 @@ const ClientForm: FC<ClientFormProps> = ({ customer, labels, handleInputChange, 
             <Form.Control
               type="text"
               name="direction"
-              value={customer.direction || ''}
+              value={client.direction || ''}
               onChange={handleInputChange}
               placeholder="Dirección"
               className="form-control"
@@ -102,7 +102,7 @@ const ClientForm: FC<ClientFormProps> = ({ customer, labels, handleInputChange, 
             <Form.Control
               type="number"
               name="credit_limit"
-              value={customer.credit_limit || ''}
+              value={client.credit_limit || ''}
               onChange={handleInputChange}
               placeholder="Límite de crédito"
               className="form-control"
@@ -133,7 +133,7 @@ const ClientForm: FC<ClientFormProps> = ({ customer, labels, handleInputChange, 
             <Form.Check
               type="checkbox"
               name="trusted"
-              checked={customer.trusted || false} // Valor booleano
+              checked={client.trusted || false} // Valor booleano
               onChange={handleInputChange}
               label="Confiable"
             />
@@ -142,7 +142,7 @@ const ClientForm: FC<ClientFormProps> = ({ customer, labels, handleInputChange, 
             <Form.Check
               type="checkbox"
               name="blocked"
-              checked={customer.blocked || false}
+              checked={client.blocked || false}
               onChange={handleInputChange}
               label="Bloqueado"
             />

@@ -7,7 +7,7 @@ interface ClientFormModalProps {
   show: boolean;
   onHide: () => void;
   isUpdating: boolean;
-  customer: Client;
+  client: Client;
   labels: { value: string, label: string }[];
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSelectChange: (event: any) => void;
@@ -19,7 +19,7 @@ const ClientFormModal: FC<ClientFormModalProps> = ({
   show,
   onHide,
   isUpdating,
-  customer,
+  client,
   labels,
   handleInputChange,
   handleSelectChange,
@@ -33,7 +33,7 @@ const ClientFormModal: FC<ClientFormModalProps> = ({
       </Modal.Header>
       <Modal.Body>
         <ClientForm
-          customer={customer}
+          client={client}
           labels={labels}
           handleInputChange={handleInputChange}
           handleSelectChange={handleSelectChange}

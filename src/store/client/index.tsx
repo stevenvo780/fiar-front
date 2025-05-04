@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../rootReducer';
 import { Client } from '@utils/types';
-import customerActions from './actions';
+import clientActions from './actions';
 import api from '../../api';
 import useUI from '../ui';
 import * as XLSX from "xlsx/xlsx";
@@ -19,10 +19,10 @@ const useClient = () => {
     try {
       const response = await api.client.getClientAPI(page, limit, search);
       console.log('respuesta del back de clientes', response);
-      customerActions.setClient(dispatch, response.data.data);
-      customerActions.setTotalPages(dispatch, response.data.total);
-      customerActions.setPage(dispatch, response.data.page);
-      customerActions.setLastPage(dispatch, response.data.last_page);
+      clientActions.setClient(dispatch, response.data.data);
+      clientActions.setTotalPages(dispatch, response.data.total);
+      clientActions.setPage(dispatch, response.data.page);
+      clientActions.setLastPage(dispatch, response.data.last_page);
     } catch (error: any) {
       console.error(`Error fetching client: ${error}`);
       addAlert({ type: 'danger', message: 'Ocurrió un error, consulta a soporte' });
@@ -31,11 +31,11 @@ const useClient = () => {
     }
   };
 
-  const createClient = async (customer: Client) => {
+  const createClient = async (client: Client) => {
     setLoading(true);
     try {
-      const response = await api.client.createClientAPI(customer);
-      customerActions.addClient(dispatch, response.data);
+      const response = await api.client.createClientAPI(client);
+      clientActions.addClient(dispatch, response.data);
       addAlert({ type: 'success', message: 'Cliente creado con éxito.' });
     } catch (error) {
       console.error(`Error: ${error}`);
@@ -45,11 +45,11 @@ const useClient = () => {
     }
   };
 
-  const updateClient = async (id: number, customer: Client) => {
+  const updateClient = async (id: number, client: Client) => {
     setLoading(true);
     try {
-      const response = await api.client.updateClientAPI(id, customer);
-      customerActions.updateClient(dispatch, response.data);
+      const response = await api.client.updateClientAPI(id, client);
+      clientActions.updateClient(dispatch, response.data);
       addAlert({ type: 'success', message: 'Cliente actualizado con éxito.' });
     } catch (error) {
       console.error(`Error: ${error}`);
@@ -63,7 +63,7 @@ const useClient = () => {
     setLoading(true);
     try {
       await api.client.deleteClientAPI(id);
-      customerActions.deleteClient(dispatch, id);
+      clientActions.deleteClient(dispatch, id);
       addAlert({ type: 'success', message: 'Cliente eliminado con éxito.' });
     } catch (error) {
       console.error(`Error: ${error}`);
@@ -78,7 +78,7 @@ const useClient = () => {
     try {
       const response = await api.client.getLabelsAPI();
       const labels = response.data.map((label: string) => ({ value: label, label }));
-      customerActions.setLabels(dispatch, labels);
+      clientActions.setLabels(dispatch, labels);
     } catch (error) {
       console.error(`Error: ${error}`);
       addAlert({ type: 'danger', message: 'Ocurrió un error, consulta a soporte' });
@@ -127,7 +127,7 @@ const useClient = () => {
 
         await api.client.uploadClientAPI({ filename: uniqueFilename });
 
-        customerActions.setPage(dispatch, 1);
+        clientActions.setPage(dispatch, 1);
         fetchClient(1, limit, search);
         addAlert({ type: 'success', message: 'Archivo subido con éxito.' });
       };
@@ -158,12 +158,12 @@ const useClient = () => {
       const response = await api.client.getClientAPI(1, 20000, '');
       const allClient = response.data.data;
 
-      const clientWithLabelsAsString = allClient.map((customer: any) => {
-        const customerNew = {
-          ...customer,
-          label: customer.label ? customer.label.join(', ') : ''
+      const clientWithLabelsAsString = allClient.map((client: any) => {
+        const clientNew = {
+          ...client,
+          label: client.label ? client.label.join(', ') : ''
         };
-        return convertKeysToSpanish(customerNew);
+        return convertKeysToSpanish(clientNew);
       });
       const ws = XLSX.utils.json_to_sheet(clientWithLabelsAsString);
       const wb = XLSX.utils.book_new();

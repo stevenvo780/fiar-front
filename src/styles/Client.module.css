@@ -7,7 +7,7 @@
 }
 
 /* Tarjeta de cliente */
-.customer-card {
+.client-card {
   height: 180px;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
@@ -106,7 +106,7 @@
 
 /* Hacer que las tarjetas se ajusten en pantallas pequeñas */
 @media (max-width: 768px) {
-  .customer-card {
+  .client-card {
     height: auto;
   }
 

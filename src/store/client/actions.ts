@@ -18,12 +18,12 @@ const actions = {
     dispatch({ type: 'SET_LAST_PAGE', payload: lastPage });
   },
 
-  addClient: (dispatch: Dispatch<any>, customer: Client) => {
-    dispatch({ type: 'ADD_CUSTOMER', payload: customer });
+  addClient: (dispatch: Dispatch<any>, client: Client) => {
+    dispatch({ type: 'ADD_CUSTOMER', payload: client });
   },
 
-  updateClient: (dispatch: Dispatch<any>, customer: Client) => {
-    dispatch({ type: 'UPDATE_CUSTOMER', payload: customer });
+  updateClient: (dispatch: Dispatch<any>, client: Client) => {
+    dispatch({ type: 'UPDATE_CUSTOMER', payload: client });
   },
 
   deleteClient: (dispatch: Dispatch<any>, id: number) => {

@@ -5,16 +5,24 @@ import { Transaction } from '@utils/types';
 export const getTransactionsAPI = (
   page: number = 1,
   limit: number = 50,
-  search: string = '',
-  order?: 'asc' | 'desc',
-  status?: string
+  clientSearch: string = '',
+  order: 'asc' | 'desc' = 'desc',
+  status?: string,
+  minAmount?: number,
+  maxAmount?: number,
+  startDate?: string,
+  endDate?: string
 ): Promise<AxiosResponse<{ data: Transaction[]; total: number; page: number; last_page: number }>> => {
   const params = new URLSearchParams();
   params.append('page', String(page));
   params.append('limit', String(limit));
-  if (search) params.append('search', search);
+  if (clientSearch) params.append('clientSearch', clientSearch);
   if (order) params.append('order', order);
   if (status) params.append('status', status);
+  if (minAmount !== undefined) params.append('minAmount', String(minAmount));
+  if (maxAmount !== undefined) params.append('maxAmount', String(maxAmount));
+  if (startDate) params.append('startDate', startDate);
+  if (endDate) params.append('endDate', endDate);
   return axios.get(`/transactions?${params.toString()}`);
 };
 

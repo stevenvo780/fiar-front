@@ -8,11 +8,37 @@ const useTransactions = () => {
   const { transactions, loading, error, total, page, lastPage } = useSelector((state: RootState) => state.transactions);
   const dispatch = useDispatch();
 
-  const fetchTransactions = async (pageParam: number = 1, limit: number = 50, search: string = '') => {
-    if (loading) return;  // Evita que se dispare si ya está cargando
+  const fetchTransactions = async (
+    pageParam: number = 1,
+    limitParam: number = 50,
+    clientSearch: string = '',
+    orderFilter: 'reciente' | 'antiguo' = 'reciente',
+    statusFilter: 'todos' | 'aprobado' | 'no_aprobado' = 'todos',
+    minAmount?: number,
+    maxAmount?: number,
+    startDate?: string,
+    endDate?: string
+  ) => {
+    if (loading) return;
     transactionActions.setLoading(dispatch, true);
     try {
-      const response = await api.transactions.getTransactionsAPI(pageParam, limit, search);
+      // mapear valores UI → API
+      const apiOrder = orderFilter === 'antiguo' ? 'asc' : 'desc';
+      let apiStatus: string | undefined;
+      if (statusFilter === 'aprobado') apiStatus = 'approved';
+      else if (statusFilter === 'no_aprobado') apiStatus = 'rejected';
+      // llamar al endpoint con todos los filtros
+      const response = await api.transactions.getTransactionsAPI(
+        pageParam,
+        limitParam,
+        clientSearch,
+        apiOrder,
+        apiStatus,
+        minAmount,
+        maxAmount,
+        startDate,
+        endDate
+      );
       transactionActions.setTransactions(dispatch, response.data.data);
       transactionActions.setTotal(dispatch, response.data.total);
       transactionActions.setPage(dispatch, response.data.page);

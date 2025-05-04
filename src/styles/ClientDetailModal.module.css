@@ -1,19 +1,19 @@
 /* ClientDetailModal.css */
 
 /* Modal */
-.customer-details {
+.client-details {
     padding: 20px;
     font-family: 'Arial', sans-serif;
     color: #333;
   }
   
-  .customer-details .customer-info p {
+  .client-details .client-info p {
     font-size: 1rem;
     margin: 8px 0;
     line-height: 1.6;
   }
   
-  .customer-details .customer-info strong {
+  .client-details .client-info strong {
     color: #06D6A0;
   }
   

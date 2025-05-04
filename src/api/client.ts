@@ -7,12 +7,12 @@ export const getClientAPI = (page: number = 1, limit: number = 50, search: strin
   return axios.get(url);
 };
 
-export const createClientAPI = (customer: Client): Promise<AxiosResponse<Client>> => {
-  return axios.post('/clients', customer);
+export const createClientAPI = (client: Client): Promise<AxiosResponse<Client>> => {
+  return axios.post('/clients', client);
 };
 
-export const updateClientAPI = (id: number, customer: Client): Promise<AxiosResponse<Client>> => {
-  return axios.put(`/clients/${id}`, customer);
+export const updateClientAPI = (id: number, client: Client): Promise<AxiosResponse<Client>> => {
+  return axios.put(`/clients/${id}`, client);
 };
 
 export const deleteClientAPI = (id: number): Promise<AxiosResponse<void>> => {

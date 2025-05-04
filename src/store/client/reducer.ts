@@ -25,7 +25,7 @@ interface Action {
   payload?: any;
 }
 
-const customerReducer = (state: ClientState = initialClientState, action: Action): ClientState => {
+const clientReducer = (state: ClientState = initialClientState, action: Action): ClientState => {
   switch (action.type) {
     case 'SET_CUSTOMERS':
       return { ...state, client: action.payload };
@@ -34,9 +34,9 @@ const customerReducer = (state: ClientState = initialClientState, action: Action
     case 'ADD_CUSTOMER':
       return { ...state, client: [...state.client, action.payload] };
     case 'UPDATE_CUSTOMER':
-      return { ...state, client: state.client.map(customer => customer.id === action.payload.id ? action.payload : customer) };
+      return { ...state, client: state.client.map(client => client.id === action.payload.id ? action.payload : client) };
     case 'DELETE_CUSTOMER':
-      return { ...state, client: state.client.filter(customer => customer.id !== action.payload) };
+      return { ...state, client: state.client.filter(client => client.id !== action.payload) };
     case 'SET_TOTAL_PAGES':
       return { ...state, totalPages: action.payload };
     case 'SET_PAGE':
@@ -48,4 +48,4 @@ const customerReducer = (state: ClientState = initialClientState, action: Action
   }
 };
 
-export default customerReducer;
+export default clientReducer;

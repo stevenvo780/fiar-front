@@ -52,7 +52,7 @@ const Header = () => {
           <Nav.Link href="/transacciones" className={styles.navItem}>
             <FaMoneyBillTransfer className={styles.icon} size={18} /> transacciones
           </Nav.Link>
-          <Nav.Link href="/customers" className={styles.navItem}>
+          <Nav.Link href="/client" className={styles.navItem}>
             <FaUsers className={styles.icon} size={18} /> Clientes
           </Nav.Link>
           <Nav.Link href="/plans" className={styles.navItem}>

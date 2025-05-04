@@ -27,7 +27,7 @@ const ClientView: FC = () => {
     downloadExcel
   } = useClient();
 
-  const [customer, setClient] = useState<Client>({} as Client);
+  const [clientSelected, setClientSelected] = useState<Client>({} as Client);
   const [isUpdating, setIsUpdating] = useState(false);
   const [showModalDetail, setShowModalDetail] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
@@ -40,17 +40,17 @@ const ClientView: FC = () => {
   }, [page, limit]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setClient({ ...customer, [e.target.name]: e.target.value });
+    setClientSelected({ ...clientSelected, [e.target.name]: e.target.value });
   };
 
   const createOrUpdateClient = async () => {
     try {
       setLoading(true);
       if (isUpdating) {
-        await updateClient(customer.id || 0, customer);
+        await updateClient(clientSelected.id || 0, clientSelected);
         setIsUpdating(false);
       } else {
-        await createClient(customer);
+        await createClient(clientSelected);
       }
     } catch (err) {
       console.error('Error al guardar cliente:', err);
@@ -65,18 +65,18 @@ const ClientView: FC = () => {
   const updateClientSelect = (id: number) => {
     const selectedClient = client.find((i: Client) => i.id === id);
     if (selectedClient) {
-      setClient(selectedClient);
+      setSelectedClient(selectedClient);
       setIsUpdating(true);
       setShowModalCreate(true);
     }
   };
 
   const resetForm = () => {
-    setClient({} as Client);
+    setSelectedClient({} as Client);
   };
 
-  const handleShowModalDetail = (customer: Client) => {
-    setSelectedClient(customer);
+  const handleShowModalDetail = (client: Client) => {
+    setSelectedClient(client);
     setShowModalDetail(true);
   };
 
@@ -91,7 +91,7 @@ const ClientView: FC = () => {
       const labelValue = event[index].value;
       labelsData.push(labelValue);
     }
-    setClient(customer);
+    setSelectedClient(clientSelected);
   };
 
   const handlePageChange = (current: number) => {
@@ -241,20 +241,20 @@ const ClientView: FC = () => {
       <ClientDetailModal
         show={showModalDetail}
         onHide={handleCloseModalDetail}
-        customer={selectedClient}
+        client={selectedClient}
       />
       <ClientFormModal
         show={showModalCreate}
         onHide={() => setShowModalCreate(false)}
         isUpdating={isUpdating}
-        customer={customer}
+        client={clientSelected}
         labels={labels}
         handleInputChange={handleInputChange}
         handleSelectChange={handleSelectChange}
         handleSave={createOrUpdateClient}
         handleCancel={() => {
           setIsUpdating(false);
-          setClient({} as Client);
+          setSelectedClient({} as Client);
           setShowModalCreate(false);
         }}
       />
