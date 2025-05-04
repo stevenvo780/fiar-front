@@ -59,7 +59,7 @@ const EditProfile: React.FC = () => {
         .then(data => {
           setApiUser({
             ...data,
-            apiKey: data.apiKey || '', // Asegura que apiKey esté presente
+            apiKey: data.apiKey ?? data.api_key ?? '', // Soporta ambas variantes
           });
           setError(null);
         })
@@ -79,7 +79,7 @@ const EditProfile: React.FC = () => {
       setFormData({
         email: u.email || '',
         name: u.name || '',
-        apiKey: u.apiKey || '',
+        apiKey: u.apiKey ?? u.api_key ?? '',
       });
     }
   }, [apiUser, user]);
@@ -104,8 +104,8 @@ const EditProfile: React.FC = () => {
       // Refresca los datos del usuario después de actualizar
       const updated = await fetchUser();
       setApiUser({
-        ...updated,
-        apiKey: updated.apiKey || '', // Asegura que apiKey esté presente tras actualizar
+        ...(updated || {}),
+        apiKey: (updated && ((updated as any).apiKey ?? (updated as any).api_key)) || '',
       });
       setSuccess('Perfil actualizado correctamente');
     } catch (err) {

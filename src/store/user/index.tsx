@@ -6,7 +6,8 @@ import userActions from './actions';
 import api from '../../api';
 import useUI from '@store/ui';
 import firebase from 'firebase/compat/app';
-import { reauthenticateWithCredential, updatePassword } from 'firebase/auth';
+import { reauthenticateWithCredential, updatePassword, User } from 'firebase/auth';
+import { User as ApiUser } from '@utils/types'; // Importa el User de tu backend/types
 
 const useUser = () => {
   const { token, user } = useSelector((state: RootState) => state.user);
@@ -118,14 +119,16 @@ const useUser = () => {
     }
   };
 
-  const fetchUser = async () => {
+  const fetchUser = async (): Promise<ApiUser> => {
     setLoading(true);
     try {
       const response = await api.users.getUser();
       userActions.setUser(dispatch, response.data);
+      return response.data;
     } catch (error) {
       console.error('Error fetching user:', error);
       addAlert({ type: 'danger', message: 'Error al obtener la información del usuario' });
+      throw error;
     } finally {
       setLoading(false);
     }
