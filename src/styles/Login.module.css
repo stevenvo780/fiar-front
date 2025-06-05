@@ -7,42 +7,63 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url('../../public/img/fondo.png');
-  background-position: left bottom;
-  background-size: 800px auto;
+  background-color: var(--bg-color);
+  background-image: url('/img/pattern-bg.png'); /* Mantener la imagen de fondo */
+  background-position: left bottom; /* Asegurar que la imagen esté en la esquina inferior izquierda */
+  background-size: 250px auto;
   background-repeat: no-repeat;
   overflow: hidden;
   min-height: 100vh;
+  padding: 20px;
 }
 
 .card {
-  border-radius: 20px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
-  padding: 3rem;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 15px;
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
   max-height: 90vh;
   overflow-y: auto;
   margin: 0 auto;
-  background: #fff;
+  background: var(--white-color);
   display: flex;
   flex-direction: column;
   justify-content: center;
   min-height: auto;
   height: auto;
   max-height: 90vh;
+  border: 1px solid var(--border-color);
 }
 
 .formControl {
   height: 50px;
   font-size: 1.1rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-color);
+  padding: 12px 15px;
+  width: 100%;
+  font-size: 1rem;
+  margin-top: 5px;
+}
+
+.formControl:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(88, 163, 153, 0.25);
 }
 
 .forgotPasswordLink {
   display: block;
   text-align: center;
   margin-top: 20px;
-  color: #58A399;
+  color: var(--link-color) !important;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgotPasswordLink:hover {
+  color: var(--link-hover) !important;
+  text-decoration: underline;
 }
 
 .modalBackground {
@@ -51,6 +72,12 @@
 
 .full-width {
   width: 100%;
+}
+
+/* Ajuste para el logo */
+.logoContainer {
+  margin: 10px auto 20px;
+  max-width: 150px;
 }
 
 @media (max-width: 768px) {
