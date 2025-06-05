@@ -10,5 +10,5 @@ export const updateUserProfile = (userData: any) => {
 };
 
 export const register = (userData: any) => {
-  return axios.post('/register', userData);
+  return axios.post('/auth/register', userData);
 };

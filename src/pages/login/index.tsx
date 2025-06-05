@@ -41,13 +41,13 @@ const Login = () => {
     <>
       <Container className={styles.loginContainer} fluid>
         <Card className={styles.card}>
-          <div className="text-center">
-            <Image fetchPriority="high" src={logo} alt="Logo" width={200} height={200} />
+          <div className={`${styles.logoContainer} text-center`}>
+            <Image fetchPriority="high" src={logo} alt="Logo" width={150} height={150} style={{ objectFit: 'contain' }}/>
           </div>
           <Card.Body>
             <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="formBasicEmail">
-                <Form.Label>Ingresa el correo electrónico</Form.Label>
+              <Form.Group controlId="formBasicEmail" className="mb-3">
+                <Form.Label>Correo electrónico</Form.Label>
                 <Form.Control
                   placeholder="Correo electrónico"
                   type="email"
@@ -57,9 +57,9 @@ const Login = () => {
                   className={styles.formControl}
                 />
               </Form.Group>
-              <br />
-              <Form.Group controlId="formBasicPassword">
-                <Form.Label>Agrega la contraseña</Form.Label>
+              
+              <Form.Group controlId="formBasicPassword" className="mb-3">
+                <Form.Label>Contraseña</Form.Label>
                 <Form.Control
                   placeholder="Contraseña"
                   type="password"
@@ -69,35 +69,38 @@ const Login = () => {
                   className={styles.formControl}
                 />
               </Form.Group>
-              <br />
+              
               <Button
-                style={{ width: '100%' }}
-                className="btn btn-success btn-block mb-3"
+                variant="success"
+                className="w-100 mb-3"
                 type="submit"
                 disabled={isLoading}
               >
                 {isLoading ? 'Cargando...' : 'Iniciar sesión'}
               </Button>
+              
               <Button
-                style={{ width: '100%' }}
-                className="btn btn-secondary btn-block mb-3 d-flex align-items-center"
+                variant="secondary"
+                className="w-100 mb-3 d-flex align-items-center justify-content-center"
                 onClick={() => handleLoginWithProvider('google')}
               >
-                <FcGoogle size={24} className="mr-3" />
-                <span className="flex-grow-1 text-center">Continuar con Google</span>
+                <FcGoogle size={20} className="me-2" />
+                <span>Continuar con Google</span>
               </Button>
+              
               <Button
-                style={{ width: '100%' }}
                 variant="link"
                 onClick={() => setShowPasswordResetModal(true)}
-                className={styles.forgotPasswordLink}
+                className={`w-100 ${styles.forgotPasswordLink}`}
               >
                 ¿Olvidaste tu contraseña?
               </Button>
+              
               <hr />
+              
               <Button
-                style={{ width: '100%' }}
-                className="btn btn-secondary btn-block"
+                variant="secondary"
+                className="w-100"
                 onClick={handleRegister}
               >
                 Registrarse
