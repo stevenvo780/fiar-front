@@ -7,9 +7,9 @@ const IndexPage: React.FC = () => {
   const router = useRouter();
   useEffect(() => {
     if (token) {
-      router.replace('/Home');
+      router.replace('/transacciones');
     } else {
-      router.replace('/login');
+      router.replace('/home');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

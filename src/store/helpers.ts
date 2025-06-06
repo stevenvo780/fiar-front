@@ -26,5 +26,10 @@ export const renewToken = async (): Promise<void> => {
 
 export const clearSession = () => {
   userActions.clearUser(store.dispatch);
-  router.push('/login');
+  // Solo redirigir a login si no estamos en una ruta pública
+  const publicRoutes = ['/login', '/home', '/plans'];
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+  if (!publicRoutes.includes(currentPath)) {
+    router.push('/login');
+  }
 };

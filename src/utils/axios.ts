@@ -27,7 +27,7 @@ service.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
 
-    if ((error.response.status === 401 || error.response.status === 403) && !originalRequest._retry) {
+    if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         await renewToken();
@@ -37,13 +37,23 @@ service.interceptors.response.use(
           return service(originalRequest);
         }
       } catch (renewError) {
-        clearSession();
+        // Solo limpiar sesión si no estamos en una ruta pública
+        const publicRoutes = ['/login', '/home', '/plans'];
+        const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+        if (!publicRoutes.includes(currentPath)) {
+          clearSession();
+        }
         return Promise.reject(renewError);
       }
     }
 
-    if (originalRequest._retry && (error.response.status === 401 || error.response.status === 403)) {
-      clearSession();
+    if (originalRequest._retry && (error.response?.status === 401 || error.response?.status === 403)) {
+      // Solo limpiar sesión si no estamos en una ruta pública
+      const publicRoutes = ['/login', '/home', '/plans'];
+      const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+      if (!publicRoutes.includes(currentPath)) {
+        clearSession();
+      }
       return Promise.reject(error);
     }
 

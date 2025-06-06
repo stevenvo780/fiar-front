@@ -14,12 +14,20 @@ import {
 function HomeHeroButtons() {
   return (
     <div className="d-flex flex-wrap gap-3">
-      <Link href="/plans" passHref>
+      <Link href="/login" passHref>
         <Button
           variant="light"
           size="lg"
         >
-          Comenzar Ahora
+          Iniciar Sesión
+        </Button>
+      </Link>
+      <Link href="/plans" passHref>
+        <Button
+          variant="outline-light"
+          size="lg"
+        >
+          Ver Planes
         </Button>
       </Link>
       <Button
@@ -149,14 +157,15 @@ class Home extends React.Component {
               Regístrese hoy y comience a ofrecer crédito sin intereses de forma segura y controlada.
             </p>
             <div className="d-flex justify-content-center gap-3">
-              <Button
-                variant="light"
-                size="lg"
-                className="text-dark"
-                onClick={() => window.open('https://www.humanizar.co/', '_blank')}
-              >
-                Crear Cuenta
-              </Button>
+              <Link href="/login" passHref>
+                <Button
+                  variant="light"
+                  size="lg"
+                  className="text-dark"
+                >
+                  Iniciar Sesión
+                </Button>
+              </Link>
               <Button
                 variant="outline-light"
                 size="lg"

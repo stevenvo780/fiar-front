@@ -15,17 +15,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!token && router.pathname !== '/login') {
+    const publicRoutes = ['/', '/login', '/home', '/plans'];
+    const isPublicRoute = publicRoutes.includes(router.pathname);
+    
+    if (!token && !isPublicRoute) {
       router.push('/login');
     } else if (token && router.pathname === '/login') {
-      router.push('/home');
+      router.push('/transacciones');
     }
   }, [token, router]);
 
   useEffect(() => {
-    const interval = setInterval(renewToken, 55 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [renewToken]);
+    if (token) {
+      const interval = setInterval(renewToken, 55 * 60 * 1000);
+      return () => clearInterval(interval);
+    }
+  }, [renewToken, token]);
 
   return (
     <div className="main-container">

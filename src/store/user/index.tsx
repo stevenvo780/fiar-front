@@ -23,7 +23,7 @@ const useUser = () => {
       if (user) {
         const token = await user.getIdToken();
         userActions.setToken(dispatch, token);
-        router.push('/home');
+        router.push('/transacciones');
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
@@ -42,7 +42,7 @@ const useUser = () => {
       if (user) {
         const token = await user.getIdToken();
         userActions.setToken(dispatch, token);
-        router.push('/home');
+        router.push('/transacciones');
       }
     } catch (error) {
       console.error(`Error al iniciar sesión con ${providerName}:`, error);
