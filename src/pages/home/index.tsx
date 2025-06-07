@@ -1,13 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
-import { Container, Row, Col, Card, Button, Badge } from 'react-bootstrap';
-import { 
-  FaCreditCard, 
+import { Container, Row, Col, Button, Badge } from 'react-bootstrap';
+import {  
   FaHandshake, 
-  FaStore, 
-  FaLock, 
-  FaUsers, 
-  FaChartLine, 
   FaShieldAlt,
   FaRocket
 } from 'react-icons/fa';
@@ -18,6 +13,7 @@ function HomeHeroButtons() {
         <Button
           variant="light"
           size="lg"
+          className="text-dark"
         >
           Iniciar Sesión
         </Button>
