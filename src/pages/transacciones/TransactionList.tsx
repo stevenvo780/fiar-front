@@ -1,14 +1,13 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Row, Col, Card, Dropdown, Modal, Button, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Row, Col, Card, Dropdown, Button, Badge, OverlayTrigger, Tooltip, Modal } from 'react-bootstrap';
 import { FaInfoCircle, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import { Transaction as TransactionBase } from '@utils/types';
 import styles from '@styles/Transactions.module.css';
+import useUI from '@/store/ui';
 
-// Extiende la interfaz Transaction para incluir client opcional
 interface Client {
   name?: string;
   email?: string;
-  // Agrega más campos si es necesario
 }
 interface Transaction extends TransactionBase {
   client?: Client;
@@ -16,32 +15,19 @@ interface Transaction extends TransactionBase {
 
 interface TransactionListProps {
   transactions: Transaction[];
-  handleShowModal: (transaction: Transaction) => void;
-  updateTransactionSelect: (id: string) => void;
   onStatusChange: (id: string, status: 'pending' | 'approved' | 'rejected') => Promise<void>;
 }
 
-const TransactionList: FC<TransactionListProps> = ({
-  transactions,
-  handleShowModal,
-  updateTransactionSelect,
-  onStatusChange,
-}) => {
-  // Sincroniza el estado local si cambian las transacciones del prop
+const TransactionList: FC<TransactionListProps> = ({ transactions, onStatusChange }) => {
+  const { addAlert } = useUI();
   const [localTransactions, setLocalTransactions] = useState<Transaction[]>(transactions);
   useEffect(() => {
     setLocalTransactions(transactions);
   }, [transactions]);
 
-  // Estado para el modal de historial
-  const [showHistoryModal, setShowHistoryModal] = useState<boolean>(false);
-  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
-
-  // Formatea el monto como moneda
   const formatCurrency = (amount: number) =>
     amount.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 });
 
-  // Devuelve un badge de estado con color
   const StatusBadge = ({ status }: { status: 'pending' | 'approved' | 'rejected' }) => (
     <Badge pill bg={
       status === 'approved' ? 'success'
@@ -67,26 +53,33 @@ const TransactionList: FC<TransactionListProps> = ({
     </Badge>
   );
 
-  // Actualiza el estado de una transacción localmente
-  const handleStatusChange = async (id: Transaction['id'], status: 'pending' | 'approved' | 'rejected') => {
+  const handleStatusChange = async (id: Transaction['id'], newStatus: 'pending' | 'approved' | 'rejected') => {
+    const prevStatus = localTransactions.find(tx => tx.id === id)?.status;
     setLocalTransactions(prev =>
       prev.map(tx =>
-        tx.id === id ? { ...tx, status } : tx
+        tx.id === id ? { ...tx, status: newStatus } : tx
       )
     );
-    await onStatusChange(id, status);
+    try {
+      await onStatusChange(id, newStatus);
+    } catch (err: any) {
+      setLocalTransactions(prev =>
+        prev.map(tx =>
+          tx.id === id ? { ...tx, status: prevStatus! } : tx
+        )
+      );
+      const msg = err.response?.data?.message || 'Error al actualizar el estado de la transacción';
+      addAlert({ type: 'danger', message: msg });
+    }
   };
 
-  // Abre el modal y selecciona la transacción
+  const [showHistoryModal, setShowHistoryModal] = useState<boolean>(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
+
+  // Abre detalle de transacción
   const handleShowHistory = (transaction: Transaction) => {
     setSelectedTransaction(transaction);
     setShowHistoryModal(true);
-  };
-
-  // Cierra el modal
-  const handleCloseHistory = () => {
-    setShowHistoryModal(false);
-    setSelectedTransaction(null);
   };
 
   return (
@@ -182,26 +175,14 @@ const TransactionList: FC<TransactionListProps> = ({
                       </Dropdown>
                     </Col>
                     <Col xs={5}>
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={<Tooltip>Ver detalles de la transacción</Tooltip>}
+                      <Button
+                        variant="info"
+                        size="sm"
+                        className="w-100"
+                        onClick={() => handleShowHistory(transaction)}
                       >
-                        <button
-                          className="btn btn-info btn-sm w-100"
-                          style={{
-                            borderRadius: 8,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            background: '#6c757d', // secondary, más opaco
-                            borderColor: '#6c757d',
-                            color: '#fff'
-                          }}
-                          onClick={() => handleShowHistory(transaction)}
-                        >
-                          <FaInfoCircle style={{ marginRight: 4, color: '#fff' }} />
-                        </button>
-                      </OverlayTrigger>
+                        <FaInfoCircle style={{ marginRight: 4 }} /> Detalle
+                      </Button>
                     </Col>
                   </Row>
                 </div>
@@ -212,7 +193,7 @@ const TransactionList: FC<TransactionListProps> = ({
       </Row>
 
       {/* Modal de historial */}
-      <Modal show={showHistoryModal} onHide={handleCloseHistory} centered>
+      <Modal show={showHistoryModal} onHide={() => setShowHistoryModal(false)} centered>
         <Modal.Header closeButton style={{ borderBottom: 'none' }}>
           <Modal.Title>
             <FaInfoCircle style={{ color: '#3aafa9', marginRight: 8 }} />
@@ -233,16 +214,16 @@ const TransactionList: FC<TransactionListProps> = ({
               }}>
                 <h6 className="mb-2" style={{ color: '#17252a' }}>Datos de la Transacción</h6>
                 <div><strong>ID:</strong> {selectedTransaction.id}</div>
-                <div><strong>Monto:</strong> {formatCurrency(selectedTransaction.amount)}</div>
-                <div>
-                  <strong>Estado:</strong>{' '}
-                  <StatusBadge status={selectedTransaction.status} />
-                </div>
-                <div>
-                  <strong>Fecha:</strong>{' '}
-                  {selectedTransaction.createdAt
-                    ? new Date(selectedTransaction.createdAt).toLocaleString()
-                    : 'Sin fecha'}
+                <div><strong>Amount:</strong> {formatCurrency(selectedTransaction.amount)}</div>
+                <div><strong>Status:</strong> <StatusBadge status={selectedTransaction.status} /></div>
+                <div><strong>Created At:</strong> {new Date(selectedTransaction.createdAt).toLocaleString()}</div>
+                <div><strong>Updated At:</strong> {new Date(selectedTransaction.updatedAt).toLocaleString()}</div>
+                <div><strong>Txn Hash:</strong> {selectedTransaction.txn_hash}</div>
+                <div><strong>Owner ID:</strong> {selectedTransaction.owner_id}</div>
+                <div><strong>Detail:</strong>
+                  <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', background: '#fff', padding: 8, borderRadius: 4 }}>
+                    {JSON.stringify(selectedTransaction.detail, null, 2)}
+                  </pre>
                 </div>
               </div>
               {/* Bloque de información del cliente */}
@@ -254,11 +235,11 @@ const TransactionList: FC<TransactionListProps> = ({
                 <h6 className="mb-2" style={{ color: '#17252a' }}>Datos del Cliente</h6>
                 {selectedTransaction.client ? (
                   <>
-                    <div><strong>Nombre:</strong> {selectedTransaction.client.name}</div>
+                    <div><strong>Name:</strong> {selectedTransaction.client.name}</div>
                     <div><strong>Email:</strong> {selectedTransaction.client.email}</div>
                   </>
                 ) : (
-                  <div>No hay información del cliente.</div>
+                  <div>No client information available.</div>
                 )}
               </div>
             </div>
@@ -267,7 +248,7 @@ const TransactionList: FC<TransactionListProps> = ({
           )}
         </Modal.Body>
         <Modal.Footer style={{ borderTop: 'none' }}>
-          <Button variant="outline-secondary" onClick={handleCloseHistory} style={{ borderRadius: 8 }}>
+          <Button variant="outline-secondary" onClick={() => setShowHistoryModal(false)} style={{ borderRadius: 8 }}>
             <p style={{ margin: 0, color: 'black' }}>Cerrar</p>
           </Button>
         </Modal.Footer>

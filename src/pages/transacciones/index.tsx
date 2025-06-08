@@ -8,6 +8,7 @@ import Pagination from 'rc-pagination';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import 'rc-pagination/assets/index.css';
 import styles from '@styles/Transactions.module.css';
+import TransactionFormModal from './TransactionFormModal';
 
 const Transactions: FC = () => {
   const { setLoading, addAlert } = useUI();
@@ -30,6 +31,8 @@ const Transactions: FC = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [showAdvancedFilters, setShowAdvancedFilters] = useState<boolean>(false);
+  const [showTransactionModal, setShowTransactionModal] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<{id?: string, name?: string}>({});
 
   useEffect(() => {
     fetchTransactions(
@@ -83,22 +86,8 @@ const Transactions: FC = () => {
     setCurrentPage(pageNum);
   };
 
-  const handleShowModal = (transaction: any) => {
-    // Implementa la lógica para mostrar/ocultar el modal con la transacción seleccionada
-  };
-
-  const updateTransactionSelect = (id: string) => {
-    // Implementa la lógica para actualizar la transacción seleccionada
-  };
-
   const handleChangeTransactionStatus = async (id: string, status: 'pending' | 'approved' | 'rejected') => {
-    try {
-      // Solo enviar el status, sin el id en el body
-      await updateTransaction(id, { status });
-    } catch (err) {
-      console.error(err);
-      addAlert({ type: 'danger', message: 'Error al actualizar el estado de la transacción' });
-    }
+    await updateTransaction(id, { status });
   };
 
   const clearAllFilters = () => {
@@ -112,12 +101,33 @@ const Transactions: FC = () => {
     setCurrentPage(1);
   };
 
-  const toggleAdvancedFilters = () => {
-    setShowAdvancedFilters(!showAdvancedFilters);
-  };
-
   return (
     <>
+      {/* Botón flotante para crear transacción */}
+      <Button
+        variant="primary"
+        onClick={() => { setSelectedClient({}); setShowTransactionModal(true); }}
+        style={{
+          position: 'fixed',
+          bottom: 32,
+          right: 32,
+          zIndex: 1050,
+          width: 56,
+          height: 56,
+          borderRadius: '50%',
+          fontSize: 32,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#FFC313',
+          border: 'none',
+          color: '#111',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.15)'
+        }}
+        aria-label="Nueva transacción"
+      >
+        ➕
+      </Button>
       <Container fluid className="px-3">
         {/* Panel de Filtros Mejorado */}
         <div className={`${styles.filtersPanel} mb-4`}>
@@ -168,8 +178,8 @@ const Transactions: FC = () => {
                   className={styles.filterInput}
                 >
                   <option value="todos">Todos</option>
-                  <option value="aprobado">Aprobados</option>
-                  <option value="no_aprobado">No aprobados</option>
+                  <option value="aprobado">Aprobado</option>
+                  <option value="no_aprobado">No Aprobado</option>
                 </Form.Select>
               </Form.Group>
             </div>
@@ -177,7 +187,7 @@ const Transactions: FC = () => {
             <div className="col-6 col-md-3 col-lg-2">
               <Form.Group>
                 <Form.Label className={styles.filterLabel}>
-                  <i className="fas fa-list me-1"></i>
+
                   Por página
                 </Form.Label>
                 <Form.Select
@@ -185,9 +195,9 @@ const Transactions: FC = () => {
                   onChange={handleLimitChange}
                   className={styles.filterInput}
                 >
-                  <option value={10}>10</option>
-                  <option value={20}>20</option>
-                  <option value={50}>50</option>
+                  {[10, 20, 50, 100].map(n => (
+                    <option key={n} value={n}>{n}</option>
+                  ))}
                 </Form.Select>
               </Form.Group>
             </div>
@@ -214,7 +224,7 @@ const Transactions: FC = () => {
           <div className={`${styles.advancedFiltersToggle} d-flex justify-content-between align-items-center`}>
             <Button 
               variant="link"
-              onClick={toggleAdvancedFilters}
+              onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
               className={`p-0 ${styles.toggleBtn}`}
             >
               <i className={`fas ${showAdvancedFilters ? 'fa-chevron-up' : 'fa-chevron-down'} me-2`}></i>
@@ -245,66 +255,48 @@ const Transactions: FC = () => {
               <div className="row g-3">
                 <div className="col-6 col-md-3">
                   <Form.Group>
-                    <Form.Label className={styles.filterLabel}>
-                      <i className="fas fa-dollar-sign me-1"></i>
-                      Monto Mínimo
-                    </Form.Label>
+                    <Form.Label>Monto mínimo</Form.Label>
                     <Form.Control
                       type="number"
-                      placeholder="0.00"
+                      min={0}
                       value={minAmount}
                       onChange={e => setMinAmount(e.target.value)}
-                      className={styles.filterInput}
-                      min="0"
-                      step="0.01"
+                      placeholder="0"
                     />
                   </Form.Group>
                 </div>
                 
                 <div className="col-6 col-md-3">
                   <Form.Group>
-                    <Form.Label className={styles.filterLabel}>
-                      <i className="fas fa-dollar-sign me-1"></i>
-                      Monto Máximo
-                    </Form.Label>
+                    <Form.Label>Monto máximo</Form.Label>
                     <Form.Control
                       type="number"
-                      placeholder="999999.99"
+                      min={0}
                       value={maxAmount}
                       onChange={e => setMaxAmount(e.target.value)}
-                      className={styles.filterInput}
-                      min="0"
-                      step="0.01"
+                      placeholder="0"
                     />
                   </Form.Group>
                 </div>
                 
                 <div className="col-6 col-md-3">
                   <Form.Group>
-                    <Form.Label className={styles.filterLabel}>
-                      <i className="fas fa-calendar-alt me-1"></i>
-                      Fecha Inicio
-                    </Form.Label>
+                    <Form.Label>Fecha inicio</Form.Label>
                     <Form.Control
                       type="date"
                       value={startDate}
                       onChange={e => setStartDate(e.target.value)}
-                      className={styles.filterInput}
                     />
                   </Form.Group>
                 </div>
                 
                 <div className="col-6 col-md-3">
                   <Form.Group>
-                    <Form.Label className={styles.filterLabel}>
-                      <i className="fas fa-calendar-alt me-1"></i>
-                      Fecha Fin
-                    </Form.Label>
+                    <Form.Label>Fecha fin</Form.Label>
                     <Form.Control
                       type="date"
                       value={endDate}
                       onChange={e => setEndDate(e.target.value)}
-                      className={styles.filterInput}
                     />
                   </Form.Group>
                 </div>
@@ -314,8 +306,6 @@ const Transactions: FC = () => {
         </div>
         <TransactionList
           transactions={transactions}
-          handleShowModal={handleShowModal}
-          updateTransactionSelect={updateTransactionSelect}
           onStatusChange={handleChangeTransactionStatus}
         />
         <div className={styles.paginationContainer}>
@@ -338,6 +328,12 @@ const Transactions: FC = () => {
             }}
           />
         </div>
+        <TransactionFormModal
+          show={showTransactionModal}
+          onHide={() => setShowTransactionModal(false)}
+          clientId={selectedClient.id}
+          clientName={selectedClient.name}
+        />
       </Container>
     </>
   );

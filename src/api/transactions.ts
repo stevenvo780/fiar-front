@@ -27,7 +27,7 @@ export const getTransactionsAPI = (
 };
 
 export const addTransactionAPI = (transaction: Transaction): Promise<AxiosResponse<Transaction>> => {
-  return axios.post('/transactions', transaction);
+  return axios.post('/transactions/web', transaction);
 };
 
 export const updateTransactionAPI = (id: string, transaction: UpdateTransaction): Promise<AxiosResponse<Transaction>> => {

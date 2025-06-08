@@ -73,7 +73,8 @@ const useTransactions = () => {
       transactionActions.updateTransaction(dispatch, response.data);
       transactionActions.setError(dispatch, null);
     } catch (err: any) {
-      transactionActions.setError(dispatch, err.message || 'Error al actualizar transacción');
+      transactionActions.setError(dispatch, err.response?.data?.message || 'Error al actualizar transacción');
+      throw err;
     } finally {
       transactionActions.setLoading(dispatch, false);
     }
