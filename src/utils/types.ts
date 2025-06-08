@@ -24,6 +24,7 @@ export interface Profile {
 export interface Client {
   id?: number;
   owner_id?: string;
+  email?: string;  // añadido campo de correo electrónico
   document?: string;
   lastname?: string;
   name?: string;

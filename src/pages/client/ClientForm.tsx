@@ -53,6 +53,16 @@ const ClientForm: FC<ClientFormProps> = ({ client, labels, handleInputChange, ha
           </Col>
           <Col sm="4" style={{ marginTop: 10 }}>
             <Form.Control
+              type="email"
+              name="email"
+              value={client.email || ''}
+              onChange={handleInputChange}
+              placeholder="Email"
+              className="form-control"
+            />
+          </Col>
+          <Col sm="4" style={{ marginTop: 10 }}>
+            <Form.Control
               type="text"
               name="phone"
               value={client.phone || ''}
