@@ -1,6 +1,6 @@
 import axios from '@utils/axios';
 import { AxiosResponse } from 'axios';
-import { Transaction } from '@utils/types';
+import { Transaction, UpdateTransaction } from '@utils/types';
 
 export const getTransactionsAPI = (
   page: number = 1,
@@ -30,7 +30,7 @@ export const addTransactionAPI = (transaction: Transaction): Promise<AxiosRespon
   return axios.post('/transactions', transaction);
 };
 
-export const updateTransactionAPI = (id: string, transaction: Transaction): Promise<AxiosResponse<Transaction>> => {
+export const updateTransactionAPI = (id: string, transaction: UpdateTransaction): Promise<AxiosResponse<Transaction>> => {
   return axios.put(`/transactions/${id}`, transaction);
 };
 

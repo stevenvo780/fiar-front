@@ -68,10 +68,11 @@ const Transactions: FC = () => {
 
   const handleChangeTransactionStatus = async (id: string, status: 'pending' | 'approved' | 'rejected') => {
     try {
-      // reenviar el estado tal cual
-      await updateTransaction(id, { id, status } as any);
+      // Solo enviar el status, sin el id en el body
+      await updateTransaction(id, { status });
     } catch (err) {
       console.error(err);
+      addAlert({ type: 'danger', message: 'Error al actualizar el estado de la transacción' });
     }
   };
 

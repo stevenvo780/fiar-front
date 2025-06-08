@@ -98,54 +98,44 @@ const ClientForm: FC<ClientFormProps> = ({ client, labels, handleInputChange, ha
       <fieldset style={{ marginBottom: '20px', padding: '15px', border: '1px solid #ccc', borderRadius: '10px' }}>
         <legend style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Información del Crédito</legend>
         <Row>
-          {/* Campos numéricos para límite de crédito, cupo total y cupo disponible */}
-          <Col sm="4" style={{ marginTop: 10 }}>
+          {/* Campos para límite de crédito y saldo inicial */}
+          <Col sm="6" style={{ marginTop: 10 }}>
             <Form.Control
               type="number"
               name="credit_limit"
               value={client.credit_limit || ''}
               onChange={handleInputChange}
-              placeholder="Límite de crédito"
+              placeholder="Límite de crédito máximo"
               className="form-control"
             />
           </Col>
-          <Col sm="4" style={{ marginTop: 10 }}>
+          <Col sm="6" style={{ marginTop: 10 }}>
             <Form.Control
               type="number"
-              name="total_quota"
-              value={client.total_quota || ''} // Vinculado a client.total_quota
+              name="current_balance"
+              value={client.current_balance || ''}
               onChange={handleInputChange}
-              placeholder="Cupo Total"
-              className="form-control"
-            />
-          </Col>
-          <Col sm="4" style={{ marginTop: 10 }}>
-            <Form.Control
-              type="number"
-              name="available_quota"
-              value={client.available_quota || ''} // Vinculado a client.available_quota
-              onChange={handleInputChange}
-              placeholder="Cupo Disponible"
+              placeholder="Saldo inicial disponible"
               className="form-control"
             />
           </Col>
           {/* Checkboxes para marcar si el cliente es confiable o está bloqueado */}
-          <Col sm="4" style={{ marginTop: 10 }}>
+          <Col sm="6" style={{ marginTop: 10 }}>
             <Form.Check
               type="checkbox"
               name="trusted"
               checked={client.trusted || false} // Valor booleano
               onChange={handleInputChange}
-              label="Confiable"
+              label="Cliente confiable"
             />
           </Col>
-          <Col sm="4" style={{ marginTop: 10 }}>
+          <Col sm="6" style={{ marginTop: 10 }}>
             <Form.Check
               type="checkbox"
               name="blocked"
               checked={client.blocked || false}
               onChange={handleInputChange}
-              label="Bloqueado"
+              label="Cliente bloqueado"
             />
           </Col>
         </Row>

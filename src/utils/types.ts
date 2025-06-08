@@ -28,6 +28,7 @@ export interface Client {
   lastname?: string;
   name?: string;
   credit_limit?: number;
+  current_balance?: number;
   trusted?: boolean;
   created_at?: string;
   blocked?: boolean;
@@ -37,8 +38,6 @@ export interface Client {
   phone?: string;
   label?: string[];
   transactions?: Transaction[];
-  total_quota?: number; // Añadido
-  available_quota?: number; // Añadido
 }
 
 export interface Transaction {
@@ -51,6 +50,13 @@ export interface Transaction {
   createdAt: Date;
   updatedAt: Date;
   txn_hash: string;
+}
+
+export interface UpdateTransaction {
+  id?: string;
+  status?: 'pending' | 'approved' | 'rejected';
+  amount?: number;
+  detail?: any;
 }
 
 export interface BlockchainLog {

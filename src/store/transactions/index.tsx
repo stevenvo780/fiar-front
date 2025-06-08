@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../rootReducer';
-import { Transaction } from '@utils/types';
+import { Transaction, UpdateTransaction } from '@utils/types';
 import transactionActions from './actions';
 import api from '../../api';
 import { useCallback } from 'react';
@@ -65,7 +65,7 @@ const useTransactions = () => {
     }
   };
 
-  const updateTransaction = async (id: string, transaction: Transaction) => {
+  const updateTransaction = async (id: string, transaction: UpdateTransaction) => {
     transactionActions.setLoading(dispatch, true);
     try {
       const response = await api.transactions.updateTransactionAPI(id, transaction);

@@ -32,12 +32,12 @@ const ClientList: FC<ClientListProps> = ({
                 <span className={styles['data-value']}>{client.document}</span>
               </div>
               <div className={styles['data-row']}>
-                <span className={styles['data-label']}>Cupo:</span>
+                <span className={styles['data-label']}>Límite:</span>
                 <span className={styles['data-value']}>${client.credit_limit}</span>
               </div>
               <div className={styles['data-row']}>
                 <span className={styles['data-label']}>Disponible:</span>
-                <span className={styles['data-value']}>${client.available_quota}</span>
+                <span className={styles['data-value']}>${client.current_balance}</span>
               </div>
 
               <div className={`${styles['button-group']} mt-1 d-flex justify-content-between`}>
