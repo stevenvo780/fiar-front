@@ -27,8 +27,11 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ show, onHid
   const [newClient, setNewClient] = useState<Client>({} as Client);
 
   useEffect(() => {
-    if (show) fetchClient(1, 100, '');
-  }, [show, fetchClient]);
+    if (show) {
+      fetchClient(1, 100, '');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [show]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +48,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ show, onHid
         operation,
         status,
         detail: {},
-        client_id: selectedClient.id,
+        clientId: selectedClient.id, // <-- corregido de client_id a clientId
       };
       await addTransaction(tx);
       addAlert({ type: 'success', message: `Transacción ${operation === 'income' ? 'abonada' : 'prestada'} correctamente` });
@@ -102,7 +105,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ show, onHid
                     isClearable
                   />
                 </div>
-                <Button variant="outline-primary" onClick={() => setShowClientModal(true)}>
+                <Button variant="primary" onClick={() => setShowClientModal(true)}>
                   Nuevo cliente
                 </Button>
               </div>
