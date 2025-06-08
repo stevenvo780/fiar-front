@@ -25,10 +25,25 @@ const Transactions: FC = () => {
   const [currentPage, setCurrentPage] = useState(page);
   const [order, setOrder] = useState<'reciente' | 'antiguo'>('reciente');
   const [statusFilter, setStatusFilter] = useState<'todos' | 'aprobado' | 'no_aprobado'>('todos');
+  const [minAmount, setMinAmount] = useState<string>('');
+  const [maxAmount, setMaxAmount] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState<boolean>(false);
 
   useEffect(() => {
-    fetchTransactions(currentPage, limit, search, order, statusFilter);
-  }, [currentPage, limit, search, order, statusFilter, fetchTransactions]);
+    fetchTransactions(
+      currentPage,
+      limit,
+      search,
+      order,
+      statusFilter,
+      minAmount ? Number(minAmount) : undefined,
+      maxAmount ? Number(maxAmount) : undefined,
+      startDate || undefined,
+      endDate || undefined
+    );
+  }, [currentPage, limit, search, order, statusFilter, minAmount, maxAmount, startDate, endDate, fetchTransactions]);
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value;
@@ -44,7 +59,17 @@ const Transactions: FC = () => {
   const handleDownloadExcel = async () => {
     try {
       setLoading(true);
-      await downloadExcel();
+      await downloadExcel(
+        1,
+        10000,
+        search,
+        order,
+        statusFilter,
+        minAmount ? Number(minAmount) : undefined,
+        maxAmount ? Number(maxAmount) : undefined,
+        startDate || undefined,
+        endDate || undefined
+      );
       addAlert({ type: 'success', message: 'Excel descargado correctamente' });
     } catch (err) {
       console.error('Error al descargar Excel:', err);
@@ -76,56 +101,217 @@ const Transactions: FC = () => {
     }
   };
 
+  const clearAllFilters = () => {
+    setSearch('');
+    setOrder('reciente');
+    setStatusFilter('todos');
+    setMinAmount('');
+    setMaxAmount('');
+    setStartDate('');
+    setEndDate('');
+    setCurrentPage(1);
+  };
+
+  const toggleAdvancedFilters = () => {
+    setShowAdvancedFilters(!showAdvancedFilters);
+  };
+
   return (
     <>
-      <Container className="container">
-        <Navbar expand="lg" className="mb-3">
-          <Navbar.Toggle aria-controls="navbar-transactions" />
-          <Navbar.Collapse id="navbar-transactions">
-            <Nav className="me-auto align-items-center">
-              <Form.Control
-                type="text"
-                placeholder="Buscar..."
-                value={search}
-                onChange={handleSearchChange}
-                className="me-2"
-                style={{ width: '200px', minWidth: 120 }}
-              />
-              <Form.Select
-                value={order}
-                onChange={e => setOrder(e.target.value as 'reciente' | 'antiguo')}
-                className="me-2"
-                style={{ width: '140px', minWidth: 100 }}
-              >
-                <option value="reciente">Más reciente</option>
-                <option value="antiguo">Más antiguo</option>
-              </Form.Select>
-              <Form.Select
-                value={statusFilter}
-                onChange={e => setStatusFilter(e.target.value as 'todos' | 'aprobado' | 'no_aprobado')}
-                className="me-2"
-                style={{ width: '140px', minWidth: 100 }}
-              >
-                <option value="todos">Todos</option>
-                <option value="aprobado">Aprobado</option>
-                <option value="no_aprobado">No aprobado</option>
-              </Form.Select>
-              <Button variant="secondary" onClick={handleDownloadExcel} className="me-2">
-                Descargar Excel
-              </Button>
-              <Form.Select
-                value={limit}
-                onChange={handleLimitChange}
-                style={{ width: '100px', minWidth: 80 }}
-              >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-              </Form.Select>
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-        <hr />
+      <Container fluid className="px-3">
+        {/* Panel de Filtros Mejorado */}
+        <div className={`${styles.filtersPanel} mb-4`}>
+          {/* Filtros Principales */}
+          <div className="row g-3 mb-3">
+            <div className="col-12 col-md-6 col-lg-4">
+              <Form.Group>
+                <Form.Label className={styles.filterLabel}>
+                  <i className="fas fa-search me-1"></i>
+                  Buscar Cliente
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Nombre del cliente..."
+                  value={search}
+                  onChange={handleSearchChange}
+                  className={styles.filterInput}
+                />
+              </Form.Group>
+            </div>
+            
+            <div className="col-6 col-md-3 col-lg-2">
+              <Form.Group>
+                <Form.Label className={styles.filterLabel}>
+                  <i className="fas fa-sort me-1"></i>
+                  Ordenar por
+                </Form.Label>
+                <Form.Select
+                  value={order}
+                  onChange={e => setOrder(e.target.value as 'reciente' | 'antiguo')}
+                  className={styles.filterInput}
+                >
+                  <option value="reciente">Más reciente</option>
+                  <option value="antiguo">Más antiguo</option>
+                </Form.Select>
+              </Form.Group>
+            </div>
+            
+            <div className="col-6 col-md-3 col-lg-2">
+              <Form.Group>
+                <Form.Label className={styles.filterLabel}>
+                  <i className="fas fa-check-circle me-1"></i>
+                  Estado
+                </Form.Label>
+                <Form.Select
+                  value={statusFilter}
+                  onChange={e => setStatusFilter(e.target.value as 'todos' | 'aprobado' | 'no_aprobado')}
+                  className={styles.filterInput}
+                >
+                  <option value="todos">Todos</option>
+                  <option value="aprobado">Aprobados</option>
+                  <option value="no_aprobado">No aprobados</option>
+                </Form.Select>
+              </Form.Group>
+            </div>
+            
+            <div className="col-6 col-md-3 col-lg-2">
+              <Form.Group>
+                <Form.Label className={styles.filterLabel}>
+                  <i className="fas fa-list me-1"></i>
+                  Por página
+                </Form.Label>
+                <Form.Select
+                  value={limit}
+                  onChange={handleLimitChange}
+                  className={styles.filterInput}
+                >
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                </Form.Select>
+              </Form.Group>
+            </div>
+            
+            <div className="col-6 col-md-3 col-lg-2">
+              <Form.Group>
+                <Form.Label className={styles.filterLabel}>
+                  <i className="fas fa-download me-1"></i>
+                  Exportar
+                </Form.Label>
+                <Button 
+                  variant="success" 
+                  onClick={handleDownloadExcel} 
+                  className={`w-100 ${styles.exportBtn}`}
+                >
+                  <i className="fas fa-file-excel me-1"></i>
+                  Excel
+                </Button>
+              </Form.Group>
+            </div>
+          </div>
+          
+          {/* Toggle para Filtros Avanzados */}
+          <div className={`${styles.advancedFiltersToggle} d-flex justify-content-between align-items-center`}>
+            <Button 
+              variant="link"
+              onClick={toggleAdvancedFilters}
+              className={`p-0 ${styles.toggleBtn}`}
+            >
+              <i className={`fas ${showAdvancedFilters ? 'fa-chevron-up' : 'fa-chevron-down'} me-2`}></i>
+              <small className="fw-bold text-primary">
+                FILTROS AVANZADOS 
+                {(minAmount || maxAmount || startDate || endDate) && (
+                  <span className={`badge bg-primary ms-2 ${styles.filterBadge}`}>
+                    {[minAmount, maxAmount, startDate, endDate].filter(Boolean).length}
+                  </span>
+                )}
+              </small>
+            </Button>
+            
+            <Button 
+              variant="outline-secondary" 
+              size="sm" 
+              onClick={clearAllFilters}
+              className={styles.clearFiltersBtn}
+            >
+              <i className="fas fa-times me-1"></i>
+              Limpiar Filtros
+            </Button>
+          </div>
+          
+          {/* Filtros Avanzados - Colapsable */}
+          {showAdvancedFilters && (
+            <div className={styles.advancedFilters}>
+              <div className="row g-3">
+                <div className="col-6 col-md-3">
+                  <Form.Group>
+                    <Form.Label className={styles.filterLabel}>
+                      <i className="fas fa-dollar-sign me-1"></i>
+                      Monto Mínimo
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      placeholder="0.00"
+                      value={minAmount}
+                      onChange={e => setMinAmount(e.target.value)}
+                      className={styles.filterInput}
+                      min="0"
+                      step="0.01"
+                    />
+                  </Form.Group>
+                </div>
+                
+                <div className="col-6 col-md-3">
+                  <Form.Group>
+                    <Form.Label className={styles.filterLabel}>
+                      <i className="fas fa-dollar-sign me-1"></i>
+                      Monto Máximo
+                    </Form.Label>
+                    <Form.Control
+                      type="number"
+                      placeholder="999999.99"
+                      value={maxAmount}
+                      onChange={e => setMaxAmount(e.target.value)}
+                      className={styles.filterInput}
+                      min="0"
+                      step="0.01"
+                    />
+                  </Form.Group>
+                </div>
+                
+                <div className="col-6 col-md-3">
+                  <Form.Group>
+                    <Form.Label className={styles.filterLabel}>
+                      <i className="fas fa-calendar-alt me-1"></i>
+                      Fecha Inicio
+                    </Form.Label>
+                    <Form.Control
+                      type="date"
+                      value={startDate}
+                      onChange={e => setStartDate(e.target.value)}
+                      className={styles.filterInput}
+                    />
+                  </Form.Group>
+                </div>
+                
+                <div className="col-6 col-md-3">
+                  <Form.Group>
+                    <Form.Label className={styles.filterLabel}>
+                      <i className="fas fa-calendar-alt me-1"></i>
+                      Fecha Fin
+                    </Form.Label>
+                    <Form.Control
+                      type="date"
+                      value={endDate}
+                      onChange={e => setEndDate(e.target.value)}
+                      className={styles.filterInput}
+                    />
+                  </Form.Group>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
         <TransactionList
           transactions={transactions}
           handleShowModal={handleShowModal}
