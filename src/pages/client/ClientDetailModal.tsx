@@ -1,8 +1,11 @@
 import { FC } from 'react';
 import { Modal, Button, ListGroup, Container, Card } from 'react-bootstrap';
+import { FaTrashAlt } from 'react-icons/fa';
 import { Client, Transaction } from '@utils/types';
 import styles from '@styles/ClientDetailModal.module.css';
-import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa'; 
+
+const formatCurrency = (amount: number) =>
+  amount.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 });
 
 // Definición de las propiedades que recibe el componente
 interface ClientDetailModalProps {
@@ -42,8 +45,8 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, client })
                     <p><strong>Ciudad:</strong> {client.city}</p>
                     <p><strong>Estado:</strong> {client.state}</p>
                     <p><strong>Dirección:</strong> {client.direction}</p>
-                    <p><strong>Límite de crédito:</strong> ${client.credit_limit}</p>
-                    <p><strong>Saldo disponible:</strong> ${client.current_balance}</p>
+                    <p><strong>Límite de crédito:</strong> {formatCurrency(client.credit_limit || 0)}</p>
+                    <p><strong>Saldo disponible:</strong> {formatCurrency(client.current_balance || 0)}</p>
                     <p><strong>Confiable:</strong> {client.trusted ? 'Sí' : 'No'}</p>
                     <p><strong>Bloqueado:</strong> {client.blocked ? 'Sí' : 'No'}</p>
                     <p><strong>Creado en:</strong> {client.created_at}</p>
@@ -67,7 +70,7 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, client })
                         <ListGroup.Item key={transaction.id || index} className="transaction-item">
                           <div className="transaction-info">
                             {/* Muestra los detalles de cada transacción */}
-                            <p><strong>Monto:</strong> ${transaction.amount}</p>
+                            <p><strong>Monto:</strong> {formatCurrency(transaction.amount)}</p>
                             <p><strong>Estado:</strong> {transaction.status}</p>
                             <p><strong>Fecha:</strong> {new Date(transaction.createdAt!).toLocaleDateString()}</p>
                             {transaction.detail && <p><strong>Detalle:</strong> {transaction.detail}</p>}

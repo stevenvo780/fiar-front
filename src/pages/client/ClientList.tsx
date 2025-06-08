@@ -4,6 +4,12 @@ import { Client } from '@utils/types';
 import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa'; // Agrega los iconos
 import styles from '@styles/Client.module.css';
 
+const formatNumber = (amount: number | string | undefined) => {
+  const num = typeof amount === 'string' ? parseFloat(amount) : amount ?? 0;
+  const [intPart, decPart] = num.toFixed(2).split('.');
+  return intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + decPart;
+};
+
 interface ClientListProps {
   client: Client[];
   handleShowModal: (client: Client) => void;
@@ -33,11 +39,11 @@ const ClientList: FC<ClientListProps> = ({
               </div>
               <div className={styles['data-row']}>
                 <span className={styles['data-label']}>Límite:</span>
-                <span className={styles['data-value']}>${client.credit_limit}</span>
+                <span className={styles['data-value']}>{formatNumber(client.credit_limit || 0)}</span>
               </div>
               <div className={styles['data-row']}>
                 <span className={styles['data-label']}>Disponible:</span>
-                <span className={styles['data-value']}>${client.current_balance}</span>
+                <span className={styles['data-value']}>{formatNumber(client.current_balance || 0)}</span>
               </div>
 
               <div className={`${styles['button-group']} mt-1 d-flex justify-content-between`}>

@@ -25,8 +25,10 @@ const TransactionList: FC<TransactionListProps> = ({ transactions, onStatusChang
     setLocalTransactions(transactions);
   }, [transactions]);
 
-  const formatCurrency = (amount: number) =>
-    amount.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 });
+  const formatCurrency = (amount: number | string | undefined) => {
+    const num = typeof amount === 'string' ? parseFloat(amount) : amount ?? 0;
+    return num.toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
 
   const StatusBadge = ({ status }: { status: 'pending' | 'approved' | 'rejected' }) => (
     <Badge pill bg={
@@ -214,7 +216,7 @@ const TransactionList: FC<TransactionListProps> = ({ transactions, onStatusChang
               }}>
                 <h6 className="mb-2" style={{ color: '#17252a' }}>Datos de la Transacción</h6>
                 <div><strong>ID:</strong> {selectedTransaction.id}</div>
-                <div><strong>Amount:</strong> {formatCurrency(selectedTransaction.amount)}</div>
+                <div><strong>Monto:</strong> {formatCurrency(selectedTransaction.amount)}</div>
                 <div><strong>Status:</strong> <StatusBadge status={selectedTransaction.status} /></div>
                 <div><strong>Created At:</strong> {new Date(selectedTransaction.createdAt).toLocaleString()}</div>
                 <div><strong>Updated At:</strong> {new Date(selectedTransaction.updatedAt).toLocaleString()}</div>
@@ -235,8 +237,8 @@ const TransactionList: FC<TransactionListProps> = ({ transactions, onStatusChang
                 <h6 className="mb-2" style={{ color: '#17252a' }}>Datos del Cliente</h6>
                 {selectedTransaction.client ? (
                   <>
-                    <div><strong>Name:</strong> {selectedTransaction.client.name}</div>
-                    <div><strong>Email:</strong> {selectedTransaction.client.email}</div>
+                    <div><strong>Nombre:</strong> {selectedTransaction.client.name}</div>
+                    <div><strong>Correo:</strong> {selectedTransaction.client.email}</div>
                   </>
                 ) : (
                   <div>No client information available.</div>
