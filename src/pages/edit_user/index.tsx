@@ -19,6 +19,9 @@ const EditProfile: React.FC = () => {
   const [success, setSuccess] = useState<string | null>(null);
 
   const [apiUser, setApiUser] = useState<any>(null);
+  const [plugins, setPlugins] = useState<any>({
+    sinergia: { enabled: false, apiKey: '' },
+  });
 
   const API_URL = process.env.NEXT_PUBLIC_API || 'http://172.23.146.224:8080/api';
 
@@ -38,34 +41,35 @@ const EditProfile: React.FC = () => {
     }
   }, [token, user]);
 
-  // Obtener usuario por ID usando fetch y guardar en apiUser
-  useEffect(() => {
-    if (token) {
-      setLoading(true);
-      fetch(`${API_URL}/user/me/data`, {
+  const fetchApiUser = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${API_URL}/user/me/data`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(res => {
-          if (!res.ok) throw new Error('Error al obtener usuario');
-          return res.json();
-        })
-        .then(data => {
-          setApiUser({
-            ...data,
-            apiKey: data.apiKey ?? data.api_key ?? '', // Soporta ambas variantes
-          });
-          setError(null);
-        })
-        .catch(err => {
-          setError('Error al obtener usuario');
-          setApiUser(null);
-          console.error('Error al obtener usuario:', err);
-        })
-        .finally(() => setLoading(false));
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!res.ok) throw new Error('Error al obtener usuario');
+      const data = await res.json();
+      setApiUser({
+        ...data,
+        apiKey: data.apiKey ?? data.api_key ?? '',
+      });
+    } catch (err) {
+      setError('Error al obtener usuario');
+      setApiUser(null);
+      console.error('Error al obtener usuario:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchApiUser();
     }
   }, [token, API_URL]);
 
@@ -77,6 +81,9 @@ const EditProfile: React.FC = () => {
         email: u.email || '',
         name: u.name || '',
         apiKey: u.apiKey ?? u.api_key ?? '',
+      });
+      setPlugins(u.profile?.plugins || {
+        sinergia: { enabled: false, apiKey: '' },
       });
     }
   }, [apiUser, user]);
@@ -91,19 +98,29 @@ const EditProfile: React.FC = () => {
     setPasswordData({ ...passwordData, [name]: value });
   };
 
+  const handlePluginChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value, checked, type, dataset } = e.target;
+    const plugin = dataset.plugin;
+    if (!plugin) return;
+
+    setPlugins((prev: any) => ({
+      ...prev,
+      [plugin]: {
+        ...prev[plugin],
+        [name]: type === 'checkbox' ? checked : value,
+      },
+    }));
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     setSuccess(null);
     try {
-      await updateUserProfile(formData);
-      // Refresca los datos del usuario después de actualizar
-      const updated = await fetchUser();
-      setApiUser({
-        ...(updated || {}),
-        apiKey: (updated && ((updated as any).apiKey ?? (updated as any).api_key)) || '',
-      });
+      await updateUserProfile({ ...formData, plugins });
+      await fetchUser();
+      await fetchApiUser();  // Volver a cargar datos tras la actualización
       setSuccess('Perfil actualizado correctamente');
     } catch (err) {
       setError('Error al actualizar el perfil');
@@ -162,6 +179,26 @@ const EditProfile: React.FC = () => {
                 value={formData.apiKey}
                 onChange={handleInputChange}
                 placeholder="API Key"
+              />
+            </Form.Group>
+            <Form.Group controlId="formPluginsSinergia" className="mb-3">
+              <Form.Check
+                type="checkbox"
+                label="Habilitar Sinergia"
+                name="enabled"
+                data-plugin="sinergia"
+                checked={plugins.sinergia?.enabled || false}
+                onChange={handlePluginChange}
+              />
+              <Form.Control
+                type="text"
+                name="apiKey"
+                data-plugin="sinergia"
+                value={plugins.sinergia?.apiKey || ''}
+                onChange={handlePluginChange}
+                placeholder="API Key Sinergia"
+                disabled={!plugins.sinergia?.enabled}
+                className="mt-2"
               />
             </Form.Group>
             <Button variant="primary" type="submit" style={{ marginTop: '20px' }}>
