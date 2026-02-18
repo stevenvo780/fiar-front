@@ -78,23 +78,10 @@ export interface Action {
   payload?: any;
 }
 
-export interface CreditCard {
-  number: string;
-  securityCode: string;
-  expirationDate: string;
-  name: string;
-}
-
 export interface PaymentDetails {
-  // Checkout Pro — solo necesita plan y periodicidad
+  // Suscripción recurrente — solo necesita plan y periodicidad
   planType?: string;
   periodicity: PaymentPeriodicity;
-}
-
-export interface ValidationResponse {
-  status: string;
-  transactionId: string;
-  message: string;
 }
 
 export interface Plans {

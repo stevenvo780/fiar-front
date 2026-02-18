@@ -1,12 +1,12 @@
 import axios from '@utils/axios';
 import { AxiosResponse } from 'axios';
-import { User, ValidationResponse } from '@utils/types';
+import { User } from '@utils/types';
 
 /**
- * Crea una preferencia de Checkout Pro.
- * Retorna init_point y sandbox_init_point para redirección.
+ * Crea una suscripción recurrente (PreApproval) en Mercado Pago.
+ * Retorna init_point para redirección al checkout de MP.
  */
-export const createPreferenceAPI = (data: {
+export const createSubscriptionAPI = (data: {
   planType: string;
   frequency: string;
 }): Promise<AxiosResponse<any>> => {
@@ -20,10 +20,6 @@ export const getPaymentStatusAPI = (
   paymentId: string,
 ): Promise<AxiosResponse<any>> => {
   return axios.get(`/mercadopago/payment-status/${paymentId}`);
-};
-
-export const validatePayAPI = (): Promise<AxiosResponse<ValidationResponse>> => {
-  return axios.post('/validatePay');
 };
 
 export const cancelSubscriptionAPI = (): Promise<AxiosResponse<User>> => {

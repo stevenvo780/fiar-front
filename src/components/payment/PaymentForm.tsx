@@ -30,7 +30,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   onPaymentError,
   onCancelSubscription,
 }) => {
-  const { createPreference, cancelSubscription } = usePayments();
+  const { createSubscription, cancelSubscription } = usePayments();
   const { user } = useUser();
   const { setLoading, addAlert } = useUI();
   const [loading, setLoadingLocal] = useState(false);
@@ -43,11 +43,11 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     setLoadingLocal(true);
 
     try {
-      await createPreference({
+      await createSubscription({
         planType: 'BASIC',
         frequency: billingCycle === PaymentPeriodicity.ANNUAL ? 'ANNUALLY' : 'MONTHLY',
       });
-      // createPreference redirige automáticamente a la pasarela de MP
+      // createSubscription redirige automáticamente al checkout de MP
     } catch (error: any) {
       console.error("Error al crear preferencia:", error);
       if (onPaymentError) onPaymentError(error);
@@ -179,7 +179,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             </Col>
           </Row>
         ) : (
-          // Vista de Checkout Pro — sin formulario de tarjeta
+          // Suscripción recurrente vía Mercado Pago PreApproval
           <Row className="g-0">
             {/* Tarjeta del plan */}
             <Col md={5} style={{
@@ -240,12 +240,15 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               </div>
             </Col>
 
-            {/* Panel de pago — Checkout Pro */}
+            {/* Panel de pago — Suscripción recurrente */}
             <Col md={7} className="bg-white p-4 d-flex flex-column justify-content-center">
               <div className="text-center">
-                <h4 className="mb-3">Pago seguro con Mercado Pago</h4>
+                <h4 className="mb-3">Suscripción recurrente con Mercado Pago</h4>
                 <p className="text-muted mb-4">
-                  Serás redirigido a la pasarela segura de Mercado Pago donde podrás pagar con:
+                  Se creará una suscripción automática. Mercado Pago cobrará {billingCycle === PaymentPeriodicity.ANNUAL ? 'cada 12 meses' : 'cada mes'} sin que tengas que volver a pagar manualmente.
+                </p>
+                <p className="text-muted small mb-3">
+                  Puedes pagar con:
                 </p>
 
                 <div className="d-flex flex-wrap justify-content-center gap-3 mb-4">
@@ -264,9 +267,13 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                     <span>Plan:</span>
                     <strong>{planTitle} ({billingCycle === PaymentPeriodicity.ANNUAL ? 'Anual' : 'Mensual'})</strong>
                   </div>
-                  <div className="d-flex justify-content-between">
+                  <div className="d-flex justify-content-between mb-1">
                     <span>Total:</span>
                     <strong className="text-success">${priceInfo.displayPrice} COP</strong>
+                  </div>
+                  <div className="d-flex justify-content-between">
+                    <span>Cobro:</span>
+                    <span className="text-muted">{billingCycle === PaymentPeriodicity.ANNUAL ? 'Automático cada 12 meses' : 'Automático cada mes'}</span>
                   </div>
                 </div>
 
@@ -288,14 +295,14 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                     ) : (
                       <FaLock className="me-2" />
                     )}
-                    Pagar con Mercado Pago
+                    Suscribirme con Mercado Pago
                   </Button>
                 </div>
 
                 <p className="text-muted small mt-3">
                   <FaLock className="me-1" />
                   Tus datos de pago son procesados directamente por Mercado Pago.
-                  <br />Nunca almacenamos tu información financiera.
+                  <br />Puedes cancelar tu suscripción en cualquier momento.
                 </p>
               </div>
             </Col>

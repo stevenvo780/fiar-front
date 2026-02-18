@@ -1,24 +1,20 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import axios from '@utils/axios';
 import { RootState } from '../rootReducer';
-import paymentActions from './actions';
-import { User, ValidationResponse } from '@utils/types';
-import { useRouter } from 'next/router';
+import { User } from '@utils/types';
 import useUI from '@store/ui';
 import useUser from '@store/user';
 
 const usePayments = () => {
-  const { paymentDetails, validationResponse } = useSelector((state: RootState) => state.payments);
-  const dispatch = useDispatch();
+  const { paymentDetails } = useSelector((state: RootState) => state.payments);
   const { setLoading, addAlert } = useUI();
   const { setUser } = useUser();
-  const router = useRouter();
 
   /**
-   * Crea una Preferencia de Checkout Pro en el backend y redirige
-   * al usuario a la pasarela segura de Mercado Pago.
+   * Crea una suscripción recurrente en el backend (PreApproval)
+   * y redirige al usuario al checkout de Mercado Pago.
    */
-  const createPreference = async (data: { planType: string; frequency: string }) => {
+  const createSubscription = async (data: { planType: string; frequency: string }) => {
     setLoading(true);
     try {
       const response = await axios.post('/mercadopago/subscribe', data);
@@ -47,20 +43,6 @@ const usePayments = () => {
     }
   };
 
-  const validatePay = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.post<ValidationResponse>('/validatePay');
-      paymentActions.setValidationResponse(dispatch, response.data);
-      addAlert({ type: 'success', message: 'Validación de pago exitosa.' });
-    } catch (error) {
-      console.error(`Error: ${error}`);
-      addAlert({ type: 'danger', message: 'Ocurrió un error, consulta a soporte' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const cancelSubscription = async () => {
     setLoading(true);
     try {
@@ -77,9 +59,7 @@ const usePayments = () => {
 
   return {
     paymentDetails,
-    validationResponse,
-    createPreference,
-    validatePay,
+    createSubscription,
     cancelSubscription,
   };
 };

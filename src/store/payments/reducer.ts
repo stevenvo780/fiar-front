@@ -1,13 +1,11 @@
-import { PaymentDetails, ValidationResponse } from '@utils/types';
+import { PaymentDetails } from '@utils/types';
 
 export interface PaymentState {
   paymentDetails: PaymentDetails | null;
-  validationResponse: ValidationResponse | null;
 }
 
 export const initialPaymentState: PaymentState = {
   paymentDetails: null,
-  validationResponse: null,
 };
 
 interface Action {
@@ -19,8 +17,6 @@ const reducer = (state: PaymentState = initialPaymentState, action: Action): Pay
   switch (action.type) {
     case 'SET_PAYMENT_DETAILS':
       return { ...state, paymentDetails: action.payload };
-    case 'SET_VALIDATION_RESPONSE':
-      return { ...state, validationResponse: action.payload };
     default:
       return state;
   }

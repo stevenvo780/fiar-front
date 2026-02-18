@@ -30,6 +30,25 @@ const transactionReducer = (
   switch (action.type) {
     case 'SET_TRANSACTIONS':
       return { ...state, transactions: action.payload };
+    case 'ADD_TRANSACTION':
+      return {
+        ...state,
+        transactions: [action.payload, ...state.transactions],
+        total: state.total + 1,
+      };
+    case 'UPDATE_TRANSACTION':
+      return {
+        ...state,
+        transactions: state.transactions.map((t) =>
+          t.id === action.payload.id ? action.payload : t
+        ),
+      };
+    case 'DELETE_TRANSACTION':
+      return {
+        ...state,
+        transactions: state.transactions.filter((t) => t.id !== action.payload),
+        total: state.total - 1,
+      };
     case 'SET_TRANSACTIONS_TOTAL':
       return { ...state, total: action.payload };
     case 'SET_TRANSACTIONS_PAGE':
