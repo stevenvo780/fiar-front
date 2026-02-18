@@ -37,16 +37,35 @@ const useUser = () => {
     setLoading(true);
     try {
       const provider = providers[providerName];
-      const result = await compatAuth.signInWithPopup(provider);
-      const user = result.user;
-      if (user) {
-        const token = await user.getIdToken();
-        userActions.setToken(dispatch, token);
-        router.push('/transacciones');
+      // Intentar popup primero (funciona en desktop)
+      try {
+        const result = await compatAuth.signInWithPopup(provider);
+        const user = result.user;
+        if (user) {
+          const token = await user.getIdToken();
+          userActions.setToken(dispatch, token);
+          router.push('/transacciones');
+        }
+      } catch (popupError: any) {
+        // Si el popup falla (bloqueado, mobile, cookies), usar redirect
+        if (
+          popupError.code === 'auth/popup-blocked' ||
+          popupError.code === 'auth/popup-closed-by-user' ||
+          popupError.code === 'auth/cancelled-popup-request' ||
+          popupError.code === 'auth/operation-not-supported-in-this-environment'
+        ) {
+          console.warn(`Popup bloqueado, usando redirect para ${providerName}`);
+          await compatAuth.signInWithRedirect(provider);
+          return; // La página se recargará después del redirect
+        }
+        throw popupError; // Re-lanzar otros errores
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error al iniciar sesión con ${providerName}:`, error);
-      addAlert({ type: 'danger', message: `Error al iniciar sesión con ${providerName}` });
+      const errorMsg = error.code
+        ? `Error (${error.code}): ${error.message}`
+        : `Error al iniciar sesión con ${providerName}`;
+      addAlert({ type: 'danger', message: errorMsg });
     } finally {
       setLoading(false);
     }
@@ -198,6 +217,22 @@ const useUser = () => {
     }
   };
 
+  const handleRedirectResult = async () => {
+    try {
+      const result = await compatAuth.getRedirectResult();
+      if (result && result.user) {
+        const token = await result.user.getIdToken();
+        userActions.setToken(dispatch, token);
+        router.push('/transacciones');
+      }
+    } catch (error: any) {
+      console.error('Error procesando redirect de auth:', error);
+      if (error.code && error.code !== 'auth/credential-already-in-use') {
+        addAlert({ type: 'danger', message: `Error de autenticación: ${error.message}` });
+      }
+    }
+  };
+
   const isAuthenticated = () => !!token;
 
   return {
@@ -205,6 +240,7 @@ const useUser = () => {
     user,
     loginWithEmail,
     loginWithProvider,
+    handleRedirectResult,
     resetPassword,
     changePassword,
     renewToken,
