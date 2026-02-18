@@ -10,6 +10,19 @@ import 'rc-pagination/assets/index.css';
 import styles from '@styles/Transactions.module.css';
 import TransactionFormModal from './TransactionFormModal';
 
+const paginationLocale = {
+  items_per_page: '/ página',
+  jump_to: 'Ir a',
+  jump_to_confirm: 'confirmar',
+  page: '',
+  prev_page: 'Página anterior',
+  next_page: 'Página siguiente',
+  prev_5: '5 páginas anteriores',
+  next_5: '5 páginas siguientes',
+  prev_3: '3 páginas anteriores',
+  next_3: '3 páginas siguientes',
+};
+
 const Transactions: FC = () => {
   const { setLoading, addAlert } = useUI();
   const {
@@ -128,7 +141,7 @@ const Transactions: FC = () => {
       >
         ➕
       </Button>
-      <Container fluid className="px-3">
+      <Container fluid className="px-3" style={{ paddingBottom: 100 }}>
         {/* Panel de Filtros Mejorado */}
         <div className={`${styles.filtersPanel} mb-4`}>
           {/* Filtros Principales */}
@@ -314,6 +327,7 @@ const Transactions: FC = () => {
             total={lastPage * limit}
             pageSize={limit}
             onChange={handlePageChange}
+            locale={paginationLocale}
             prevIcon={<FaChevronLeft />}
             nextIcon={<FaChevronRight />}
             style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}

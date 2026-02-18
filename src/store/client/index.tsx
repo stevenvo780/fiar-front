@@ -36,9 +36,10 @@ const useClient = () => {
       const response = await api.client.createClientAPI(client);
       clientActions.addClient(dispatch, response.data);
       addAlert({ type: 'success', message: 'Cliente creado con éxito.' });
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error: ${error}`);
-      addAlert({ type: 'danger', message: 'Ocurrió un error, consulta a soporte' });
+      const msg = error?.response?.data?.message || 'Ocurrió un error, consulta a soporte';
+      addAlert({ type: 'danger', message: msg });
     } finally {
       setLoading(false);
     }
@@ -50,9 +51,10 @@ const useClient = () => {
       const response = await api.client.updateClientAPI(id, client);
       clientActions.updateClient(dispatch, response.data);
       addAlert({ type: 'success', message: 'Cliente actualizado con éxito.' });
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error: ${error}`);
-      addAlert({ type: 'danger', message: 'Ocurrió un error, consulta a soporte' });
+      const msg = error?.response?.data?.message || 'Ocurrió un error, consulta a soporte';
+      addAlert({ type: 'danger', message: msg });
     } finally {
       setLoading(false);
     }
@@ -64,9 +66,10 @@ const useClient = () => {
       await api.client.deleteClientAPI(id);
       clientActions.deleteClient(dispatch, id);
       addAlert({ type: 'success', message: 'Cliente eliminado con éxito.' });
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error: ${error}`);
-      addAlert({ type: 'danger', message: 'Ocurrió un error, consulta a soporte' });
+      const msg = error?.response?.data?.message || 'Ocurrió un error, consulta a soporte';
+      addAlert({ type: 'danger', message: msg });
     } finally {
       setLoading(false);
     }

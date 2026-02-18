@@ -60,7 +60,8 @@ const useTransactions = () => {
       transactionActions.addTransaction(dispatch, response.data);
       transactionActions.setError(dispatch, null);
     } catch (err: any) {
-      transactionActions.setError(dispatch, err.message || 'Error al agregar transacción');
+      transactionActions.setError(dispatch, err.response?.data?.message || err.message || 'Error al agregar transacción');
+      throw err;
     } finally {
       transactionActions.setLoading(dispatch, false);
     }

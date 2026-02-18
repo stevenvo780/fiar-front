@@ -50,7 +50,7 @@ const Header = () => {
             <FaHome className={styles.icon} size={18} /> Inicio
           </Nav.Link>
           <Nav.Link href="/transacciones" className={styles.navItem}>
-            <FaMoneyBillTransfer className={styles.icon} size={18} /> transacciones
+            <FaMoneyBillTransfer className={styles.icon} size={18} /> Transacciones
           </Nav.Link>
           <Nav.Link href="/client" className={styles.navItem}>
             <FaUsers className={styles.icon} size={18} /> Clientes

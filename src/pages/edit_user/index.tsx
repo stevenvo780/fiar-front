@@ -118,7 +118,9 @@ const EditProfile: React.FC = () => {
     setError(null);
     setSuccess(null);
     try {
-      await updateUserProfile({ ...formData, plugins });
+      // Solo enviar campos válidos de User (sin plugins)
+      const { email, name, apiKey } = formData;
+      await updateUserProfile({ email, name, apiKey });
       await fetchUser();
       await fetchApiUser();  // Volver a cargar datos tras la actualización
       setSuccess('Perfil actualizado correctamente');

@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FC, useEffect } from 'react';
-import { Container, Row, Col, Form, Button, Dropdown, Navbar, Nav } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Dropdown } from 'react-bootstrap';
 import { withAuthSync } from '@utils/auth';
 import ClientList from './ClientList';
 import useClient from '@store/client';
@@ -11,6 +11,19 @@ import Pagination from 'rc-pagination';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import 'rc-pagination/assets/index.css';
 import styles from '@styles/Client.module.css';
+
+const paginationLocale = {
+  items_per_page: '/ página',
+  jump_to: 'Ir a',
+  jump_to_confirm: 'confirmar',
+  page: '',
+  prev_page: 'Página anterior',
+  next_page: 'Página siguiente',
+  prev_5: '5 páginas anteriores',
+  next_5: '5 páginas siguientes',
+  prev_3: '3 páginas anteriores',
+  next_3: '3 páginas siguientes',
+};
 
 const ClientView: FC = () => {
   const { setLoading, addAlert } = useUI();
@@ -168,64 +181,59 @@ const ClientView: FC = () => {
   return (
     <>
       <Container className="container">
-        <Navbar expand="lg" className={`mb-3 ${styles.roundedNavbar}`}>
-          <Navbar.Toggle aria-controls="navbar-client" />
-          <Navbar.Collapse id="navbar-client">
-            <Nav className="me-auto align-items-center">
-              <Form.Control
-                type="text"
-                placeholder="Buscar..."
-                value={search}
-                onChange={handleSearchChange}
-                className="me-2"
-                style={{ width: '200px' }}
-              />
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  setIsUpdating(false);
-                  resetForm();
-                  setShowModalCreate(true);
-                }}
-                className="me-2"
-              >
-                Nuevo cliente
-              </Button>
-              <Button variant="secondary" onClick={handleDownloadExcel} className="me-2">
-                Descargar Excel
-              </Button>
-              <Dropdown className="me-2">
-                <Dropdown.Toggle variant="success" id="estado-de-cuenta">
-                  Estado de cuenta
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item>En deuda</Dropdown.Item>
-                  <Dropdown.Item>Al día</Dropdown.Item>
-                  <Dropdown.Item>Suspendidos</Dropdown.Item>
-                  <Dropdown.Item>Todos</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-              <Dropdown className="me-2">
-                <Dropdown.Toggle variant="success" id="deudas-pendientes">
-                  Deudas pendientes
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item>Deuda (mayor → menor)</Dropdown.Item>
-                  <Dropdown.Item>Deuda (menor → mayor)</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-              <Form.Select
-                value={limit}
-                onChange={handleLimitChange}
-                style={{ width: '100px' }}
-              >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-              </Form.Select>
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
+        <div className={`mb-3 p-3 ${styles.roundedNavbar}`}>
+          <div className="d-flex flex-wrap gap-2 align-items-center">
+            <Form.Control
+              type="text"
+              placeholder="Buscar..."
+              value={search}
+              onChange={handleSearchChange}
+              style={{ width: '200px', flex: '1 1 180px', maxWidth: '300px' }}
+            />
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setIsUpdating(false);
+                resetForm();
+                setShowModalCreate(true);
+              }}
+            >
+              Nuevo cliente
+            </Button>
+            <Button variant="secondary" onClick={handleDownloadExcel}>
+              Descargar Excel
+            </Button>
+            <Dropdown>
+              <Dropdown.Toggle variant="success" id="estado-de-cuenta">
+                Estado de cuenta
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item>En deuda</Dropdown.Item>
+                <Dropdown.Item>Al día</Dropdown.Item>
+                <Dropdown.Item>Suspendidos</Dropdown.Item>
+                <Dropdown.Item>Todos</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+            <Dropdown>
+              <Dropdown.Toggle variant="success" id="deudas-pendientes">
+                Deudas pendientes
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item>Deuda (mayor → menor)</Dropdown.Item>
+                <Dropdown.Item>Deuda (menor → mayor)</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+            <Form.Select
+              value={limit}
+              onChange={handleLimitChange}
+              style={{ width: '100px' }}
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </Form.Select>
+          </div>
+        </div>
         <hr />
         <ClientList
           client={client}
@@ -239,6 +247,7 @@ const ClientView: FC = () => {
             total={lastPage * limit}
             pageSize={limit}
             onChange={handlePageChange}
+            locale={paginationLocale}
             prevIcon={<FaChevronLeft />}
             nextIcon={<FaChevronRight />}
             style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}

@@ -124,4 +124,24 @@
 .roundedNavbar {
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* Paginación */
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+  padding: 1rem;
+}
+
+@media (max-width: 576px) {
+  .roundedNavbar {
+    border-radius: 8px;
+  }
+
+  .paginationContainer {
+    padding: 0.5rem;
+    margin-top: 1rem;
+  }
 }

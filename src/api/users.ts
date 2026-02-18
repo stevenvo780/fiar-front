@@ -2,7 +2,7 @@ import axios from '@utils/axios';
 import { User } from '@utils/types';
 
 export const getUser = () => {
-  return axios.get('/user');
+  return axios.get('/user/me/data');
 };
 
 export const updateUserProfile = (userData: any) => {

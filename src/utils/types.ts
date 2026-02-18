@@ -86,8 +86,8 @@ export interface CreditCard {
 }
 
 export interface PaymentDetails {
-  tokenId: string;
-  tokenValid: string;
+  // Checkout Pro — solo necesita plan y periodicidad
+  planType?: string;
   periodicity: PaymentPeriodicity;
 }
 

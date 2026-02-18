@@ -1,9 +1,12 @@
-import React from "react";
-import { Container, Row, Col, Card, Button, Badge } from 'react-bootstrap';
+import React, { useState } from "react";
+import { Container, Row, Col, Card, Button, Badge, Modal } from 'react-bootstrap';
 import { FaHandshake, FaStore, FaLock, FaUsers, FaChartLine, FaShieldAlt, FaRocket, FaCreditCard } from 'react-icons/fa';
-import { FaPlayCircle } from 'react-icons/fa'; // Nuevo ícono para el CTA
+import { FaPlayCircle } from 'react-icons/fa';
+import PaymentForm from '@components/payment/PaymentForm';
 
 const PlansPage: React.FC = () => {
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+
   return (
     <Container className="py-5">
       {/* Hero/Promo Section */}
@@ -56,7 +59,7 @@ const PlansPage: React.FC = () => {
                 size="lg"
                 className="w-100 fw-bold"
                 style={{ maxWidth: 220 }}
-                onClick={() => window.open('https://www.humanizar.co/', '_blank')}
+                onClick={() => setShowPaymentModal(true)}
               >
                 Elegir Mensual
               </Button>
@@ -87,7 +90,7 @@ const PlansPage: React.FC = () => {
                 size="lg"
                 className="w-100 fw-bold"
                 style={{ maxWidth: 220 }}
-                onClick={() => window.open('https://www.humanizar.co/', '_blank')}
+                onClick={() => setShowPaymentModal(true)}
               >
                 Elegir Anual
               </Button>
@@ -102,11 +105,26 @@ const PlansPage: React.FC = () => {
         <Button
           variant="success"
           size="lg"
-          onClick={() => window.open('https://www.humanizar.co/', '_blank')}
+          onClick={() => setShowPaymentModal(true)}
         >
-          Solicita tu Demo Gratis
+          Suscribirse Ahora
         </Button>
       </div>
+
+      {/* Modal de pago con Mercado Pago */}
+      <Modal show={showPaymentModal} onHide={() => setShowPaymentModal(false)} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Suscribirse al Plan</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-0">
+          <PaymentForm
+            planTitle="Plan Especial"
+            planPrice="30.000"
+            onPaymentSuccess={() => setShowPaymentModal(false)}
+            onPaymentError={() => {}}
+          />
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 };

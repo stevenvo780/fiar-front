@@ -161,16 +161,38 @@ const useUser = () => {
   const registerUser = async (userData: any) => {
     setLoading(true);
     try {
-      const response = await api.users.register(userData);
-      if (response.data.uid) {
-        addAlert({ type: 'success', message: 'Registro exitoso' });
-        router.push('/login');
-      } else if (response.data.message) {
-        addAlert({ type: 'danger', message: response.data.message });
+      // 1. Crear usuario en Firebase (client-side)
+      const userCredential = await compatAuth.createUserWithEmailAndPassword(
+        userData.email,
+        userData.password,
+      );
+      const firebaseUser = userCredential.user;
+      if (!firebaseUser) {
+        throw new Error('No se pudo crear el usuario en Firebase');
       }
-    } catch (error) {
+
+      // 2. Obtener token de Firebase y guardarlo en el store
+      const firebaseToken = await firebaseUser.getIdToken();
+      userActions.setToken(dispatch, firebaseToken);
+
+      // 3. Registrar usuario en el backend con el token
+      const response = await api.users.register({
+        email: userData.email,
+        name: userData.name,
+        phone: userData.phone,
+      });
+
+      addAlert({ type: 'success', message: 'Registro exitoso' });
+      router.push('/transacciones');
+    } catch (error: any) {
       console.error('Ocurrió un error al registrar:', error);
-      addAlert({ type: 'danger', message: 'Error al registrar' });
+      if (error.code === 'auth/email-already-in-use') {
+        addAlert({ type: 'danger', message: 'Este correo ya está registrado' });
+      } else if (error.code === 'auth/weak-password') {
+        addAlert({ type: 'danger', message: 'La contraseña debe tener al menos 6 caracteres' });
+      } else {
+        addAlert({ type: 'danger', message: error.message || 'Error al registrar' });
+      }
     } finally {
       setLoading(false);
     }

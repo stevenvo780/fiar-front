@@ -163,6 +163,23 @@
   padding: 1rem;
 }
 
+/* Data row spacing */
+.data-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.data-label {
+  font-weight: 600;
+  color: #495057;
+  white-space: nowrap;
+}
+
+.data-value {
+  color: #6c757d;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .filtersPanel {
@@ -218,5 +235,14 @@
   
   .toggleBtn small {
     font-size: 0.75rem;
+  }
+
+  .transaction-card {
+    margin-bottom: 0.5rem;
+  }
+
+  .paginationContainer {
+    padding: 0.5rem;
+    margin-top: 1rem;
   }
 }

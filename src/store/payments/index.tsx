@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from '@utils/axios';
 import { RootState } from '../rootReducer';
 import paymentActions from './actions';
-import { PaymentDetails, User, ValidationResponse } from '@utils/types';
+import { User, ValidationResponse } from '@utils/types';
 import { useRouter } from 'next/router';
 import useUI from '@store/ui';
 import useUser from '@store/user';
@@ -11,22 +11,36 @@ const usePayments = () => {
   const { paymentDetails, validationResponse } = useSelector((state: RootState) => state.payments);
   const dispatch = useDispatch();
   const { setLoading, addAlert } = useUI();
-  const { setUser, logout } = useUser();
+  const { setUser } = useUser();
   const router = useRouter();
 
-  const payUsers = async (details: PaymentDetails) => {
+  /**
+   * Crea una Preferencia de Checkout Pro en el backend y redirige
+   * al usuario a la pasarela segura de Mercado Pago.
+   */
+  const createPreference = async (data: { planType: string; frequency: string }) => {
     setLoading(true);
     try {
-      const response = await axios.post<PaymentDetails>('/payUsers', details);
-      paymentActions.setPaymentDetails(dispatch, response.data);
-      addAlert({ type: 'success', message: 'Pago creado con éxito.' });
-      setUser(response.data);
+      const response = await axios.post('/mercadopago/subscribe', data);
+      const { init_point, sandbox_init_point } = response.data;
+
+      // En desarrollo usar sandbox_init_point, en producción init_point
+      const redirectUrl =
+        process.env.NODE_ENV === 'production' ? init_point : (sandbox_init_point || init_point);
+
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      } else {
+        addAlert({ type: 'danger', message: 'No se recibió URL de pago. Intenta de nuevo.' });
+      }
     } catch (error: any) {
       console.error(error);
-      if (error?.response?.data?.message){
+      if (error?.response?.data?.message) {
         addAlert({ type: 'danger', message: error.response.data.message });
+      } else if (error?.response?.data?.details) {
+        addAlert({ type: 'danger', message: error.response.data.details });
       } else {
-        addAlert({ type: 'danger', message: 'Error al crear el pago.' });
+        addAlert({ type: 'danger', message: 'Error al iniciar el pago.' });
       }
     } finally {
       setLoading(false);
@@ -50,7 +64,7 @@ const usePayments = () => {
   const cancelSubscription = async () => {
     setLoading(true);
     try {
-      const response = await axios.get<User>('/cancelSubscription');
+      const response = await axios.get<User>('/mercadopago/cancel-subscription');
       setUser(response.data);
       addAlert({ type: 'success', message: 'Suscripción cancelada con éxito.' });
     } catch (error) {
@@ -61,23 +75,12 @@ const usePayments = () => {
     }
   };
 
-  const getToken = async () => {
-    try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_WOMPI_URL}/merchants/${process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY}`);
-      return response.data.data.presigned_acceptance.acceptance_token;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  };
-
   return {
     paymentDetails,
     validationResponse,
-    payUsers,
+    createPreference,
     validatePay,
     cancelSubscription,
-    getToken,
   };
 };
 
