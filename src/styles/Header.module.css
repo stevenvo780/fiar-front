@@ -1,98 +1,148 @@
-/* Header.module.css */
+/* Header.module.css — Minimal modern navbar */
 
-/* Estilo del navbar */
 .navbar {
-  background-color: #FFFFFF;  /* Fondo blanco */
-  padding: 15px 30px;
-  border-bottom: 1px solid #EAEAEA;  /* Borde sutil */
-  box-shadow: none;  /* Sin sombra */
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  margin-bottom: 20px; /* Agregar espacio entre el header y el contenido siguiente */
+  background-color: #ffffff;
+  padding: 0 1.5rem;
+  height: 60px;
+  border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  transition: box-shadow 0.2s ease;
+  margin-bottom: 0;
 }
 
-.navbar-toggler-icon {
-  background-color: #333;  /* Color oscuro para el ícono de la hamburguesa */
-}
-
-/* Estilo de la marca */
 .brand {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  text-decoration: none !important;
 }
 
 .logo {
-  margin-right: 10px;
+  border-radius: 10px;
+  object-fit: contain;
 }
 
 .brandName {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1B3862;  /* Color azul */
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0a827f;
+  letter-spacing: -0.02em;
 }
 
-/* Estilo de los elementos de navegación */
-.navItem {
-  margin-left: 20px;
-  font-size: 1rem;
-  color: #333;  /* Color oscuro para los enlaces */
+.toggler {
+  border: none;
+  padding: 0.25rem;
+}
+
+.toggler:focus {
+  box-shadow: none;
+}
+
+/* Nav links */
+.navLinks {
   display: flex;
   align-items: center;
-  transition: color 0.3s ease;
-  padding: 10px 0;
+  gap: 0.25rem;
 }
 
-/* Efecto hover para los enlaces */
+.navItem {
+  display: flex !important;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b !important;
+  padding: 0.5rem 0.75rem !important;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
 .navItem:hover {
-  color: #1B3862;  /* Color azul al pasar el mouse */
+  color: #0a827f !important;
+  background-color: #f0fdfa;
 }
 
-.icon {
-  margin-right: 8px;
+.navItemActive {
+  color: #0a827f !important;
+  background-color: #f0fdfa;
+  font-weight: 600;
 }
 
-.iconUser {
-  font-size: 1.5rem;
-  color: #333;  /* Icono con color oscuro */
+/* User avatar button */
+.avatarBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  transition: color 0.15s ease;
+  cursor: pointer;
 }
 
-.userMenu {
-  background-color: #FFFFFF;
-  box-shadow: none;  /* Sin sombra para el dropdown */
+.avatarBtn:hover {
+  color: #0a827f;
 }
 
-.navbar-collapse {
-  justify-content: flex-end;
+.userMenu :global(.dropdown-toggle)::after {
+  display: none;
 }
 
-/* Estilos de los elementos de dropdown */
-.navDropdownItem {
-  padding: 10px 20px;
-  border: none;  /* Sin bordes en los items del dropdown */
+.userMenu :global(.dropdown-menu) {
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 0.5rem;
+  min-width: 200px;
+  margin-top: 0.5rem;
 }
 
-.navDropdownItem:hover {
-  background-color: #f0f0f0;  /* Color suave al pasar el mouse */
-  color: #333;  /* Color oscuro */
+/* Dropdown items */
+.dropItem {
+  display: flex !important;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  color: #334155 !important;
+  padding: 0.6rem 0.75rem !important;
+  border-radius: 8px;
+  transition: background-color 0.12s ease;
 }
 
-/* Responsividad para móviles */
-@media (max-width: 768px) {
+.dropItem:hover {
+  background-color: #f8fafc !important;
+  color: #0a827f !important;
+}
+
+.dropItemDanger {
+  color: #ef4444 !important;
+}
+
+.dropItemDanger:hover {
+  background-color: #fef2f2 !important;
+  color: #dc2626 !important;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
   .navbar {
-    padding: 20px 15px;
+    height: auto;
+    padding: 0.75rem 1rem;
   }
 
-  .navbar-nav {
+  .navLinks {
     flex-direction: column;
+    align-items: stretch;
+    gap: 0.125rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f0f0f0;
+    margin-top: 0.5rem;
   }
 
   .navItem {
-    margin-left: 0;
-    margin-top: 15px;
-    font-size: 1.1rem;
-  }
-
-  .iconUser {
-    font-size: 1.5rem;
+    padding: 0.65rem 0.75rem !important;
   }
 }

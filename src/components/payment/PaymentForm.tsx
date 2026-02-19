@@ -6,6 +6,8 @@ import useUser from '@store/user';
 import useUI from '@store/ui';
 import { UserRoleOptions, PaymentPeriodicity } from '@utils/types';
 import { FaShieldAlt, FaLock } from 'react-icons/fa';
+import { HiOutlineCheckCircle, HiOutlineXCircle, HiOutlineExclamationTriangle } from 'react-icons/hi2';
+import { TbStarFilled } from 'react-icons/tb';
 
 interface PaymentFormProps {
   planTitle?: string;
@@ -88,10 +90,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   };
 
   const planBenefits = [
-    { icon: "fas fa-check-circle", text: "Mensajes ilimitados" },
-    { icon: "fas fa-check-circle", text: "Clientes ilimitados" },
-    { icon: "fas fa-check-circle", text: "Soporte prioritario" },
-    { icon: "fas fa-check-circle", text: "Envíos mas rápidos" },
+    { text: "Mensajes ilimitados" },
+    { text: "Clientes ilimitados" },
+    { text: "Soporte prioritario" },
+    { text: "Envíos mas rápidos" },
   ];
 
   const hasSpecialPlan = (): boolean => {
@@ -148,7 +150,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             }}>
               <div className="text-center mb-4">
                 <div className="display-1 mb-3">
-                  <i className="fas fa-star-circle text-warning"></i>
+                  <TbStarFilled className="text-warning" size={64} />
                 </div>
                 <h2 className="display-5 fw-bold mb-3">¡Felicidades!</h2>
                 <h3 className="h4 mb-4">Ya tienes activo tu {planTitle}</h3>
@@ -162,7 +164,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                       {planBenefits.map((benefit, index) => (
                         <div key={index} className="col-md-6 mb-3">
                           <div className="d-flex align-items-center">
-                            <i className={`${benefit.icon} me-3 fs-4 text-warning`}></i>
+                            <HiOutlineCheckCircle className="me-3 fs-4 text-warning" />
                             <span className="fs-5">{benefit.text}</span>
                           </div>
                         </div>
@@ -178,9 +180,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                   variant="outline-light"
                   size="sm"
                   onClick={handleCancel}
-                  className="fw-bold"
+                  className="fw-bold d-inline-flex align-items-center gap-1"
                 >
-                  <i className="fas fa-times-circle me-2"></i>
+                  <HiOutlineXCircle size={18} />
                   Cancelar suscripción
                 </Button>
               </div>
@@ -240,7 +242,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
 
                   {planBenefits.map((benefit, index) => (
                     <div key={index} className="d-flex align-items-center mb-3">
-                      <i className={`${benefit.icon} me-2`}></i>
+                      <HiOutlineCheckCircle className="me-2" size={18} />
                       <span>{benefit.text}</span>
                     </div>
                   ))}
@@ -326,7 +328,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         <Modal.Body>
           <div className="text-center mb-4">
             <div className="display-4 text-warning mb-3">
-              <i className="fas fa-exclamation-triangle"></i>
+              <HiOutlineExclamationTriangle size={56} />
             </div>
           </div>
           <p className="fw-bold text-center mb-3">Lamentamos que desees cancelar tu suscripción</p>

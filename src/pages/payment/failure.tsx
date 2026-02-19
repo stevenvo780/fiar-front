@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Card, Button } from "react-bootstrap";
 import { useRouter } from "next/router";
-import { FaTimesCircle } from "react-icons/fa";
+import { HiOutlineXCircle } from "react-icons/hi2";
 
 const PaymentFailure: React.FC = () => {
   const router = useRouter();
@@ -12,11 +12,13 @@ const PaymentFailure: React.FC = () => {
       style={{ minHeight: "70vh" }}
     >
       <Card
-        className="text-center shadow-lg border-0 p-5"
-        style={{ maxWidth: 520 }}
+        className="text-center border-0 p-5"
+        style={{ maxWidth: 520, borderRadius: 20, boxShadow: '0 8px 32px rgba(239,68,68,0.08)' }}
       >
         <Card.Body>
-          <FaTimesCircle size={72} className="text-danger mb-4" />
+          <div className="d-inline-flex align-items-center justify-content-center mb-4" style={{ width: 80, height: 80, borderRadius: '50%', background: '#fef2f2' }}>
+            <HiOutlineXCircle size={48} className="text-danger" />
+          </div>
           <h2 className="fw-bold mb-3">Pago no completado</h2>
           <p className="text-muted mb-4">
             Tu pago no pudo ser procesado. Esto puede ocurrir por fondos

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Card, Button, Spinner } from "react-bootstrap";
 import { useRouter } from "next/router";
-import { FaCheckCircle } from "react-icons/fa";
+import { HiOutlineCheckCircle } from "react-icons/hi2";
 import useUser from "@store/user";
 
 const PaymentSuccess: React.FC = () => {
@@ -10,7 +10,6 @@ const PaymentSuccess: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Refrescar datos del usuario para obtener la suscripción actualizada
     const refresh = async () => {
       try {
         await fetchUser();
@@ -30,15 +29,17 @@ const PaymentSuccess: React.FC = () => {
       style={{ minHeight: "70vh" }}
     >
       <Card
-        className="text-center shadow-lg border-0 p-5"
-        style={{ maxWidth: 520 }}
+        className="text-center border-0 p-5"
+        style={{ maxWidth: 520, borderRadius: 20, boxShadow: '0 8px 32px rgba(16,185,129,0.1)' }}
       >
         <Card.Body>
           {loading ? (
             <Spinner animation="border" variant="success" />
           ) : (
             <>
-              <FaCheckCircle size={72} className="text-success mb-4" />
+              <div className="d-inline-flex align-items-center justify-content-center mb-4" style={{ width: 80, height: 80, borderRadius: '50%', background: '#ecfdf5' }}>
+                <HiOutlineCheckCircle size={48} className="text-success" />
+              </div>
               <h2 className="fw-bold mb-3">¡Pago exitoso!</h2>
               <p className="text-muted mb-4">
                 Tu suscripción ha sido activada correctamente. Ya puedes

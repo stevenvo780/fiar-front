@@ -2,11 +2,19 @@ import React, { useEffect } from 'react';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { FaUser, FaEnvelope, FaEdit, FaSignOutAlt, FaUsers, FaShoppingCart,  FaHome } from 'react-icons/fa';
+import {
+  HiOutlineHome,
+  HiOutlineUserGroup,
+  HiOutlineCreditCard,
+  HiOutlineArrowRightOnRectangle,
+  HiOutlinePencilSquare,
+  HiOutlineEnvelope,
+  HiOutlineUserCircle,
+} from 'react-icons/hi2';
+import { TbArrowsExchange } from 'react-icons/tb';
 import logo from '../../public/img/icon.png';
 import useUser from '@store/user';
-import styles from '@styles/Header.module.css'; 
-import { FaMoneyBillTransfer } from "react-icons/fa6";
+import styles from '@styles/Header.module.css';
 
 const Header = () => {
   const router = useRouter();
@@ -18,61 +26,76 @@ const Header = () => {
     }
   }, [user, token]);
 
-  const handleLogout = () => {
-    logout();
-  };
-
-  const handleEditProfile = () => {
-    router.push('/edit_user');
-  };
+  const isActive = (path: string) => router.pathname === path;
 
   return (
-    <Navbar
-      expand="lg"
-      className={styles.navbar}
-      style={{ minHeight: '56px', padding: '0 1rem', background: '#fff' }} // Reduce height and padding
-    >
-      <Navbar.Brand href="/home" className={styles.brand} style={{ display: 'flex', alignItems: 'center', padding: 0 }}>
+    <Navbar expand="lg" className={styles.navbar}>
+      <Navbar.Brand href="/home" className={styles.brand}>
         <Image
           src={logo}
-          alt="Logo"
-          width={38}
-          height={38}
+          alt="Fiar"
+          width={36}
+          height={36}
           className={styles.logo}
-          style={{ borderRadius: '8px', background: '#f5f5f5', objectFit: 'contain' }} // Reduce white, round corners
           fetchPriority="high"
         />
+        <span className={styles.brandName}>Fiar</span>
       </Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-        <Nav className="ml-auto" style={{ alignItems: 'center' }}>
-          <Nav.Link href="/home" className={styles.navItem}>
-            <FaHome className={styles.icon} size={18} /> Inicio
+      <Navbar.Toggle aria-controls="main-nav" className={styles.toggler} />
+      <Navbar.Collapse id="main-nav" className="justify-content-end">
+        <Nav className={styles.navLinks}>
+          <Nav.Link
+            href="/home"
+            className={`${styles.navItem} ${isActive('/home') ? styles.navItemActive : ''}`}
+          >
+            <HiOutlineHome size={19} />
+            <span>Inicio</span>
           </Nav.Link>
-          <Nav.Link href="/transacciones" className={styles.navItem}>
-            <FaMoneyBillTransfer className={styles.icon} size={18} /> Transacciones
+          <Nav.Link
+            href="/transacciones"
+            className={`${styles.navItem} ${isActive('/transacciones') ? styles.navItemActive : ''}`}
+          >
+            <TbArrowsExchange size={19} />
+            <span>Transacciones</span>
           </Nav.Link>
-          <Nav.Link href="/client" className={styles.navItem}>
-            <FaUsers className={styles.icon} size={18} /> Clientes
+          <Nav.Link
+            href="/client"
+            className={`${styles.navItem} ${isActive('/client') ? styles.navItemActive : ''}`}
+          >
+            <HiOutlineUserGroup size={19} />
+            <span>Clientes</span>
           </Nav.Link>
-          <Nav.Link href="/plans" className={styles.navItem}>
-            <FaShoppingCart className={styles.icon} size={18} /> Planes
+          <Nav.Link
+            href="/plans"
+            className={`${styles.navItem} ${isActive('/plans') ? styles.navItemActive : ''}`}
+          >
+            <HiOutlineCreditCard size={19} />
+            <span>Planes</span>
           </Nav.Link>
+
           <NavDropdown
-            title={<FaUser className={styles.iconUser} size={18} />}
+            title={
+              <span className={styles.avatarBtn}>
+                <HiOutlineUserCircle size={26} />
+              </span>
+            }
             id="user-menu"
             align={{ lg: 'end' }}
             drop="down"
             className={styles.userMenu}
           >
-            <NavDropdown.Item href="/contact">
-              <FaEnvelope className={styles.icon} size={16} /> Contáctanos
+            <NavDropdown.Item href="/contact" className={styles.dropItem}>
+              <HiOutlineEnvelope size={17} />
+              <span>Contáctanos</span>
             </NavDropdown.Item>
-            <NavDropdown.Item onClick={handleEditProfile}>
-              <FaEdit className={styles.icon} size={16} /> Editar perfil
+            <NavDropdown.Item onClick={() => router.push('/edit_user')} className={styles.dropItem}>
+              <HiOutlinePencilSquare size={17} />
+              <span>Editar perfil</span>
             </NavDropdown.Item>
-            <NavDropdown.Item onClick={handleLogout}>
-              <FaSignOutAlt className={styles.icon} size={16} /> Cerrar sesión
+            <NavDropdown.Divider />
+            <NavDropdown.Item onClick={() => logout()} className={`${styles.dropItem} ${styles.dropItemDanger}`}>
+              <HiOutlineArrowRightOnRectangle size={17} />
+              <span>Cerrar sesión</span>
             </NavDropdown.Item>
           </NavDropdown>
         </Nav>
