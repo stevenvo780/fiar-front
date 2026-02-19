@@ -23,7 +23,7 @@ const useUser = () => {
       if (user) {
         const token = await user.getIdToken();
         userActions.setToken(dispatch, token);
-        router.push('/transacciones');
+        router.push('/dashboard');
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
@@ -44,7 +44,7 @@ const useUser = () => {
         if (user) {
           const token = await user.getIdToken();
           userActions.setToken(dispatch, token);
-          router.push('/transacciones');
+          router.push('/dashboard');
         }
       } catch (popupError: any) {
         // Si el popup falla (bloqueado, mobile, cookies), usar redirect
@@ -202,7 +202,7 @@ const useUser = () => {
       });
 
       addAlert({ type: 'success', message: 'Registro exitoso' });
-      router.push('/transacciones');
+      router.push('/dashboard');
     } catch (error: any) {
       console.error('Ocurrió un error al registrar:', error);
       if (error.code === 'auth/email-already-in-use') {
@@ -223,7 +223,7 @@ const useUser = () => {
       if (result && result.user) {
         const token = await result.user.getIdToken();
         userActions.setToken(dispatch, token);
-        router.push('/transacciones');
+        router.push('/dashboard');
       }
     } catch (error: any) {
       console.error('Error procesando redirect de auth:', error);

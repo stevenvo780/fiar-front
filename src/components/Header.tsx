@@ -10,6 +10,7 @@ import {
   HiOutlinePencilSquare,
   HiOutlineEnvelope,
   HiOutlineUserCircle,
+  HiOutlineChartBarSquare,
 } from 'react-icons/hi2';
 import { TbArrowsExchange } from 'react-icons/tb';
 import logo from '../../public/img/icon.png';
@@ -45,11 +46,11 @@ const Header = () => {
       <Navbar.Collapse id="main-nav" className="justify-content-end">
         <Nav className={styles.navLinks}>
           <Nav.Link
-            href="/home"
-            className={`${styles.navItem} ${isActive('/home') ? styles.navItemActive : ''}`}
+            href="/dashboard"
+            className={`${styles.navItem} ${isActive('/dashboard') ? styles.navItemActive : ''}`}
           >
-            <HiOutlineHome size={19} />
-            <span>Inicio</span>
+            <HiOutlineChartBarSquare size={19} />
+            <span>Dashboard</span>
           </Nav.Link>
           <Nav.Link
             href="/transacciones"

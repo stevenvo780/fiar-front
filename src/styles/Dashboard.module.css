@@ -1,0 +1,348 @@
+.dashboardContainer {
+  padding: 0 1rem 2rem;
+}
+
+.greeting {
+  margin-bottom: 2rem;
+}
+
+.greetingTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--font-color);
+  margin-bottom: 0.25rem;
+}
+
+.greetingSubtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+/* Metric cards grid */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.metricCard {
+  background: var(--white-color);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.metricCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(10, 130, 127, 0.08);
+}
+
+.metricIconWrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.metricIconWrap.teal {
+  background: linear-gradient(135deg, #e0f7fa, #f0fdfa);
+  color: var(--primary-color);
+}
+
+.metricIconWrap.amber {
+  background: linear-gradient(135deg, #fef3c7, #fffbeb);
+  color: #d97706;
+}
+
+.metricIconWrap.green {
+  background: linear-gradient(135deg, #d1fae5, #ecfdf5);
+  color: #059669;
+}
+
+.metricIconWrap.red {
+  background: linear-gradient(135deg, #fee2e2, #fef2f2);
+  color: #dc2626;
+}
+
+.metricIconWrap.blue {
+  background: linear-gradient(135deg, #dbeafe, #eff6ff);
+  color: #2563eb;
+}
+
+.metricIconWrap.purple {
+  background: linear-gradient(135deg, #ede9fe, #f5f3ff);
+  color: #7c3aed;
+}
+
+.metricBody {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.metricLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.15rem;
+}
+
+.metricValue {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--font-color);
+  line-height: 1.2;
+}
+
+.metricSub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+/* Sections row */
+.sectionsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .sectionsRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sectionCard {
+  background: var(--white-color);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--font-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.sectionBody {
+  padding: 1rem 1.25rem;
+}
+
+.sectionEmpty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Transaction item in recent list */
+.txItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.txItem:last-child {
+  border-bottom: none;
+}
+
+.txLeft {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.txClient {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--font-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.txDate {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.txRight {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.txAmount {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--font-color);
+}
+
+.txBadge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.2em 0.6em;
+  border-radius: 8px;
+  text-transform: uppercase;
+}
+
+.txBadge.approved {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.txBadge.pending {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.txBadge.rejected {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Client item */
+.clientItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.clientItem:last-child {
+  border-bottom: none;
+}
+
+.clientName {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--font-color);
+}
+
+.clientBalance {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--primary-color);
+}
+
+/* Quick actions */
+.actionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--white-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: var(--font-color);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.actionBtn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: #f0fdfa;
+  transform: translateY(-1px);
+}
+
+.actionIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e0f7fa, #f0fdfa);
+  color: var(--primary-color);
+}
+
+/* Plan badge */
+.planBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3em 0.75em;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.planBadge.free {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.planBadge.special {
+  background: linear-gradient(135deg, #fef3c7, #fffbeb);
+  color: #d97706;
+}
+
+.planBadge.normal {
+  background: linear-gradient(135deg, #e0f7fa, #f0fdfa);
+  color: var(--primary-color);
+}
+
+/* Skeleton loading */
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeletonLine {
+  height: 1rem;
+  margin-bottom: 0.5rem;
+  composes: skeleton;
+}
+
+.skeletonCard {
+  height: 90px;
+  composes: skeleton;
+}

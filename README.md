@@ -22,7 +22,7 @@ FIAR Frontend es la interfaz de usuario del sistema de gestión de créditos del
 - **Dashboard de créditos**: Interfaz principal para gestión de créditos
 - **Portal de clientes**: Gestión completa de información de clientes
 - **Centro de transacciones**: Monitoreo y control de operaciones crediticias
-- **Sistema de pagos**: Integración con Wompi y métodos de pago
+- **Sistema de pagos**: Integración con Mercado Pago y suscripciones recurrentes
 - **Analytics financiero**: Reportes y métricas en tiempo real
 
 ## ✨ Características Principales
@@ -51,7 +51,7 @@ FIAR Frontend es la interfaz de usuario del sistema de gestión de créditos del
 - **Exportación de reportes** en múltiples formatos
 
 ### 💳 Sistema de Pagos
-- **Integración Wompi** para pagos en línea
+- **Integración Mercado Pago** para suscripciones recurrentes
 - **Payment Links** dinámicos
 - **Suscripciones** y planes recurrentes
 - **Métodos de pago** múltiples
@@ -231,9 +231,8 @@ NEXT_PUBLIC_ENABLE_ANALYTICS=true
 NEXT_PUBLIC_ENABLE_NOTIFICATIONS=true
 NEXT_PUBLIC_ENABLE_EXCEL_IMPORT=true
 
-# Wompi Integration
-NEXT_PUBLIC_WOMPI_PUBLIC_KEY=pub_test_your_public_key
-NEXT_PUBLIC_WOMPI_SANDBOX=true
+# Mercado Pago Integration
+NEXT_PUBLIC_MP_PUBLIC_KEY=your_mp_public_key
 
 # UI Configuration
 NEXT_PUBLIC_DEFAULT_PAGE_SIZE=10
@@ -308,7 +307,7 @@ docker run -p 3000:3000 fiar-frontend
 - **Exportación de reportes** personalizados
 
 ### 💳 Sistema de Pagos
-- **Formulario de pago** integrado con Wompi
+- **Formulario de pago** integrado con Mercado Pago
 - **Payment links** generados dinámicamente
 - **Gestión de suscripciones** y planes
 - **Historial de pagos** completo

@@ -7,7 +7,7 @@ const IndexPage: React.FC = () => {
   const router = useRouter();
   useEffect(() => {
     if (token) {
-      router.replace('/transacciones');
+      router.replace('/dashboard');
     } else {
       router.replace('/home');
     }

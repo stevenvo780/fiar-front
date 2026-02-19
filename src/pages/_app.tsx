@@ -19,7 +19,7 @@ function RedirectResultHandler() {
       if (result && result.user) {
         result.user.getIdToken().then((token) => {
           userActions.setToken(store.dispatch, token);
-          Router.push('/transacciones');
+          Router.push('/dashboard');
         });
       }
     }).catch((error) => {

@@ -21,7 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     if (!token && !isPublicRoute) {
       router.push('/login');
     } else if (token && router.pathname === '/login') {
-      router.push('/transacciones');
+      router.push('/dashboard');
     }
   }, [token, router]);
 
