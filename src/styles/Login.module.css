@@ -8,10 +8,6 @@
   justify-content: center;
   align-items: center;
   background-color: var(--bg-color);
-  background-image: url('/img/pattern-bg.png'); /* Mantener la imagen de fondo */
-  background-position: left bottom; /* Asegurar que la imagen esté en la esquina inferior izquierda */
-  background-size: 250px auto;
-  background-repeat: no-repeat;
   overflow: hidden;
   min-height: 100vh;
   padding: 20px;
