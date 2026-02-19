@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Container } from 'react-bootstrap';
 import { withAuthSync } from '@utils/auth';
 import { useRouter } from 'next/router';
@@ -52,24 +52,28 @@ const Dashboard = () => {
   const { transactions, total, fetchTransactions } = useTransaction();
   const { client, fetchClient } = useClient();
   const [loading, setLoading] = useState(true);
-
-  const loadData = useCallback(async () => {
-    setLoading(true);
-    try {
-      await Promise.all([
-        fetchTransactions(1, 50, '', 'reciente'),
-        fetchClient(1, 50, ''),
-      ]);
-    } catch (e) {
-      // silent
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchTransactions, fetchClient]);
+  const hasFetched = useRef(false);
 
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        await Promise.all([
+          fetchTransactions(1, 50, '', 'reciente'),
+          fetchClient(1, 50, ''),
+        ]);
+      } catch (e) {
+        // silent
+      } finally {
+        setLoading(false);
+      }
+    };
     loadData();
-  }, [loadData]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Computed metrics
   const metrics = useMemo(() => {
