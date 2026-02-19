@@ -102,7 +102,7 @@ const Dashboard = () => {
   }, [transactions, client, total]);
 
   const recentTransactions = useMemo(
-    () => transactions.slice(0, 8),
+    () => transactions.slice(0, 5),
     [transactions]
   );
 
@@ -110,7 +110,7 @@ const Dashboard = () => {
     () =>
       [...(client as Client[])]
         .sort((a, b) => (Number(b.current_balance) || 0) - (Number(a.current_balance) || 0))
-        .slice(0, 6),
+        .slice(0, 5),
     [client]
   );
 
@@ -189,7 +189,7 @@ const Dashboard = () => {
       <div className={styles.metricsGrid}>
         <div className={styles.metricCard}>
           <div className={`${styles.metricIconWrap} ${styles.teal}`}>
-            <TbArrowsExchange size={24} />
+            <TbArrowsExchange size={20} />
           </div>
           <div className={styles.metricBody}>
             <span className={styles.metricLabel}>Transacciones</span>
@@ -200,7 +200,7 @@ const Dashboard = () => {
 
         <div className={styles.metricCard}>
           <div className={`${styles.metricIconWrap} ${styles.green}`}>
-            <HiOutlineBanknotes size={24} />
+            <HiOutlineBanknotes size={20} />
           </div>
           <div className={styles.metricBody}>
             <span className={styles.metricLabel}>Monto Aprobado</span>
@@ -211,7 +211,7 @@ const Dashboard = () => {
 
         <div className={styles.metricCard}>
           <div className={`${styles.metricIconWrap} ${styles.amber}`}>
-            <HiOutlineClock size={24} />
+            <HiOutlineClock size={20} />
           </div>
           <div className={styles.metricBody}>
             <span className={styles.metricLabel}>Pendientes</span>
@@ -222,7 +222,7 @@ const Dashboard = () => {
 
         <div className={styles.metricCard}>
           <div className={`${styles.metricIconWrap} ${styles.blue}`}>
-            <HiOutlineUserGroup size={24} />
+            <HiOutlineUserGroup size={20} />
           </div>
           <div className={styles.metricBody}>
             <span className={styles.metricLabel}>Clientes</span>
@@ -233,7 +233,7 @@ const Dashboard = () => {
 
         <div className={styles.metricCard}>
           <div className={`${styles.metricIconWrap} ${styles.purple}`}>
-            <HiOutlineChartBarSquare size={24} />
+            <HiOutlineChartBarSquare size={20} />
           </div>
           <div className={styles.metricBody}>
             <span className={styles.metricLabel}>Crédito Otorgado</span>
@@ -244,7 +244,7 @@ const Dashboard = () => {
 
         <div className={styles.metricCard}>
           <div className={`${styles.metricIconWrap} ${styles.red}`}>
-            <HiOutlineXCircle size={24} />
+            <HiOutlineXCircle size={20} />
           </div>
           <div className={styles.metricBody}>
             <span className={styles.metricLabel}>Rechazadas</span>
