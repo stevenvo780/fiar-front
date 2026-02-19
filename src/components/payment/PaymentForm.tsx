@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Button, Modal, Spinner, ToggleButton, ToggleButtonGroup } from 'react-bootstrap';
 import RingLoader from "react-spinners/RingLoader";
 import usePayments from '@store/payments';
@@ -10,6 +10,7 @@ import { FaShieldAlt, FaLock } from 'react-icons/fa';
 interface PaymentFormProps {
   planTitle?: string;
   planPrice?: string;
+  defaultBillingCycle?: 'MONTHLY' | 'ANNUAL';
   onPaymentSuccess?: () => void;
   onPaymentError?: (error: any) => void;
   onCancelSubscription?: () => void;
@@ -26,6 +27,7 @@ const override: any = {
 const PaymentForm: React.FC<PaymentFormProps> = ({
   planTitle = "Plan Especial",
   planPrice = "30.000",
+  defaultBillingCycle,
   onPaymentSuccess,
   onPaymentError,
   onCancelSubscription,
@@ -36,7 +38,13 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   const [loading, setLoadingLocal] = useState(false);
   const planUser = user?.role || null;
   const [showCancelModal, setShowCancelModal] = useState(false);
-  const [billingCycle, setBillingCycle] = useState<PaymentPeriodicity>(PaymentPeriodicity.MONTHLY);
+  const [billingCycle, setBillingCycle] = useState<PaymentPeriodicity>(
+    defaultBillingCycle === 'ANNUAL' ? PaymentPeriodicity.ANNUAL : PaymentPeriodicity.MONTHLY
+  );
+
+  useEffect(() => {
+    setBillingCycle(defaultBillingCycle === 'ANNUAL' ? PaymentPeriodicity.ANNUAL : PaymentPeriodicity.MONTHLY);
+  }, [defaultBillingCycle]);
 
   const handlePayWithMercadoPago = async () => {
     setLoading(true);

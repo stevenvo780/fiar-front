@@ -55,7 +55,7 @@ const PremiumBanner: React.FC = () => {
         <Modal.Body className="p-0">
           <PaymentForm 
             planTitle="Plan Especial"
-            planPrice="88.000"
+            planPrice="30.000"
             onPaymentSuccess={handleClose}
             onPaymentError={() => {}}
           />

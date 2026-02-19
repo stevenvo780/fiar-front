@@ -6,6 +6,7 @@ import PaymentForm from '@components/payment/PaymentForm';
 
 const PlansPage: React.FC = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [defaultBillingCycle, setDefaultBillingCycle] = useState<'MONTHLY' | 'ANNUAL'>('MONTHLY');
 
   return (
     <Container className="py-5">
@@ -59,7 +60,7 @@ const PlansPage: React.FC = () => {
                 size="lg"
                 className="w-100 fw-bold"
                 style={{ maxWidth: 220 }}
-                onClick={() => setShowPaymentModal(true)}
+                onClick={() => { setDefaultBillingCycle('MONTHLY'); setShowPaymentModal(true); }}
               >
                 Elegir Mensual
               </Button>
@@ -76,21 +77,21 @@ const PlansPage: React.FC = () => {
             </div>
             <Card.Body className="d-flex flex-column align-items-center pt-5">
               <Card.Title className="fw-bold fs-3 mb-3">Plan Anual</Card.Title>
-              <div className="display-5 fw-bold text-success mb-2">$330.000</div>
+              <div className="display-5 fw-bold text-success mb-2">$288.000</div>
               <div className="text-muted mb-1">COP / año</div>
-              <div className="mb-3 small text-success fw-semibold">¡Ahorra $30.000!</div>
+              <div className="mb-3 small text-success fw-semibold">¡Ahorra $72.000!</div>
               <ul className="list-unstyled mb-4 text-start w-100" style={{ maxWidth: 250 }}>
                 <li className="mb-2"><FaShieldAlt className="me-2 text-success" />Todas las funcionalidades</li>
                 <li className="mb-2"><FaHandshake className="me-2 text-success" />Soporte prioritario</li>
                 <li className="mb-2"><FaRocket className="me-2 text-success" />Actualizaciones incluidas</li>
-                <li className="mb-2"><FaChartLine className="me-2 text-success" />Ahorra 1 mes</li>
+                <li className="mb-2"><FaChartLine className="me-2 text-success" />20% de descuento</li>
               </ul>
               <Button
                 variant="success"
                 size="lg"
                 className="w-100 fw-bold"
                 style={{ maxWidth: 220 }}
-                onClick={() => setShowPaymentModal(true)}
+                onClick={() => { setDefaultBillingCycle('ANNUAL'); setShowPaymentModal(true); }}
               >
                 Elegir Anual
               </Button>
@@ -120,6 +121,7 @@ const PlansPage: React.FC = () => {
           <PaymentForm
             planTitle="Plan Especial"
             planPrice="30.000"
+            defaultBillingCycle={defaultBillingCycle}
             onPaymentSuccess={() => setShowPaymentModal(false)}
             onPaymentError={() => {}}
           />
