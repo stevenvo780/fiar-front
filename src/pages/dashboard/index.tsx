@@ -81,11 +81,11 @@ const Dashboard = () => {
     const pending = transactions.filter((t: Transaction) => t.status === 'pending');
     const rejected = transactions.filter((t: Transaction) => t.status === 'rejected');
 
-    const totalApproved = approved.reduce((sum: number, t: Transaction) => sum + (t.amount || 0), 0);
-    const totalPending = pending.reduce((sum: number, t: Transaction) => sum + (t.amount || 0), 0);
+    const totalApproved = approved.reduce((sum: number, t: Transaction) => sum + (Number(t.amount) || 0), 0);
+    const totalPending = pending.reduce((sum: number, t: Transaction) => sum + (Number(t.amount) || 0), 0);
 
-    const totalCreditUsed = (client as Client[]).reduce((sum: number, c: Client) => sum + (c.current_balance || 0), 0);
-    const totalCreditLimit = (client as Client[]).reduce((sum: number, c: Client) => sum + (c.credit_limit || 0), 0);
+    const totalCreditUsed = (client as Client[]).reduce((sum: number, c: Client) => sum + (Number(c.current_balance) || 0), 0);
+    const totalCreditLimit = (client as Client[]).reduce((sum: number, c: Client) => sum + (Number(c.credit_limit) || 0), 0);
 
     return {
       totalTransactions: total,
@@ -109,7 +109,7 @@ const Dashboard = () => {
   const topClients = useMemo(
     () =>
       [...(client as Client[])]
-        .sort((a, b) => (b.current_balance || 0) - (a.current_balance || 0))
+        .sort((a, b) => (Number(b.current_balance) || 0) - (Number(a.current_balance) || 0))
         .slice(0, 6),
     [client]
   );
@@ -276,14 +276,18 @@ const Dashboard = () => {
                 <p>No hay transacciones aún</p>
               </div>
             ) : (
-              recentTransactions.map((tx: Transaction) => (
+              recentTransactions.map((tx: any) => (
                 <div key={tx.id} className={styles.txItem}>
                   <div className={styles.txLeft}>
-                    <span className={styles.txClient}>{tx.detail?.clientName || `Cliente #${tx.client_id}`}</span>
+                    <span className={styles.txClient}>
+                      {tx.client?.name
+                        ? `${tx.client.name}${tx.client.lastname ? ` ${tx.client.lastname}` : ''}`
+                        : tx.detail?.clientName || `Transacción #${tx.id?.slice(0, 8)}`}
+                    </span>
                     <span className={styles.txDate}>{formatDate(tx.createdAt)}</span>
                   </div>
                   <div className={styles.txRight}>
-                    <span className={styles.txAmount}>{formatCurrency(tx.amount)}</span>
+                    <span className={styles.txAmount}>{formatCurrency(Number(tx.amount) || 0)}</span>
                     <span className={`${styles.txBadge} ${styles[tx.status]}`}>
                       {statusLabel[tx.status] || tx.status}
                     </span>
@@ -320,7 +324,7 @@ const Dashboard = () => {
                     {c.name} {c.lastname || ''}
                   </span>
                   <span className={styles.clientBalance}>
-                    {formatCurrency(c.current_balance || 0)}
+                    {formatCurrency(Number(c.current_balance) || 0)}
                   </span>
                 </div>
               ))
