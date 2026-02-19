@@ -1,23 +1,27 @@
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import Events from '@components/Events';
 import PremiumBanner from '@components/PremiumBanner';
 import useUser from '@store/user';
 import { useRouter } from 'next/router';
+import { auth } from '@utils/firebase.config';
+import { onAuthStateChanged } from 'firebase/auth';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const { token, renewToken, user } = useUser();
-  const router = useRouter();
+const PUBLIC_ROUTES = ['/', '/login', '/home', '/plans'];
 
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const { token, renewToken, user, logout } = useUser();
+  const router = useRouter();
+  const renewIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Redirigir según estado de auth
   useEffect(() => {
-    const publicRoutes = ['/', '/login', '/home', '/plans'];
-    const isPublicRoute = publicRoutes.includes(router.pathname);
-    
+    const isPublicRoute = PUBLIC_ROUTES.includes(router.pathname);
     if (!token && !isPublicRoute) {
       router.push('/login');
     } else if (token && router.pathname === '/login') {
@@ -25,10 +29,29 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }
   }, [token, router]);
 
+  // Listener de Firebase Auth: si Firebase cierra la sesión, limpiar Redux
   useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (!firebaseUser && token) {
+        // Firebase perdió la sesión pero Redux aún tiene token → cerrar sesión
+        console.warn('Firebase auth perdida, cerrando sesión...');
+        logout();
+      }
+    });
+    return () => unsubscribe();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  // Renovar token cada 50 minutos (tokens Firebase expiran a los 60)
+  useEffect(() => {
+    if (renewIntervalRef.current) {
+      clearInterval(renewIntervalRef.current);
+    }
     if (token) {
-      const interval = setInterval(renewToken, 55 * 60 * 1000);
-      return () => clearInterval(interval);
+      renewIntervalRef.current = setInterval(renewToken, 50 * 60 * 1000);
+      return () => {
+        if (renewIntervalRef.current) clearInterval(renewIntervalRef.current);
+      };
     }
   }, [renewToken, token]);
 

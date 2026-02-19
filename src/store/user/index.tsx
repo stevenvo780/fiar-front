@@ -120,20 +120,21 @@ const useUser = () => {
   };
 
   const renewToken = async () => {
-    setLoading(true);
     try {
       const user = auth.currentUser;
       if (user) {
         const newToken = await user.getIdToken(true);
         userActions.setToken(dispatch, newToken);
+      } else {
+        // Firebase perdió el usuario → token expirado
+        console.warn('Firebase currentUser es null, cerrando sesión');
+        addAlert({ type: 'warning', message: 'Tu sesión ha expirado, inicia sesión nuevamente' });
+        await logout();
       }
     } catch (error) {
       console.error('Error al renovar el token:', error);
       addAlert({ type: 'danger', message: 'Sesión expirada, por favor inicia sesión nuevamente' });
-      userActions.clearUser(dispatch);
-      router.push('/login');
-    } finally {
-      setLoading(false);
+      await logout();
     }
   };
 
@@ -170,11 +171,14 @@ const useUser = () => {
     }
   };
 
-  const logout = () => {
-    dispatch(userActions.resetStore());
-    if (typeof window !== 'undefined') {
-      window.location.reload();
+  const logout = async () => {
+    try {
+      await auth.signOut();
+    } catch (e) {
+      // Ignorar error de signOut
     }
+    dispatch(userActions.resetStore());
+    router.push('/login');
   };
 
   const registerUser = async (userData: any) => {
