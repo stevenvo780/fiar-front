@@ -33,17 +33,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }, [renewToken, token]);
 
   return (
-    <div className="main-container">
+    <div className="main-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Events />
       {token && <Header />}
-      {token && user?.role === 'FREE' && (
-        <>
-          <PremiumBanner />
-          <br />
-        </>
-      )}
-      <main>{children}</main>
-      <br />
+      {token && user?.role === 'FREE' && <PremiumBanner />}
+      <main style={{ flex: 1, paddingTop: '1.5rem', paddingBottom: '1.5rem' }}>{children}</main>
       {token && <Footer />}
     </div>
   );
