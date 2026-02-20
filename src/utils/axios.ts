@@ -26,8 +26,21 @@ service.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config;
+    const status = error.response?.status;
+    const message = error.response?.data?.message || '';
 
-    if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
+    // Si es un 403 de lógica de negocio (no de auth), no intentar renovar token
+    const isBusinessForbidden = status === 403 && (
+      message.includes('plan') ||
+      message.includes('límite') ||
+      message.includes('permiso') ||
+      message.includes('No tiene')
+    );
+    if (isBusinessForbidden) {
+      return Promise.reject(error);
+    }
+
+    if ((status === 401 || status === 403) && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         await renewToken();
@@ -47,7 +60,7 @@ service.interceptors.response.use(
       }
     }
 
-    if (originalRequest._retry && (error.response?.status === 401 || error.response?.status === 403)) {
+    if (originalRequest._retry && (status === 401 || status === 403)) {
       // Solo limpiar sesión si no estamos en una ruta pública
       const publicRoutes = ['/login', '/home', '/plans'];
       const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
