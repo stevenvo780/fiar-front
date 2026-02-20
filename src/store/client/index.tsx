@@ -39,7 +39,12 @@ const useClient = () => {
     } catch (error: any) {
       console.error(`Error: ${error}`);
       const msg = error?.response?.data?.message || 'Ocurrió un error, consulta a soporte';
-      addAlert({ type: 'danger', message: msg });
+      const statusCode = error?.response?.status;
+      if (statusCode === 403 && msg.includes('plan')) {
+        addAlert({ type: 'warning', message: `${msg} Ve a la sección de Planes para mejorar tu cuenta.` });
+      } else {
+        addAlert({ type: 'danger', message: msg });
+      }
     } finally {
       setLoading(false);
     }
