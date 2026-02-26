@@ -18,11 +18,12 @@ const usePayments = () => {
     setLoading(true);
     try {
       const response = await axios.post('/mercadopago/subscribe', data);
-      const { init_point, sandbox_init_point } = response.data;
+      const { init_point, sandbox_init_point, isSandbox } = response.data;
 
-      // En desarrollo usar sandbox_init_point, en producción init_point
-      const redirectUrl =
-        process.env.NODE_ENV === 'production' ? init_point : (sandbox_init_point || init_point);
+      // Si el backend está en modo sandbox, usar sandbox_init_point siempre
+      const redirectUrl = isSandbox
+        ? (sandbox_init_point || init_point)
+        : (process.env.NODE_ENV === 'production' ? init_point : (sandbox_init_point || init_point));
 
       if (redirectUrl) {
         window.location.href = redirectUrl;
