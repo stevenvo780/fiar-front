@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from 'react';
 import { Row, Col, Card, Dropdown, Button, Badge, OverlayTrigger, Tooltip, Modal } from 'react-bootstrap';
-import { FaInfoCircle, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { FaInfoCircle, FaCheckCircle, FaTimesCircle, FaArrowDown, FaArrowUp } from 'react-icons/fa';
 import { Transaction as TransactionBase } from '@utils/types';
 import styles from '@styles/Transactions.module.css';
 import useUI from '@/store/ui';
@@ -54,6 +54,30 @@ const TransactionList: FC<TransactionListProps> = ({ transactions, onStatusChang
       )}
     </Badge>
   );
+
+  const OperationBadge = ({ operation }: { operation?: 'income' | 'expense' }) => {
+    if (operation === 'income') {
+      return (
+        <Badge pill bg="success" style={{ backgroundColor: '#198754', color: 'white' }}>
+          <FaArrowDown style={{ marginRight: 4 }} />
+          Abono
+        </Badge>
+      );
+    }
+    if (operation === 'expense') {
+      return (
+        <Badge pill bg="danger" style={{ backgroundColor: '#dc3545', color: 'white' }}>
+          <FaArrowUp style={{ marginRight: 4 }} />
+          Préstamo
+        </Badge>
+      );
+    }
+    return (
+      <Badge pill bg="secondary">
+        Desconocido
+      </Badge>
+    );
+  };
 
   const handleStatusChange = async (id: Transaction['id'], newStatus: 'pending' | 'approved' | 'rejected') => {
     const prevStatus = localTransactions.find(tx => tx.id === id)?.status;
@@ -119,9 +143,15 @@ const TransactionList: FC<TransactionListProps> = ({ transactions, onStatusChang
                 )}
                 {/* Información de la transacción */}
                 <div className={styles['data-row']} style={{ marginBottom: 8 }}>
+                  <span className={styles['data-label']}>Tipo:</span>
+                  <span className={styles['data-value']}>
+                    <OperationBadge operation={transaction.operation} />
+                  </span>
+                </div>
+                <div className={styles['data-row']} style={{ marginBottom: 8 }}>
                   <span className={styles['data-label']}>Monto:</span>
-                  <span className={styles['data-value']} style={{ fontWeight: 600, color: '#6c757d' /* secondary */ }}>
-                    {formatCurrency(transaction.amount)}
+                  <span className={styles['data-value']} style={{ fontWeight: 600, color: transaction.operation === 'income' ? '#198754' : transaction.operation === 'expense' ? '#dc3545' : '#6c757d' }}>
+                    {transaction.operation === 'income' ? '+' : transaction.operation === 'expense' ? '-' : ''}{formatCurrency(transaction.amount)}
                   </span>
                 </div>
                 <div className={styles['data-row']} style={{ marginBottom: 8 }}>
@@ -225,6 +255,7 @@ const TransactionList: FC<TransactionListProps> = ({ transactions, onStatusChang
               }}>
                 <h6 className="mb-2" style={{ color: '#17252a' }}>Datos de la Transacción</h6>
                 <div><strong>ID:</strong> {selectedTransaction.id}</div>
+                <div><strong>Tipo:</strong> <OperationBadge operation={selectedTransaction.operation} /></div>
                 <div><strong>Monto:</strong> {formatCurrency(selectedTransaction.amount)}</div>
                 <div><strong>Status:</strong> <StatusBadge status={selectedTransaction.status} /></div>
                 <div><strong>Created At:</strong> {new Date(selectedTransaction.createdAt).toLocaleString()}</div>

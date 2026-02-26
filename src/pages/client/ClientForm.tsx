@@ -150,25 +150,6 @@ const ClientForm: FC<ClientFormProps> = ({ client, labels, handleInputChange, ha
           </Col>
         </Row>
       </fieldset>
-
-      {/* Botones de acción */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-        <div>
-          {/* Botones para activar o desactivar */}
-          <Button variant="success" style={{ marginRight: '10px' }}>
-            Activar
-          </Button>
-          <Button variant="danger">Desactivar</Button>
-        </div>
-        {/* Botón para guardar */}
-        <Button
-          variant="primary"
-          type="button"
-          onClick={onSave} // Llama a la función recibida
-        >
-          Guardar
-        </Button>
-      </div>
     </Form>
   );
 };

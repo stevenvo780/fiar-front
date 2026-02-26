@@ -1,11 +1,11 @@
 import { useState, ChangeEvent, FC, useEffect } from 'react';
-import { Container, Form, Button, Navbar, Nav } from 'react-bootstrap';
+import { Container, Form, Button } from 'react-bootstrap';
+import { FaPlus, FaChevronLeft, FaChevronRight, FaSearch, FaSortAmountDown, FaFilter, FaFileExcel, FaTimes } from 'react-icons/fa';
 import { withAuthSync } from '@utils/auth';
 import TransactionList from './TransactionList';
 import useTransaction from '@store/transactions';
 import useUI from '@/store/ui';
 import Pagination from 'rc-pagination';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import 'rc-pagination/assets/index.css';
 import styles from '@styles/Transactions.module.css';
 import TransactionFormModal from './TransactionFormModal';
@@ -128,7 +128,7 @@ const Transactions: FC = () => {
           width: 56,
           height: 56,
           borderRadius: '50%',
-          fontSize: 32,
+          fontSize: 24,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -139,7 +139,7 @@ const Transactions: FC = () => {
         }}
         aria-label="Nueva transacción"
       >
-        ➕
+        <FaPlus />
       </Button>
       <Container fluid className="px-3" style={{ paddingBottom: 100 }}>
         {/* Panel de Filtros Mejorado */}
@@ -149,7 +149,7 @@ const Transactions: FC = () => {
             <div className="col-12 col-md-6 col-lg-4">
               <Form.Group>
                 <Form.Label className={styles.filterLabel}>
-                  <i className="fas fa-search me-1"></i>
+                  <FaSearch className="me-1" />
                   Buscar Cliente
                 </Form.Label>
                 <Form.Control
@@ -165,7 +165,7 @@ const Transactions: FC = () => {
             <div className="col-6 col-md-3 col-lg-2">
               <Form.Group>
                 <Form.Label className={styles.filterLabel}>
-                  <i className="fas fa-sort me-1"></i>
+                  <FaSortAmountDown className="me-1" />
                   Ordenar por
                 </Form.Label>
                 <Form.Select
@@ -182,7 +182,7 @@ const Transactions: FC = () => {
             <div className="col-6 col-md-3 col-lg-2">
               <Form.Group>
                 <Form.Label className={styles.filterLabel}>
-                  <i className="fas fa-check-circle me-1"></i>
+                  <FaFilter className="me-1" />
                   Estado
                 </Form.Label>
                 <Form.Select
@@ -199,10 +199,7 @@ const Transactions: FC = () => {
             
             <div className="col-6 col-md-3 col-lg-2">
               <Form.Group>
-                <Form.Label className={styles.filterLabel}>
-
-                  Por página
-                </Form.Label>
+                <Form.Label>Por página</Form.Label>
                 <Form.Select
                   value={limit}
                   onChange={handleLimitChange}
@@ -218,7 +215,7 @@ const Transactions: FC = () => {
             <div className="col-6 col-md-3 col-lg-2">
               <Form.Group>
                 <Form.Label className={styles.filterLabel}>
-                  <i className="fas fa-download me-1"></i>
+                  <FaFileExcel className="me-1" />
                   Exportar
                 </Form.Label>
                 <Button 
@@ -226,7 +223,7 @@ const Transactions: FC = () => {
                   onClick={handleDownloadExcel} 
                   className={`w-100 ${styles.exportBtn}`}
                 >
-                  <i className="fas fa-file-excel me-1"></i>
+                  <FaFileExcel className="me-1" />
                   Excel
                 </Button>
               </Form.Group>
@@ -240,7 +237,7 @@ const Transactions: FC = () => {
               onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
               className={`p-0 ${styles.toggleBtn}`}
             >
-              <i className={`fas ${showAdvancedFilters ? 'fa-chevron-up' : 'fa-chevron-down'} me-2`}></i>
+              <FaFilter className={`me-2`} />
               <small className="fw-bold text-primary">
                 FILTROS AVANZADOS 
                 {(minAmount || maxAmount || startDate || endDate) && (
@@ -257,7 +254,7 @@ const Transactions: FC = () => {
               onClick={clearAllFilters}
               className={styles.clearFiltersBtn}
             >
-              <i className="fas fa-times me-1"></i>
+              <FaTimes className="me-1" />
               Limpiar Filtros
             </Button>
           </div>

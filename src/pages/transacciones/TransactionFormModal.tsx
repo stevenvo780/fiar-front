@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form, Alert } from 'react-bootstrap';
+import { Modal, Button, Form, Alert, Row, Col } from 'react-bootstrap';
+import { FaArrowDown, FaArrowUp, FaUser, FaMoneyBillWave, FaCheckCircle } from 'react-icons/fa';
 import Select from 'react-select';
 import useTransaction from '@store/transactions';
 import useClient from '@store/client';
@@ -48,7 +49,7 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ show, onHid
         operation,
         status,
         detail: {},
-        clientId: selectedClient.id, // <-- corregido de client_id a clientId
+        clientId: selectedClient.id,
       };
       await addTransaction(tx);
       addAlert({ type: 'success', message: `Transacción ${operation === 'income' ? 'abonada' : 'prestada'} correctamente` });
@@ -74,7 +75,6 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ show, onHid
     try {
       await createClient(newClient);
       await fetchClient(1, 100, '');
-      // Selecciona el cliente recién creado
       setSelectedClient({ ...newClient, id: client[client.length - 1]?.id });
       setShowClientModal(false);
       setNewClient({} as Client);
@@ -84,17 +84,70 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ show, onHid
     }
   };
 
+  const isIncome = operation === 'income';
+  const operationColor = isIncome ? '#198754' : '#dc3545';
+
   return (
     <>
       <Modal show={show} onHide={onHide} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>{operation === 'income' ? 'Abonar créditos' : 'Prestar créditos'}</Modal.Title>
+        <Modal.Header closeButton style={{ backgroundColor: operationColor, color: 'white', borderBottom: 'none' }}>
+          <Modal.Title className="d-flex align-items-center" style={{ color: 'white' }}>
+            {isIncome
+              ? <><FaArrowDown style={{ marginRight: 8 }} /> Registrar Abono</>
+              : <><FaArrowUp style={{ marginRight: 8 }} /> Registrar Préstamo</>
+            }
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{ padding: '1.5rem' }}>
           {error && <Alert variant="danger">{error}</Alert>}
+          
+          {/* Selector de tipo de operación */}
+          <div className="mb-4">
+            <Row className="g-2">
+              <Col xs={6}>
+                <div
+                  onClick={() => setOperation('expense')}
+                  style={{
+                    border: `2px solid ${!isIncome ? '#dc3545' : '#dee2e6'}`,
+                    borderRadius: '10px',
+                    padding: '12px',
+                    cursor: 'pointer',
+                    textAlign: 'center',
+                    backgroundColor: !isIncome ? '#fff5f5' : 'white',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  <FaArrowUp style={{ fontSize: '1.5rem', color: '#dc3545', marginBottom: 4 }} />
+                  <div style={{ fontWeight: 600, color: '#dc3545' }}>Prestar</div>
+                  <small style={{ color: '#6c757d' }}>Dar dinero al cliente</small>
+                </div>
+              </Col>
+              <Col xs={6}>
+                <div
+                  onClick={() => setOperation('income')}
+                  style={{
+                    border: `2px solid ${isIncome ? '#198754' : '#dee2e6'}`,
+                    borderRadius: '10px',
+                    padding: '12px',
+                    cursor: 'pointer',
+                    textAlign: 'center',
+                    backgroundColor: isIncome ? '#f0fff4' : 'white',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  <FaArrowDown style={{ fontSize: '1.5rem', color: '#198754', marginBottom: 4 }} />
+                  <div style={{ fontWeight: 600, color: '#198754' }}>Abonar</div>
+                  <small style={{ color: '#6c757d' }}>Recibir pago del cliente</small>
+                </div>
+              </Col>
+            </Row>
+          </div>
+
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label>Cliente</Form.Label>
+              <Form.Label className="d-flex align-items-center" style={{ fontWeight: 600, color: '#495057' }}>
+                <FaUser style={{ marginRight: '6px', color: '#6c757d' }} /> Cliente
+              </Form.Label>
               <div style={{ display: 'flex', gap: 8 }}>
                 <div style={{ flex: 1 }}>
                   <Select
@@ -105,38 +158,56 @@ const TransactionFormModal: React.FC<TransactionFormModalProps> = ({ show, onHid
                     isClearable
                   />
                 </div>
-                <Button variant="primary" onClick={() => setShowClientModal(true)}>
-                  Nuevo cliente
+                <Button variant="outline-primary" onClick={() => setShowClientModal(true)} style={{ borderRadius: '8px' }}>
+                  + Nuevo
                 </Button>
               </div>
+              {selectedClient && (
+                <div style={{ marginTop: 8, padding: '8px 12px', backgroundColor: '#f8f9fa', borderRadius: '8px', fontSize: '0.9rem' }}>
+                  <span style={{ color: '#6c757d' }}>Saldo disponible: </span>
+                  <strong style={{ color: (selectedClient.current_balance || 0) >= 0 ? '#198754' : '#dc3545' }}>
+                    {(selectedClient.current_balance || 0).toLocaleString('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 })}
+                  </strong>
+                </div>
+              )}
             </Form.Group>
+
             <Form.Group className="mb-3">
-              <Form.Label>Monto</Form.Label>
+              <Form.Label className="d-flex align-items-center" style={{ fontWeight: 600, color: '#495057' }}>
+                <FaMoneyBillWave style={{ marginRight: '6px', color: '#6c757d' }} /> Monto (COP)
+              </Form.Label>
               <Form.Control
                 type="number"
                 min={1}
                 value={amount}
                 onChange={e => setAmount(e.target.value)}
                 required
+                placeholder="0"
+                style={{ fontSize: '1.1rem', fontWeight: 600 }}
               />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Tipo de operación</Form.Label>
-              <Form.Select value={operation} onChange={e => setOperation(e.target.value as 'income' | 'expense')}>
-                <option value="income">Abonar (Ingreso)</option>
-                <option value="expense">Prestar (Egreso)</option>
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Estado</Form.Label>
+
+            <Form.Group className="mb-4">
+              <Form.Label className="d-flex align-items-center" style={{ fontWeight: 600, color: '#495057' }}>
+                <FaCheckCircle style={{ marginRight: '6px', color: '#6c757d' }} /> Estado
+              </Form.Label>
               <Form.Select value={status} onChange={e => setStatus(e.target.value as 'approved' | 'pending')}>
                 <option value="approved">Aprobado</option>
                 <option value="pending">Pendiente</option>
               </Form.Select>
             </Form.Group>
-            <div className="d-flex justify-content-end">
-              <Button variant="secondary" onClick={onHide} className="me-2">Cancelar</Button>
-              <Button variant="primary" type="submit">Guardar</Button>
+
+            <div className="d-flex justify-content-end gap-2">
+              <Button variant="outline-secondary" onClick={onHide} style={{ borderRadius: '8px' }}>Cancelar</Button>
+              <Button
+                type="submit"
+                style={{ backgroundColor: operationColor, border: 'none', borderRadius: '8px', minWidth: '120px' }}
+              >
+                {isIncome
+                  ? <><FaArrowDown style={{ marginRight: 6 }} /> Registrar Abono</>
+                  : <><FaArrowUp style={{ marginRight: 6 }} /> Registrar Préstamo</>
+                }
+              </Button>
             </div>
           </Form>
         </Modal.Body>

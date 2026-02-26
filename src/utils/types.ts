@@ -57,6 +57,7 @@ export interface Transaction {
   owner_id: string;
   amount: number;
   status: 'pending' | 'approved' | 'rejected';
+  operation?: 'income' | 'expense';
   detail: any;
   createdAt: Date;
   updatedAt: Date;
