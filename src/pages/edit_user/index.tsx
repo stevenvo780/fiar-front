@@ -2,6 +2,7 @@ import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { Container, Row, Col, Form, Button, Spinner, Alert } from 'react-bootstrap';
 import useUser from '@store/user';
 import { withAuthSync } from '@utils/auth';
+import api from '@api/index';
 
 const EditProfile: React.FC = () => {
   const { user, fetchUser, updateUserProfile, changePassword, token } = useUser();
@@ -23,8 +24,6 @@ const EditProfile: React.FC = () => {
     sinergia: { enabled: false, apiKey: '' },
   });
 
-  const API_URL = process.env.NEXT_PUBLIC_API || 'http://172.23.146.224:8080/api';
-
   // Llama a fetchUser si hay token y no hay usuario cargado
   useEffect(() => {
     if (!user && token) {
@@ -45,15 +44,8 @@ const EditProfile: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_URL}/user/me/data`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!res.ok) throw new Error('Error al obtener usuario');
-      const data = await res.json();
+      const res = await api.users.getUser();
+      const data = res.data;
       setApiUser({
         ...data,
         apiKey: data.apiKey ?? data.api_key ?? '',
@@ -71,7 +63,7 @@ const EditProfile: React.FC = () => {
     if (token) {
       fetchApiUser();
     }
-  }, [token, API_URL]);
+  }, [token]);
 
   // Actualiza el formulario cuando los datos del usuario estén disponibles (prioriza apiUser)
   useEffect(() => {
