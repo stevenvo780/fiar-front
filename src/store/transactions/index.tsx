@@ -27,7 +27,7 @@ const useTransactions = () => {
         const apiOrder = orderFilter === 'antiguo' ? 'asc' : 'desc';
         let apiStatus: string | undefined;
         if (statusFilter === 'aprobado') apiStatus = 'approved';
-        else if (statusFilter === 'no_aprobado') apiStatus = 'rejected';
+        else if (statusFilter === 'no_aprobado') apiStatus = 'not_approved';
         const response = await api.transactions.getTransactionsAPI(
           pageParam,
           limitParam,
@@ -110,7 +110,7 @@ const useTransactions = () => {
       const apiOrder = orderFilter === 'antiguo' ? 'asc' : 'desc';
       let apiStatus: string | undefined;
       if (statusFilter === 'aprobado') apiStatus = 'approved';
-      else if (statusFilter === 'no_aprobado') apiStatus = 'rejected';
+      else if (statusFilter === 'no_aprobado') apiStatus = 'not_approved';
       // Pedir hasta 10,000 registros para exportar todo el filtro
       const response = await api.transactions.getTransactionsAPI(
         pageParam,

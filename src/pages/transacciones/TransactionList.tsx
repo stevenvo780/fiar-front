@@ -108,6 +108,15 @@ const TransactionList: FC<TransactionListProps> = ({ transactions, onStatusChang
               }}
             >
               <Card.Body className="d-flex flex-column justify-content-between h-100">
+                {/* Cliente */}
+                {transaction.client?.name && (
+                  <div className={styles['data-row']} style={{ marginBottom: 8 }}>
+                    <span className={styles['data-label']}>Cliente:</span>
+                    <span className={styles['data-value']} style={{ fontWeight: 600 }}>
+                      {transaction.client.name}
+                    </span>
+                  </div>
+                )}
                 {/* Información de la transacción */}
                 <div className={styles['data-row']} style={{ marginBottom: 8 }}>
                   <span className={styles['data-label']}>Monto:</span>
