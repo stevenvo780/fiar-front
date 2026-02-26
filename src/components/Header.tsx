@@ -17,6 +17,8 @@ import { TbArrowsExchange } from 'react-icons/tb';
 import logo from '../../public/img/icon.png';
 import useUser from '@store/user';
 import styles from '@styles/Header.module.css';
+import { startTour } from './Tutorial';
+import { HiOutlineQuestionMarkCircle } from 'react-icons/hi2';
 
 const Header = () => {
   const router = useRouter();
@@ -48,6 +50,7 @@ const Header = () => {
         <Nav className={styles.navLinks}>
           <Nav.Link
             href="/dashboard"
+            data-tour="nav-dashboard"
             className={`${styles.navItem} ${isActive('/dashboard') ? styles.navItemActive : ''}`}
           >
             <HiOutlineChartBarSquare size={19} />
@@ -55,6 +58,7 @@ const Header = () => {
           </Nav.Link>
           <Nav.Link
             href="/fiar"
+            data-tour="nav-fiar"
             className={`${styles.navItem} ${isActive('/fiar') ? styles.navItemActive : ''}`}
             style={isActive('/fiar') ? {} : { color: '#FFC313', fontWeight: 700 }}
           >
@@ -63,6 +67,7 @@ const Header = () => {
           </Nav.Link>
           <Nav.Link
             href="/transacciones"
+            data-tour="nav-transacciones"
             className={`${styles.navItem} ${isActive('/transacciones') ? styles.navItemActive : ''}`}
           >
             <TbArrowsExchange size={19} />
@@ -70,6 +75,7 @@ const Header = () => {
           </Nav.Link>
           <Nav.Link
             href="/client"
+            data-tour="nav-clientes"
             className={`${styles.navItem} ${isActive('/client') ? styles.navItemActive : ''}`}
           >
             <HiOutlineUserGroup size={19} />
@@ -77,6 +83,7 @@ const Header = () => {
           </Nav.Link>
           <Nav.Link
             href="/plans"
+            data-tour="nav-planes"
             className={`${styles.navItem} ${isActive('/plans') ? styles.navItemActive : ''}`}
           >
             <HiOutlineCreditCard size={19} />
@@ -101,6 +108,10 @@ const Header = () => {
             <NavDropdown.Item onClick={() => router.push('/edit_user')} className={styles.dropItem}>
               <HiOutlinePencilSquare size={17} />
               <span>Editar perfil</span>
+            </NavDropdown.Item>
+            <NavDropdown.Item onClick={startTour} className={styles.dropItem}>
+              <HiOutlineQuestionMarkCircle size={17} />
+              <span>Ver tour de la app</span>
             </NavDropdown.Item>
             <NavDropdown.Divider />
             <NavDropdown.Item onClick={() => logout()} className={`${styles.dropItem} ${styles.dropItemDanger}`}>
