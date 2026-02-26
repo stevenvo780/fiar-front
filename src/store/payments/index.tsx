@@ -58,10 +58,26 @@ const usePayments = () => {
     }
   };
 
+  /**
+   * Sincroniza el estado de la suscripción con MercadoPago.
+   * Consulta directamente a la API de MP y activa/desactiva el plan según corresponda.
+   * Retorna true si el plan fue activado exitosamente.
+   */
+  const syncSubscription = async (): Promise<{ synced: boolean; planType: string } | null> => {
+    try {
+      const response = await axios.post('/mercadopago/sync-subscription');
+      return response.data;
+    } catch (error) {
+      console.error('Error sincronizando suscripción:', error);
+      return null;
+    }
+  };
+
   return {
     paymentDetails,
     createSubscription,
     cancelSubscription,
+    syncSubscription,
   };
 };
 

@@ -25,3 +25,17 @@ export const getPaymentStatusAPI = (
 export const cancelSubscriptionAPI = (): Promise<AxiosResponse<User>> => {
   return axios.get('/mercadopago/cancel-subscription');
 };
+
+/**
+ * Sincroniza el estado de la suscripción consultando directamente a la API de MP.
+ * Activa el plan si la suscripción está autorizada, o lo baja si fue cancelada.
+ * Funciona tanto en sandbox como en producción.
+ */
+export const syncSubscriptionAPI = (): Promise<AxiosResponse<{
+  synced: boolean;
+  status: string;
+  planType: string;
+  message: string;
+}>> => {
+  return axios.post('/mercadopago/sync-subscription');
+};
