@@ -254,7 +254,7 @@ const FiarPage: React.FC = () => {
               {filteredClients.length === 0 && search.length > 0 ? (
                 <div className={styles.emptyState}>
                   <HiOutlineUser size={32} className={styles.emptyIcon} />
-                  <p style={{ margin: 0, fontWeight: 600 }}>Sin resultados para "{search}"</p>
+                  <p style={{ margin: 0, fontWeight: 600 }}>Sin resultados para &quot;{search}&quot;</p>
                 </div>
               ) : (
                 <div className={styles.clientGrid}>
