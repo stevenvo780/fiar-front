@@ -11,6 +11,7 @@ import {
   HiOutlineEnvelope,
   HiOutlineUserCircle,
   HiOutlineChartBarSquare,
+  HiOutlineBolt,
 } from 'react-icons/hi2';
 import { TbArrowsExchange } from 'react-icons/tb';
 import logo from '../../public/img/icon.png';
@@ -51,6 +52,14 @@ const Header = () => {
           >
             <HiOutlineChartBarSquare size={19} />
             <span>Dashboard</span>
+          </Nav.Link>
+          <Nav.Link
+            href="/fiar"
+            className={`${styles.navItem} ${isActive('/fiar') ? styles.navItemActive : ''}`}
+            style={isActive('/fiar') ? {} : { color: '#FFC313', fontWeight: 700 }}
+          >
+            <HiOutlineBolt size={19} />
+            <span>Fiar rapido</span>
           </Nav.Link>
           <Nav.Link
             href="/transacciones"
