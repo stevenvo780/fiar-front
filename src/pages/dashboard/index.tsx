@@ -119,11 +119,14 @@ const Dashboard = () => {
   const greetingText = hour < 12 ? 'Buenos días' : hour < 18 ? 'Buenas tardes' : 'Buenas noches';
 
   const roleBadge = () => {
-    switch (user?.role) {
-      case 'SPECIAL':
-        return <span className={`${styles.planBadge} ${styles.special}`}>⭐ Premium</span>;
-      case 'NORMAL':
-        return <span className={`${styles.planBadge} ${styles.normal}`}>Estándar</span>;
+    const planType = (user as any)?.subscription?.planType || 'FREE';
+    switch (planType) {
+      case 'BASIC':
+        return <span className={`${styles.planBadge} ${styles.normal}`}>⭐ Basic</span>;
+      case 'PRO':
+        return <span className={`${styles.planBadge} ${styles.special}`}>🚀 Pro</span>;
+      case 'ENTERPRISE':
+        return <span className={`${styles.planBadge} ${styles.special}`}>💎 Enterprise</span>;
       default:
         return <span className={`${styles.planBadge} ${styles.free}`}>Free</span>;
     }

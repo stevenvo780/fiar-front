@@ -2,6 +2,15 @@ export enum PaymentPeriodicity {
 	MONTHLY = 'MONTHLY',
 	ANNUAL = 'ANNUAL',
 }
+export interface Subscription {
+  id?: number;
+  planType?: string;
+  startDate?: string;
+  endDate?: string | null;
+  mpSubscriptionId?: string | null;
+  mpSubscriptionStatus?: string | null;
+}
+
 export interface User {
   id?: string;
   created_at?: Date;
@@ -11,6 +20,7 @@ export interface User {
   role: UserRoleOptions;
   phone?: string | null;
   apiKey?: string;
+  subscription?: Subscription;
 }
 
 export interface Profile {
