@@ -42,7 +42,7 @@ const ClientList: FC<ClientListProps> = ({
                 <span className={styles['data-value']}>{formatNumber(client.credit_limit || 0)}</span>
               </div>
               <div className={styles['data-row']}>
-                <span className={styles['data-label']}>Disponible:</span>
+                <span className={styles['data-label']}>Saldo:</span>
                 <span className={styles['data-value']}>{formatNumber(client.current_balance || 0)}</span>
               </div>
 

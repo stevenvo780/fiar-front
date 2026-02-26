@@ -239,9 +239,9 @@ const Dashboard = () => {
             <HiOutlineChartBarSquare size={20} />
           </div>
           <div className={styles.metricBody}>
-            <span className={styles.metricLabel}>Crédito Otorgado</span>
+            <span className={styles.metricLabel}>Saldo Total</span>
             <span className={styles.metricValue}>{formatCurrency(metrics.totalCreditUsed)}</span>
-            <span className={styles.metricSub}>de {formatCurrency(metrics.totalCreditLimit)} disponible</span>
+            <span className={styles.metricSub}>de {formatCurrency(metrics.totalCreditLimit)} en límites</span>
           </div>
         </div>
 
