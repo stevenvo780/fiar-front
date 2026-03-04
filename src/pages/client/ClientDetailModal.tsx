@@ -1,7 +1,8 @@
-import { FC } from 'react';
-import { Modal, Button, ListGroup, Container, Card, Badge, Row, Col } from 'react-bootstrap';
+import { FC, useState, useEffect } from 'react';
+import { Modal, Button, ListGroup, Container, Card, Badge, Row, Col, Spinner } from 'react-bootstrap';
 import { FaTrashAlt, FaArrowDown, FaArrowUp, FaUser, FaIdCard, FaPhone, FaEnvelope, FaMapMarkerAlt, FaMoneyBillWave, FaWallet, FaShieldAlt, FaBan, FaCalendarAlt } from 'react-icons/fa';
 import { Client, Transaction } from '@utils/types';
+import { getClientByIdAPI } from '@/api/client';
 import styles from '@styles/ClientDetailModal.module.css';
 
 const formatCurrency = (amount: number) =>
@@ -40,6 +41,23 @@ interface ClientDetailModalProps {
 
 // Componente funcional que recibe las propiedades
 const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, client }) => {
+  const [clientDetail, setClientDetail] = useState<Client | null>(null);
+  const [loadingTx, setLoadingTx] = useState(false);
+
+  useEffect(() => {
+    if (show && client?.id) {
+      setLoadingTx(true);
+      getClientByIdAPI(client.id)
+        .then((res) => setClientDetail(res.data))
+        .catch(() => setClientDetail(client))
+        .finally(() => setLoadingTx(false));
+    } else {
+      setClientDetail(null);
+    }
+  }, [show, client?.id]);
+
+  const activeClient = clientDetail ?? client;
+
   // Función placeholder para eliminar un cliente
   const deleteClient = (clientId: number) => {
     console.log(`Deleting client with ID: ${clientId}`);
@@ -51,7 +69,7 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, client })
         <Modal.Title>Detalles del Cliente</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {client && (
+        {activeClient && (
           <>
             {/* Cabecera de cliente */}
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1.5rem', padding: '1rem', backgroundColor: '#f8f9fa', borderRadius: '12px' }}>
@@ -59,11 +77,11 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, client })
                 <FaUser style={{ fontSize: '1.6rem', color: '#6c757d' }} />
               </div>
               <div>
-                <h5 style={{ margin: 0, fontWeight: 700, color: '#2c3e50' }}>{client.name} {client.lastname}</h5>
+                <h5 style={{ margin: 0, fontWeight: 700, color: '#2c3e50' }}>{activeClient.name} {activeClient.lastname}</h5>
                 <div style={{ display: 'flex', gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
-                  {client.trusted && <Badge bg="success"><FaShieldAlt style={{ marginRight: 4 }} />Confiable</Badge>}
-                  {client.blocked && <Badge bg="danger"><FaBan style={{ marginRight: 4 }} />Bloqueado</Badge>}
-                  {!client.trusted && !client.blocked && <Badge bg="secondary">Cliente regular</Badge>}
+                  {activeClient.trusted && <Badge bg="success"><FaShieldAlt style={{ marginRight: 4 }} />Confiable</Badge>}
+                  {activeClient.blocked && <Badge bg="danger"><FaBan style={{ marginRight: 4 }} />Bloqueado</Badge>}
+                  {!activeClient.trusted && !activeClient.blocked && <Badge bg="secondary">Cliente regular</Badge>}
                 </div>
               </div>
             </div>
@@ -74,14 +92,14 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, client })
                 <div style={{ backgroundColor: '#fff5f5', borderRadius: '10px', padding: '12px', textAlign: 'center', border: '1px solid #f5c6cb' }}>
                   <FaMoneyBillWave style={{ color: '#dc3545', marginBottom: 4, fontSize: '1.3rem' }} />
                   <div style={{ fontSize: '0.75rem', color: '#6c757d' }}>Limite de credito</div>
-                  <div style={{ fontWeight: 700, color: '#dc3545', fontSize: '1.1rem' }}>{formatCurrency(client.credit_limit || 0)}</div>
+                  <div style={{ fontWeight: 700, color: '#dc3545', fontSize: '1.1rem' }}>{formatCurrency(activeClient.credit_limit || 0)}</div>
                 </div>
               </Col>
               <Col xs={6}>
-                <div style={{ backgroundColor: (client.current_balance || 0) >= 0 ? '#f0fff4' : '#fff5f5', borderRadius: '10px', padding: '12px', textAlign: 'center', border: `1px solid ${(client.current_balance || 0) >= 0 ? '#c3e6cb' : '#f5c6cb'}` }}>
-                  <FaWallet style={{ color: (client.current_balance || 0) >= 0 ? '#198754' : '#dc3545', marginBottom: 4, fontSize: '1.3rem' }} />
+                <div style={{ backgroundColor: (activeClient.current_balance || 0) >= 0 ? '#f0fff4' : '#fff5f5', borderRadius: '10px', padding: '12px', textAlign: 'center', border: `1px solid ${(activeClient.current_balance || 0) >= 0 ? '#c3e6cb' : '#f5c6cb'}` }}>
+                  <FaWallet style={{ color: (activeClient.current_balance || 0) >= 0 ? '#198754' : '#dc3545', marginBottom: 4, fontSize: '1.3rem' }} />
                   <div style={{ fontSize: '0.75rem', color: '#6c757d' }}>Saldo disponible</div>
-                  <div style={{ fontWeight: 700, color: (client.current_balance || 0) >= 0 ? '#198754' : '#dc3545', fontSize: '1.1rem' }}>{formatCurrency(client.current_balance || 0)}</div>
+                  <div style={{ fontWeight: 700, color: (activeClient.current_balance || 0) >= 0 ? '#198754' : '#dc3545', fontSize: '1.1rem' }}>{formatCurrency(activeClient.current_balance || 0)}</div>
                 </div>
               </Col>
             </Row>
@@ -91,57 +109,57 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, client })
               <Card.Body>
                 <h6 style={{ color: '#6c757d', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Informacion de contacto</h6>
                 <Row className="g-2">
-                  {client.document && (
+                  {activeClient.document && (
                     <Col xs={12} sm={6}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <FaIdCard style={{ color: '#6c757d', minWidth: 16 }} />
                         <div>
                           <div style={{ fontSize: '0.75rem', color: '#adb5bd' }}>Documento</div>
-                          <div style={{ fontWeight: 600 }}>{client.document}</div>
+                          <div style={{ fontWeight: 600 }}>{activeClient.document}</div>
                         </div>
                       </div>
                     </Col>
                   )}
-                  {client.phone && (
+                  {activeClient.phone && (
                     <Col xs={12} sm={6}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <FaPhone style={{ color: '#6c757d', minWidth: 16 }} />
                         <div>
                           <div style={{ fontSize: '0.75rem', color: '#adb5bd' }}>Telefono</div>
-                          <div style={{ fontWeight: 600 }}>{client.phone}</div>
+                          <div style={{ fontWeight: 600 }}>{activeClient.phone}</div>
                         </div>
                       </div>
                     </Col>
                   )}
-                  {client.email && (
+                  {activeClient.email && (
                     <Col xs={12} sm={6}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <FaEnvelope style={{ color: '#6c757d', minWidth: 16 }} />
                         <div>
                           <div style={{ fontSize: '0.75rem', color: '#adb5bd' }}>Correo</div>
-                          <div style={{ fontWeight: 600 }}>{client.email}</div>
+                          <div style={{ fontWeight: 600 }}>{activeClient.email}</div>
                         </div>
                       </div>
                     </Col>
                   )}
-                  {(client.city || client.state || client.direction) && (
+                  {(activeClient.city || activeClient.state || activeClient.direction) && (
                     <Col xs={12} sm={6}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <FaMapMarkerAlt style={{ color: '#6c757d', minWidth: 16 }} />
                         <div>
                           <div style={{ fontSize: '0.75rem', color: '#adb5bd' }}>Ubicacion</div>
-                          <div style={{ fontWeight: 600 }}>{[client.direction, client.city, client.state].filter(Boolean).join(', ')}</div>
+                          <div style={{ fontWeight: 600 }}>{[activeClient.direction, activeClient.city, activeClient.state].filter(Boolean).join(', ')}</div>
                         </div>
                       </div>
                     </Col>
                   )}
-                  {client.created_at && (
+                  {activeClient.created_at && (
                     <Col xs={12} sm={6}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <FaCalendarAlt style={{ color: '#6c757d', minWidth: 16 }} />
                         <div>
                           <div style={{ fontSize: '0.75rem', color: '#adb5bd' }}>Registrado</div>
-                          <div style={{ fontWeight: 600 }}>{new Date(client.created_at).toLocaleDateString('es-CO')}</div>
+                          <div style={{ fontWeight: 600 }}>{new Date(activeClient.created_at).toLocaleDateString('es-CO')}</div>
                         </div>
                       </div>
                     </Col>
@@ -154,9 +172,13 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, client })
             <Card style={{ border: 'none', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', borderRadius: '10px' }}>
               <Card.Body>
                 <h6 style={{ color: '#6c757d', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Ultimas transacciones</h6>
-                {client.transactions && client.transactions.length > 0 ? (
+                {loadingTx ? (
+                  <div style={{ textAlign: 'center', padding: '1rem' }}>
+                    <Spinner animation="border" size="sm" variant="secondary" />
+                  </div>
+                ) : activeClient.transactions && activeClient.transactions.length > 0 ? (
                   <ListGroup variant="flush">
-                    {client.transactions.map((transaction: Transaction, index) => (
+                    {activeClient.transactions.map((transaction: Transaction, index: number) => (
                       <ListGroup.Item key={transaction.id || index} style={{ paddingLeft: 0, paddingRight: 0, border: 'none', borderBottom: '1px solid #f1f3f5' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -195,7 +217,7 @@ const ClientDetailModal: FC<ClientDetailModalProps> = ({ show, onHide, client })
         {/* Botón para eliminar el cliente */}
         <Button
           className={styles.btnDelete}
-          onClick={() => deleteClient(client?.id ?? 0)}
+          onClick={() => deleteClient(activeClient?.id ?? 0)}
         >
           <FaTrashAlt style={{ marginRight: '5px' }} /> Eliminar
         </Button>

@@ -7,6 +7,10 @@ export const getClientAPI = (page: number = 1, limit: number = 50, search: strin
   return axios.get(url);
 };
 
+export const getClientByIdAPI = (id: number): Promise<AxiosResponse<Client>> => {
+  return axios.get(`/clients/${id}`);
+};
+
 export const createClientAPI = (client: Client): Promise<AxiosResponse<Client>> => {
   return axios.post('/clients', client);
 };
